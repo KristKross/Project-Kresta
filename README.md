@@ -14,7 +14,14 @@ Make sure Git is installed for cloning the repository. Verify by running:
 git --version
 ```
 
-## Step 2: Clone Repository
+## Step 2: Create .env file
+
+Create a `.env` file to store environment variables. This file should be added to `.gitignore` to avoid it being committed to the repository.
+```bash
+NODE_ENV = 'development'
+```
+
+## Step 3: Clone Repository
 
 To work with the latest version of Project Kresta, clone the repository:
 ```bash
@@ -22,7 +29,7 @@ git clone <repository-url>
 cd project-kresta
 ```
 
-## Step 3: Install Dependencies
+## Step 4: Install Dependencies
 
 To install the dependencies and devDependencies for this project, run the following commands:
 
@@ -33,7 +40,7 @@ npm install axios@^1.8.4 dotenv@^16.5.0 express@^5.1.0 express-session@^1.18.1
 
 ### DevDependencies
 ```bash
-npm install --save-dev browser-sync@^3.0.4 css-loader@^7.1.2 nodemon@^3.1.9 sass@^1.86.3 sass-loader@^16.0.5 style-loader@^4.0.0 webpack@^5.99.5 webpack-cli@^6.0.1 webpack-dev-server@^5.2.1
+npm install --save-dev browser-sync@^3.0.4 css-loader@^7.1.2 html-webpack-plugin@^5.6.3 mini-css-extract-plugin@^2.9.2 nodemon@^3.1.9 sass@^1.86.3 sass-loader@^16.0.5 style-loader@^4.0.0 webpack@^5.99.5 webpack-cli@^6.0.1 webpack-dev-server@^5.2.1
 ```
 
 ## Development Workflow
