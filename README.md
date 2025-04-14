@@ -38,7 +38,7 @@ To install the dependencies and devDependencies for this project, run the follow
 npm install axios@^1.8.4 dotenv@^16.5.0 express@^5.1.0 express-session@^1.18.1
 ```
 
-### DevDependencies
+### Dev Dependencies
 ```bash
 npm install --save-dev browser-sync@^3.0.4 css-loader@^7.1.2 html-webpack-plugin@^5.6.3 mini-css-extract-plugin@^2.9.2 nodemon@^3.1.9 sass@^1.86.3 sass-loader@^16.0.5 style-loader@^4.0.0 webpack@^5.99.5 webpack-cli@^6.0.1 webpack-dev-server@^5.2.1
 ```
