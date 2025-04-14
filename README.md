@@ -37,7 +37,7 @@ npm install --save-dev browser-sync@^3.0.4 css-loader@^7.1.2 nodemon@^3.1.9 sass
 ```
 
 ## Development Workflow
-To use Nodemon for backend development, Webpack for frontend bundling and Watch Sass for CSS compiling, follow these steps:
+To use Nodemon for backend development and Webpack for frontend bundling, follow these steps:
 
 ### Nodemon (Backend Development)
 1. Run `npm run dev` in your terminal to start the development server.
@@ -47,7 +47,3 @@ To use Nodemon for backend development, Webpack for frontend bundling and Watch 
 1. Run `npm start` to launch the development server with Webpack Dev Server.
 2. Make changes to your files in the `src` directory, and Webpack will automatically bundle and reload the changes.
 3. Use `npm run build` only for production builds when project is ready to be deployed.
-
-### Watch Sass (SCSS Compilation)
-1. Run `npm run sass` in your terminal to start watching and compiling your SCSS files into CSS. This approach ensures styles are continuously updated without requiring a full build process.
-
