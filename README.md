@@ -14,19 +14,19 @@ Make sure Git is installed for cloning the repository. Verify by running:
 git --version
 ```
 
-## Step 2: Create .env file
-
-Create a `.env` file to store environment variables. This file should be added to `.gitignore` to avoid it being committed to the repository.
-```bash
-NODE_ENV = 'development'
-```
-
-## Step 3: Clone Repository
+## Step 2: Clone Repository
 
 To work with the latest version of Project Kresta, clone the repository:
 ```bash
 git clone <repository-url>
 cd project-kresta
+```
+
+## Step 3: Create .env file
+
+Create a `.env` file to store environment variables. This file should be added to `.gitignore` to avoid it being committed to the repository.
+```bash
+NODE_ENV = 'development'
 ```
 
 ## Step 4: Install Dependencies
