@@ -1,7 +1,12 @@
-$primary-color: green;
-$text-color: white;
+// BASE
+@use 'base/breakpoints';
+@use 'base/colors';
+@use 'base/global';
+@use 'base/reset';
+@use 'base/typography';
 
-body {
-    background-color: $primary-color;
-    color: $text-color;
-}
+//COMPONENTS
+@use 'components/buttons';
+
+//PAGES
+@use 'pages/index';
