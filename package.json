@@ -1,9 +1,8 @@
 {
   "scripts": {
-    "sass": "sass --watch src/scss:public/css",
     "dev": "nodemon index.js",
-    "build": "webpack",
-    "start": "webpack-dev-server --open"
+    "start": "webpack serve --mode development",
+    "build": "NODE_ENV=production webpack --mode production"
   },
   "dependencies": {
     "axios": "^1.8.4",
