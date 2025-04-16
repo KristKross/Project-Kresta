@@ -1,0 +1,176 @@
+// Font Families
+$font-cardo: 'Cardo', serif;
+$font-red-hat: 'Red Hat Display', sans-serif;
+
+// Display 1
+.display-1 {
+  font-family: $font-cardo;
+  font-weight: 700;
+  line-height: 110%;
+
+  @include mobile {
+    font-size: 40px;
+  }
+
+  @include tablet {
+    font-size: 56px;
+  }
+
+  @include desktop {
+    font-size: 72px;
+  }
+}
+
+// Heading 1
+.h1 {
+  font-family: $font-cardo;
+  font-weight: 700;
+  line-height: 120%;
+
+  @include mobile {
+    font-size: 32px;
+  }
+
+  @include tablet {
+    font-size: 44px;
+  }
+
+  @include desktop {
+    font-size: 56px;
+  }
+}
+
+// Heading 2
+.h2 {
+  font-family: $font-cardo;
+  font-weight: 700;
+  line-height: 120%;
+
+  @include mobile {
+    font-size: 28px;
+  }
+
+  @include tablet {
+    font-size: 36px;
+  }
+
+  @include desktop {
+    font-size: 44px;
+  }
+}
+
+// Heading 3
+.h3 {
+  font-family: $font-cardo;
+  font-weight: 700;
+  line-height: 130%;
+
+  @include mobile {
+    font-size: 24px;
+  }
+
+  @include tablet {
+    font-size: 28px;
+  }
+
+  @include desktop {
+    font-size: 44px;
+    line-height: 120%;
+  }
+}
+
+// Pullquote
+.pullquote {
+  font-family: $font-cardo;
+  font-style: italic;
+  line-height: 140%;
+
+  @include mobile {
+    font-size: 24px;
+  }
+
+  @include tablet {
+    font-size: 28px;
+  }
+
+  @include desktop {
+    font-size: 32px;
+  }
+}
+
+// Subtitle
+.subtitle {
+  font-family: $font-red-hat;
+  font-weight: 500;
+  line-height: 130%;
+
+  @include mobile {
+    font-size: 20px;
+  }
+
+  @include tablet {
+    font-size: 24px;
+  }
+
+  @include desktop {
+    font-size: 32px;
+    line-height: 140%;
+  }
+}
+
+// Body Large
+.body-large {
+  font-family: $font-red-hat;
+  font-weight: 400;
+  line-height: 150%;
+
+  @include mobile {
+    font-size: 18px;
+  }
+
+  @include tablet {
+    font-size: 20px;
+  }
+
+  @include desktop {
+    font-size: 22px;
+  }
+}
+
+// Body Regular
+.body-regular {
+  font-family: $font-red-hat;
+  font-weight: 400;
+  line-height: 150%;
+
+  @include mobile {
+    font-size: 16px;
+  }
+
+  @include tablet {
+    font-size: 18px;
+  }
+
+  @include desktop {
+    font-size: 20px;
+  }
+}
+
+// Button CTA
+.button-cta {
+  font-family: $font-red-hat;
+  font-weight: 400;
+  line-height: 120%;
+
+  @include mobile {
+    font-size: 14px;
+  }
+
+  @include tablet {
+    font-size: 16px;
+  }
+
+  @include desktop {
+    font-size: 18px;
+  }
+}
