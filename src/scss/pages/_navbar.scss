@@ -1,0 +1,49 @@
+@use '../base/typography' as *;
+@use '../base/colors' as *;
+
+
+nav{
+    display: flex;
+    flex-direction: row;
+    background-color: $primary-navy-blue;
+    justify-content: space-between;
+    align-items: center;
+    padding: 2rem;
+    position: relative;
+    
+    .nav-links{
+        @extend .nav-primary;
+        display: flex;
+        flex-direction: row;
+        gap: 1rem;
+        flex: 1;
+        
+        .nav-link{
+            color: $accent-white;
+            text-decoration: none;
+        }
+    }
+    
+    .logo{
+        width: 100px;
+        height: 100px;
+        background-image: url('../assets/logo.png');
+        background-size: contain;
+        background-position: center;
+        background-repeat: no-repeat;
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+    
+    .login-btn{
+        @extend .nav-primary;
+        background-color: $secondary-ice-blue;
+        color: $primary-navy-blue;
+        border: none;
+        border-radius: 10px;
+        padding: 0.5rem 1rem;
+        margin-left: auto;
+
+    }
+}
