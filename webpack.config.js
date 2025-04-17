@@ -2,6 +2,7 @@ const path = require('path');
 const dotenv = require('dotenv');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const CopyPlugin = require('copy-webpack-plugin');
 
 dotenv.config();
 const MODE = process.env.NODE_ENV || 'development'; 
@@ -17,6 +18,11 @@ module.exports = {
         publicPath: '/', 
     },
     plugins: [
+        new CopyPlugin({
+            patterns: [
+                { from: 'src/templates', to: 'templates' },
+            ],
+        }),
         new HtmlWebpackPlugin({
             filename: 'index.html', 
             template: './src/index.html',
