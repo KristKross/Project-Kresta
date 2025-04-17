@@ -1,8 +1,9 @@
-@use '_breakpoints' as *;
+@use '_breakpoints.scss' as *;
 
 // Font Families
 $font-cardo: 'Cardo', serif;
 $font-red-hat: 'Red Hat Display', sans-serif;
+$font-staatliches: 'Staatliches', sans-serif;
 
 // Display 1
 .display-1 {
@@ -163,6 +164,158 @@ $font-red-hat: 'Red Hat Display', sans-serif;
   font-family: $font-red-hat;
   font-weight: 400;
   line-height: 120%;
+
+  @include mobile {
+    font-size: 14px;
+  }
+
+  @include tablet {
+    font-size: 16px;
+  }
+
+  @include desktop {
+    font-size: 18px;
+  }
+}
+
+// Sidebar Header
+.sidebar-header {
+  font-family: $font-staatliches;
+  font-weight: 400;
+  line-height: 110%;
+
+  @include mobile {
+    font-size: 24px;
+  }
+
+  @include tablet {
+    font-size: 28px;
+  }
+
+  @include desktop {
+    font-size: 32px;
+  }
+}
+
+// Navigation Primary
+.nav-primary {
+  font-family: $font-staatliches;
+  font-weight: 400;
+  line-height: 120%;
+
+  @include mobile {
+    font-size: 20px;
+  }
+
+  @include tablet {
+    font-size: 24px;
+  }
+
+  @include desktop {
+    font-size: 28px;
+  }
+}
+
+// Navigation Secondary
+.nav-secondary {
+  font-family: $font-staatliches;
+  font-weight: 400;
+  line-height: 120%;
+
+  @include mobile {
+    font-size: 16px;
+  }
+
+  @include tablet {
+    font-size: 18px;
+  }
+
+  @include desktop {
+    font-size: 20px;
+  }
+}
+
+// Display Accent
+.display-accent {
+  font-family: $font-staatliches;
+  font-weight: 400;
+  line-height: 110%;
+
+  @include mobile {
+    font-size: 36px;
+  }
+
+  @include tablet {
+    font-size: 48px;
+  }
+
+  @include desktop {
+    font-size: 64px;
+  }
+}
+
+// Section Divider
+.section-divider {
+  font-family: $font-staatliches;
+  font-weight: 400;
+  line-height: 110%;
+
+  @include mobile {
+    font-size: 22px;
+  }
+
+  @include tablet {
+    font-size: 26px;
+  }
+
+  @include desktop {
+    font-size: 30px;
+  }
+}
+
+// Banner Text
+.banner-text {
+  font-family: $font-staatliches;
+  font-weight: 400;
+  line-height: 110%;
+
+  @include mobile {
+    font-size: 28px;
+  }
+
+  @include tablet {
+    font-size: 36px;
+  }
+
+  @include desktop {
+    font-size: 42px;
+  }
+}
+
+// Call-to-Action
+.cta {
+  font-family: $font-staatliches;
+  font-weight: 400;
+  line-height: 120%;
+
+  @include mobile {
+    font-size: 18px;
+  }
+
+  @include tablet {
+    font-size: 20px;
+  }
+
+  @include desktop {
+    font-size: 24px;
+  }
+}
+
+// Label/Tag
+.label-tag {
+  font-family: $font-staatliches;
+  font-weight: 400;
+  line-height: 110%;
 
   @include mobile {
     font-size: 14px;
