@@ -40,17 +40,17 @@ npm install axios@^1.8.4 dotenv@^16.5.0 express@^5.1.0 express-session@^1.18.1
 
 ### Dev Dependencies
 ```bash
-npm install --save-dev browser-sync@^3.0.4 copy-webpack-plugin@^13.0.0 css-loader@^7.1.2 file-loader@^6.2.0 html-webpack-plugin@^5.6.3 mini-css-extract-plugin@^2.9.2 nodemon@^3.1.9 sass@^1.86.3 sass-loader@^16.0.5 style-loader@^4.0.0 webpack@^5.99.5 webpack-cli@^6.0.1 webpack-dev-server@^5.2.1
+npm install --save-dev browser-sync@^3.0.4 copy-webpack-plugin@^13.0.0 css-loader@^7.1.2 file-loader@^6.2.0 html-webpack-plugin@^5.6.3 mini-css-extract-plugin@^2.9.2 nodemon-webpack-plugin@^4.8.2 sass@^1.86.3 sass-loader@^16.0.5 style-loader@^4.0.0 webpack@^5.99.5 webpack-cli@^6.0.1 webpack-dev-server@^5.2.1
 ```
 
 ## Development Workflow
 To use Nodemon for backend development and Webpack for frontend bundling, follow these steps:
 
-### Nodemon (Backend Development)
-1. Run `npm run dev` in your terminal to start the development server.
-2. Make changes to your code and observe how both the server and the build process are updated accordingly.
-
 ### Webpack (Frontend Bundling)
 1. Run `npm start` to launch the development server with Webpack Dev Server.
 2. Make changes to your files in the `src` directory, and Webpack will automatically bundle and reload the changes.
 3. Use `npm run build` only for production builds when project is ready to be deployed.
+
+### Nodemon (Backend Development)
+1. Run `npm run dev` in your terminal to start the development server.
+2. Make changes to your code and observe how both the server and the build process are updated accordingly.

@@ -3,6 +3,7 @@ const dotenv = require('dotenv');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
+const NodemonPlugin = require('nodemon-webpack-plugin');
 
 dotenv.config();
 const MODE = process.env.NODE_ENV || 'development'; 
@@ -34,6 +35,14 @@ module.exports = {
                 filename: "css/[name].[contenthash].css",
             }),
         ] : []),
+        new NodemonPlugin({
+            script: './app.js',
+            watch: [
+                path.resolve('./dist'), 
+                path.resolve('./app.js')
+            ],
+            verbose: true,
+        })
     ],
     module: {
         rules: [
