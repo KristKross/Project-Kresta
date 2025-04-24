@@ -9,14 +9,6 @@ document.addEventListener('DOMContentLoaded', () => {
             header.innerHTML = data;
             document.body.insertBefore(header, document.body.firstChild);
 
-            // Set logo in hero section
-            const heroLogo = document.querySelector('.hero-logo');
-            if (heroLogo) {
-                heroLogo.src = logo;
-            } else {
-                console.error('Hero logo image not found');
-            }
-
             // Set logo in navbar section
             const logoImg = document.querySelector('.logo');
             if (logoImg) {

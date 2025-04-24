@@ -26,6 +26,11 @@ module.exports = {
             ],
         }),
         new HtmlWebpackPlugin({
+            filename: 'navbar.html',
+            template: './src/templates/navbar.html',
+            inject: false,
+        }),
+        new HtmlWebpackPlugin({
             filename: 'index.html', 
             template: './src/index.html',
             inject: 'body',
@@ -48,6 +53,21 @@ module.exports = {
     module: {
         rules: [
             {
+                test: /\.html$/,
+                loader: 'html-loader',
+                options: {
+                    sources: {
+                        list: [
+                            {
+                                tag: 'img',
+                                attribute: 'src',
+                                type: 'src',
+                            },
+                        ],
+                    },
+                },
+            },
+            {
                 test: /\.css$/,
                 use: [
                     MODE === 'production' ? MiniCssExtractPlugin.loader : 'style-loader', 
@@ -66,14 +86,14 @@ module.exports = {
                 test: /\.(png|jpg|jpeg|gif|svg)$/i,
                 type: 'asset/resource',
                 generator: {
-                    filename: 'images/[name].[hash][ext]', 
+                    filename: 'assets/[name].[hash][ext]', 
                 },
             },
             {
                 test: /\.(woff|woff2|eot|ttf|otf)$/i,
                 type: 'asset/resource', 
                 generator: {
-                    filename: 'fonts/[name].[hash][ext]', 
+                    filename: 'fonts/[name].[hash][ext]',
                 },
             },
         ],
