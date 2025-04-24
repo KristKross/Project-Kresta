@@ -12,6 +12,7 @@ module.exports = {
     mode: MODE,
     entry: {
         main: "./src/js/main.js",
+        index: "./src/js/index.js",
     },
     output: {
         filename: "js/[name].[contenthash].js",
@@ -28,7 +29,7 @@ module.exports = {
             filename: 'index.html', 
             template: './src/index.html',
             inject: 'body',
-            chunks: ['main'],
+            chunks: ['main', 'index'],
         }),
         ...(MODE === 'production' ? [
             new MiniCssExtractPlugin({
