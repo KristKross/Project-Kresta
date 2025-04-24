@@ -4,16 +4,12 @@
 @use '../base/colors' as *;
 @use '../base/breakpoints' as *;
 
-
 .index {
-    p {
-        font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-        font-size: 16px;
-        line-height: 1.5;
-        color: #333;
-        margin: 0 0 1em;
-        max-width: 20%;
-    }
+
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    margin: 0 auto;
 
     .hero-section-1{
         display: flex;
@@ -58,7 +54,7 @@
             }
 
             .sign-in-btn{
-                @extend .h3;
+                @extend .button-cta;
                 display: inline-flex;
                 justify-content: center;
                 align-items: center;
@@ -73,5 +69,31 @@
                 }
             }
         }
+    }
+
+    .hero-section-2{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        .hero-section-img-2{
+            width:50%;
+        }
+
+        .caption{
+            width:50%;
+            .point-1, .point-2{
+                @extend .body-regular;
+                // font-size: 1.5em;
+                color: $accent-black;
+                // margin: 0 0 1em;
+                // max-width: 20%;
+            }
+            @extend .body-regular;
+            display: flex;
+            flex-direction: column;
+            justify-content: left;
+        }
+
     }
 }

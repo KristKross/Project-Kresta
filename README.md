@@ -40,7 +40,7 @@ npm install axios@^1.8.4 dotenv@^16.5.0 express@^5.1.0 express-session@^1.18.1
 
 ### Dev Dependencies
 ```bash
-npm install --save-dev browser-sync@^3.0.4 copy-webpack-plugin@^13.0.0 css-loader@^7.1.2 file-loader@^6.2.0 html-webpack-plugin@^5.6.3 mini-css-extract-plugin@^2.9.2 nodemon-webpack-plugin@^4.8.2 sass@^1.86.3 sass-loader@^16.0.5 style-loader@^4.0.0 webpack@^5.99.5 webpack-cli@^6.0.1 webpack-dev-server@^5.2.1
+npm install --save-dev browser-sync@^3.0.4 copy-webpack-plugin@^13.0.0 css-loader@^7.1.2 file-loader@^6.2.0 html-loader@5.1.0 html-webpack-plugin@^5.6.3 mini-css-extract-plugin@^2.9.2 nodemon-webpack-plugin@^4.8.2 sass@^1.86.3 sass-loader@^16.0.5 style-loader@^4.0.0 webpack@^5.99.5 webpack-cli@^6.0.1 webpack-dev-server@^5.2.1
 ```
 
 ## Development Workflow
