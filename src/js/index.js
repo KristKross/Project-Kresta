@@ -1,9 +1,9 @@
-import rightArrowIcon from '../assets/arrow-right.png';
+import rightArrowIcon from '../assets/icons/arrow-right.png';
 
 document.addEventListener('DOMContentLoaded', () => {
-    const rightArrow = document.querySelector('.sign-in-btn img');
+    const rightArrow = document.querySelector('.right-arrow-icon');
     if (rightArrow) {
-        rightArrowIcon.src = rightArrowIcon;
+        rightArrow.src = rightArrowIcon;
     } else {
         console.error('Logo image not found');
     }

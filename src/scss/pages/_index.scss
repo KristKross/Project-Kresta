@@ -1,3 +1,10 @@
+@use '../base/animations' as *;
+@use '../base/typography' as *;
+@use '../base/animations' as *;
+@use '../base/colors' as *;
+@use '../base/breakpoints' as *;
+
+
 .index {
     p {
         font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
@@ -6,5 +13,65 @@
         color: #333;
         margin: 0 0 1em;
         max-width: 20%;
+    }
+
+    .hero-section-1{
+        display: flex;
+        justify-content: flex-end;
+        background-image: url('../assets/images/hero/hero-section-1.png');
+        background-size: cover;
+        height: 70vh;
+
+        .hero-content {
+            display: flex;
+            justify-content: space-evenly;
+            align-items: center;
+            flex-direction: column;
+            // gap: 60px;
+            width:50%;
+            height: 100%;
+            text-align: center;
+            color: white;
+            background-color: rgba($primary-navy-blue, 0.8);
+            
+            h1 {
+                font-family:$font-staatliches;
+                font-size: 3em;
+                // margin-bottom: 0.5em;
+                color: $tertiary-beige;
+                letter-spacing: 2px;
+                font-weight:0;
+                text-shadow: 0 4px 24px rgba(0, 0, 0, 0.45), 0 1.5px 0 rgba(0,0,0,0.15);
+            }
+
+            p {
+                color: $tertiary-beige;
+                @extend .display-1;
+                font-size: 1.5em;
+                max-width: 600px;
+                margin: 0 auto;
+            }
+
+            img{
+                height: 100px;
+                width: 100px;
+            }
+
+            .sign-in-btn{
+                @extend .h3;
+                display: inline-flex;
+                justify-content: center;
+                align-items: center;
+                max-width: 250px;
+                padding: 10px 20px;
+                background-color: $accent-black;
+                border-radius: 15px;
+                gap:10px;
+                img{
+                    width: 20px;
+                    height: 20px;
+                }
+            }
+        }
     }
 }

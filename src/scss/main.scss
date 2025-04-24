@@ -11,3 +11,6 @@
 //PAGES
 @use 'pages/index';
 @use 'pages/navbar';
+
+//RESPONSIVE STYLES
+@use 'responsive-styles/navbar-breakpoints';

@@ -84,7 +84,9 @@ module.exports = {
         open: true,
         historyApiFallback: true,
         watchFiles: [
-            './src/**/*.html'
+            './src/**/*.html',
+            './src/**/*.scss',
+            './src/**/*.js',
         ],
     },
 };
