@@ -43,7 +43,7 @@ module.exports = {
                 path.resolve('./app.js')
             ],
             verbose: true,
-        })
+        }),
     ],
     module: {
         rules: [
