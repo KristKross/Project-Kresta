@@ -79,10 +79,12 @@
         padding: 5em 2em;
         gap: 2em;
         height: 90vh;
+        width: 100%;
         min-height: fit-content;
 
         .hero-section-img-2{
             width: 40%;
+            max-width: max-content;
         }
 
         .caption{
@@ -116,11 +118,12 @@
         padding: 5em 2em;
         gap: 2em;
         height: 90vh;
+        width: 100%;
         min-height: fit-content;
 
         .hero-section-img-3{
             width: 40%;
-            object-position: right bottom;
+            max-width: max-content;
         }
 
         .caption{
