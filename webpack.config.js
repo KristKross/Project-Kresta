@@ -20,13 +20,8 @@ module.exports = {
         publicPath: '/', 
     },
     plugins: [
-        new CopyPlugin({
-            patterns: [
-                { from: 'src/templates', to: 'templates' },
-            ],
-        }),
         new HtmlWebpackPlugin({
-            filename: 'navbar.html',
+            filename: 'templates/navbar.html',
             template: './src/templates/navbar.html',
             inject: false,
         }),
@@ -100,7 +95,7 @@ module.exports = {
     },
     devServer: {
         static: path.resolve(__dirname, 'dist'),
-        port: 3000,
+        port: 3001,
         open: true,
         historyApiFallback: true,
         watchFiles: [
