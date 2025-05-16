@@ -120,7 +120,7 @@ module.exports = {
         static: path.resolve(__dirname, 'dist'),
         port: 3001,
         open: true,
-        historyApiFallback: true,
+        historyApiFallback: false,
         watchFiles: [
             './src/**/*.html',
             './src/**/*.scss',
