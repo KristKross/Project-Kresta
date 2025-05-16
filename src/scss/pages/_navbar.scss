@@ -1,5 +1,7 @@
+@use '../base/animations' as *;
 @use '../base/typography' as *;
 @use '../base/colors' as *;
+@use '../base/breakpoints' as *;
 
 nav{
     display: flex;
@@ -21,6 +23,15 @@ nav{
         .nav-link{
             color: $accent-white;
             text-decoration: none;
+            position: relative;
+        }
+
+        .nav-separator {
+            width: 2px;
+            // height: ;
+            background-color: rgba($accent-white, 0.4);
+            margin: 0 15px;
+            justify-self: center;
         }
     }
     
@@ -34,12 +45,13 @@ nav{
     
     .login-btn{
         @extend .nav-primary;
-        background-color: $secondary-ice-blue;
+        background-color: $tertiary-beige   ;
         color: $primary-navy-blue;
         border: none;
         border-radius: 10px;
         padding: 0.5rem 1rem;
         margin-left: auto;
-
+        @include hover-lift;
+        @include button-border-animation($primary-navy-blue);
     }
 }

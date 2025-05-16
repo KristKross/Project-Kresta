@@ -11,6 +11,8 @@
 //PAGES
 @use 'pages/index';
 @use 'pages/navbar';
+@use 'pages/footer';
+@use 'pages/login';
 
 //RESPONSIVE STYLES
 @use 'responsive-styles/navbar-breakpoints';

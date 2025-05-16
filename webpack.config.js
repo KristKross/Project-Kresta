@@ -26,6 +26,11 @@ module.exports = {
             inject: false,
         }),
         new HtmlWebpackPlugin({
+            filename: 'templates/footer.html',
+            template: './src/templates/footer.html',
+            inject: false,
+        }),
+        new HtmlWebpackPlugin({
             filename: 'index.html', 
             template: './src/index.html',
             inject: 'body',
