@@ -12,7 +12,11 @@ module.exports = {
     mode: MODE,
     entry: {
         main: "./src/js/main.js",
-        index: "./src/js/index.js",
+    },
+    optimization: {
+        splitChunks: {
+            chunks: 'all',
+        },
     },
     output: {
         filename: "js/[name].[contenthash].js",
@@ -24,13 +28,32 @@ module.exports = {
             filename: 'templates/navbar.html',
             template: './src/templates/navbar.html',
             inject: false,
+            chunks: ['main'],
+        }),
+        new HtmlWebpackPlugin({
+            filename: 'templates/footer.html',
+            template: './src/templates/footer.html',
+            inject: false,
+            chunks: ['main'],
         }),
         new HtmlWebpackPlugin({
             filename: 'index.html', 
             template: './src/index.html',
             inject: 'body',
-            chunks: ['main', 'index'],
+            chunks: ['main'],
         }),
+        new HtmlWebpackPlugin({
+            filename: 'login.html',
+            template: './src/login.html',
+            inject: 'body',
+            chunks: ['main'],
+        }),
+        new HtmlWebpackPlugin({
+            filename: 'register.html',
+            template: './src/register.html',
+            inject: 'body',
+            chunks: ['main'],
+        }),        
         ...(MODE === 'production' ? [
             new MiniCssExtractPlugin({
                 filename: "css/[name].[contenthash].css",

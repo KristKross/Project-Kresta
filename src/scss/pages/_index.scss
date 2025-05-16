@@ -1,14 +1,14 @@
 @use '../base/animations' as *;
 @use '../base/typography' as *;
-@use '../base/animations' as *;
 @use '../base/colors' as *;
 @use '../base/breakpoints' as *;
 
-.index {
+.index-page {
     display: flex;
     flex-direction: column;
     align-content: center;
     margin: 0 auto;
+    background-color: $accent-white;
 
     .hero-section-1{
         display: flex;
@@ -36,13 +36,13 @@
             h1 {
                 @extend .banner-text;
                 font-size: 5em;
-                color: $tertiary-beige;
+                color: $accent-white;
                 letter-spacing: 2px;
                 text-shadow: 0 4px 24px rgba(0, 0, 0, 0.45), 0 1.5px 0 rgba(0,0,0,0.15);
             }
 
             p {
-                color: $tertiary-beige;
+                color: $accent-white;
                 @extend .display-1;
                 font-size: 2em;
                 max-width: 600px;
@@ -62,9 +62,12 @@
                 background-color: $accent-black;
                 border-radius: 15px;
                 gap:10px;
+                @include hover-lift;
+                @include button-border-animation($tertiary-beige);
                 img{
                     width: 20px;
                     height: 20px;
+                    @include hover-grow;
                 }
             }
         }
@@ -104,6 +107,7 @@
                 img {
                     width: 40px;
                     height: 40px;
+                    @include hover-grow;
                 }
             }
         }
@@ -143,8 +147,359 @@
                 img {
                     width: 40px;
                     height: 40px;
+                    @include hover-grow;
                 }
             }
         }
     }
+
+    .hero-section-4{
+        // background-color: $tertiary-beige;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 0 auto;
+        padding: 5em 2em;
+        gap: 2em;
+        height: 90vh;
+        width: 100%;
+        min-height: fit-content;
+
+            .caption{
+            width: 40%;
+            gap: 2em;
+            @extend .body-regular;
+            display: flex;
+            flex-direction: column;
+
+            .point-5, .point-6{
+                @extend .body-regular;
+                color: $accent-black;
+                display: inline-flex;
+                align-items: center;
+                gap: 1em;
+
+                img {
+                    width: 40px;
+                    height: 40px;
+                    @include hover-grow;
+                }
+            }
+        }
+    }
+
+    .hero-section-5{
+            display: flex;
+            flex-direction: row;
+            background-color: $primary-navy-blue;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto;
+            padding: 5em 2em;
+            gap: 2em;
+            height: 90vh;
+            width: 100%;
+            min-height: fit-content;
+
+            .card{
+                display: flex;
+                align-items: center;
+                justify-content: flex-start;
+                flex-direction: column;
+                gap: 1em;
+                height: 650px;
+                min-width: 400px;
+                width: 500px;
+                background-color: $tertiary-beige;
+                border: $accent-white 15px solid;
+                border-radius: 20px;
+                padding: 50px 25px;
+                @include hover-lift;
+                img {
+                    @include hover-fade;
+                }
+
+                .card-title{
+                    @extend .h2;
+                    color: $accent-black;
+                    text-align: left
+                }
+
+                p{
+                    @extend .body-regular;
+                    color: $accent-black;
+                    text-align: center;
+                }
+            }
+        }
+    
+    .hero-section-6{
+        background-color: $accent-black;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        margin: 0 auto;
+        padding: 5em 2em;
+        gap: 50px;
+        height: 90vh;
+        width: 100%;
+        min-height: fit-content;
+
+        .display-1{
+            color: $accent-white;
+        }
+        
+        .card-container{
+            display: flex;
+            justify-content: center;
+            flex-direction: row;
+            gap: 80px;
+
+            .card-plans {
+                width: 450px;
+                height: 550px;
+                display: flex;
+                flex-direction: column;
+                justify-content: flex-start;
+                align-items: center;
+                gap: 20px;
+                padding: 40px 20px;
+                border-radius: 40px;
+                @include hover-lift;
+
+                &.card-1 {
+                    background-color: $tertiary-beige;
+                    border: $primary-navy-blue 10px solid;
+
+                    .price {
+                        color: $accent-black;
+                    }
+
+                    .plan {
+                        color: $accent-black;
+                    }
+                }
+
+                &.card-2 {
+                    background-color: $primary-navy-blue;
+                    border: $tertiary-beige 10px solid;
+
+                    .card-seperator{
+                        color: $tertiary-beige;
+                    }
+
+                    .price, .plan {
+                        color: $tertiary-beige;
+                    }
+                    ul{
+                        color:$tertiary-beige;
+                        li{
+                            color: $tertiary-beige;
+                            @extend .body-large;
+                        }
+                    }
+                }
+
+                &.card-3 {
+                    background-color: $accent-black;
+                    border: $accent-white 10px solid;
+
+                    .card-seperator{
+                        color: $accent-white;
+                    }
+
+                    .price, .plan {
+                        color: $accent-white;
+                    }
+
+                    ul{
+                        color:$accent-white;
+                        li{
+                            color: $accent-white;
+                            @extend .body-large;
+                        }
+                    }
+                }
+
+                .price {
+                    font-family: $font-cardo;
+                    font-weight: 400;
+                    text-align: center;
+                    font-size: 65px;
+                    line-height: 1; // Changed from -10px to 1
+                    display: flex;  // Added
+                    flex-direction: column; // Added
+                    align-items: center; // Added
+                    gap: 0; // Added
+
+                    .month {
+                        font-family: $font-cardo;
+                        font-size: 20px;
+                        margin-top: 0px; // Added to reduce space
+                    }
+                }
+
+                .plan {
+                    @extend .h1;
+                    letter-spacing: 3px;
+                }
+
+                .card-seperator {
+                    width: 200px;
+                    height: 10px;
+                    background-color: currentColor;
+                    border-radius: 20px;
+                }
+
+                ul {
+                    list-style: none;
+                    padding: 0;
+                    
+                    li {
+                        @extend .body-regular;
+                        color: inherit;
+                        margin: 10px 0;
+                        @extend .body-large;
+                    }
+                }
+            }
+        }
+    }
+
+    .hero-section-7{
+        height: 90vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 30px;
+        .seperator{
+            width: 60%;
+            height: 5px;
+            background-color: $accent-white;
+            margin: 0 auto;
+            border-radius: 10px;
+        }
+
+        .subtitle{
+            @extend .subtitle;
+            text-align: center;
+            margin: 0 auto;
+        }
+
+        .email-listing-container{
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            margin: 0 auto;
+            padding: 20px 0;
+
+            input{
+                @extend .body-regular;
+                width: 400px;
+                height: 50px;
+                border-radius: 10px;
+                padding-left: 20px;
+                border: $accent-black 2px solid;
+                outline: none;
+            }
+
+            button{
+                @extend .button-cta;
+                background-color: $accent-black;
+                color: $tertiary-beige;
+                padding: 10px 20px;
+                border-radius: 10px;
+                cursor: pointer;
+                @include hover-lift;
+                @include button-border-animation($tertiary-beige);
+            }
+        }
+
+        p{
+            @extend .body-regular;
+            color: $accent-black;
+            text-align: center;
+            margin: 0 auto;
+        }
+
+        .connected-container{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            margin: 0 auto;
+            padding: 20px 0;
+
+            img{
+                width: 50px;
+                height: 50px;
+                @include hover-grow;
+            }
+        }
+    }
+    
+    .point-1, .point-2, .point-3, .point-4, .point-5, .point-6 {
+        img {
+            @include hover-grow;
+        }
+    }
+
+    .hero-section-8{
+        background-color: $primary-navy-blue;
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        height: 90vh;
+        img{
+            width: 90%;
+            height: 90%;
+        }
+
+
+        .section-8-container-2{
+            display: flex;
+            flex-direction: column;
+            gap:40px;
+
+            .display-1{
+                @extend .h1;
+                color: $accent-white;
+                text-align: center;
+                margin: 0 auto;
+            }
+
+            p{
+                @extend .body-regular;
+                color: $accent-white;
+                text-align: center;
+                margin: 0 auto;
+            }
+
+            .about-us{
+                @extend .button-cta;
+                color: $accent-white;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                gap: 20px;
+                margin: 0 auto;
+                padding: 20px 0;
+                border: $accent-white 2px solid;
+                border-radius: 10px;
+                padding: 10px;
+                @include hover-grow;
+
+                img{
+                    width: 40px;
+                    height: 40px;
+                }
+            }
+        }
+
+    } 
 }
