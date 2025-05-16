@@ -1,13 +1,15 @@
+require("dotenv").config();
 const express = require('express');
-const session = require('express-session');
-const axios = require('axios');
 const path = require('path');
-const dotenv = require('dotenv');
-
-dotenv.config();
+const mongoose = require("mongoose");
 
 const app = express();
+
 const port = 3000;
+
+mongoose.connect(process.env.MONGO_URI)
+  .then(() => console.log("MongoDB connected"))
+  .catch(err => console.log(err));
 
 app.use(express.static(path.join(__dirname, 'dist')));
 app.use(express.json());
@@ -20,6 +22,14 @@ app.get('/', (req, res) => {
 app.get('/login', (req, res) => {
     res.sendFile(path.join(__dirname, 'dist', 'login.html'));
 });
+
+app.get('/register', (req, res) => {
+    res.sendFile(path.join(__dirname, 'dist', 'register.html'));
+});
+
+// API Routes
+const authRoutes = require("./routes/authRoute");
+app.use('/auth', authRoutes);
 
 app.listen(port, () => { 
     console.log(`Server running at http://localhost:${port}`);
