@@ -2,7 +2,6 @@ const path = require('path');
 const dotenv = require('dotenv');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const CopyPlugin = require('copy-webpack-plugin');
 const NodemonPlugin = require('nodemon-webpack-plugin');
 
 dotenv.config();
@@ -12,6 +11,8 @@ module.exports = {
     mode: MODE,
     entry: {
         main: "./src/js/main.js",
+        login: "./src/js/login.js",
+        register: "./src/js/register.js",
     },
     optimization: {
         splitChunks: {
@@ -46,13 +47,13 @@ module.exports = {
             filename: 'login.html',
             template: './src/login.html',
             inject: 'body',
-            chunks: ['main'],
+            chunks: ['main', 'login'],
         }),
         new HtmlWebpackPlugin({
             filename: 'register.html',
             template: './src/register.html',
             inject: 'body',
-            chunks: ['main'],
+            chunks: ['main', 'register'],
         }),        
         ...(MODE === 'production' ? [
             new MiniCssExtractPlugin({

@@ -16,16 +16,20 @@
         <div class="login-container-right">
             <h1>Register</h1>
             <p class="subtitle">New Here! Create your account below!</p>
-            <form action="" class="login-form">
+            <form id="registerForm" class="login-form">
                 <p class="details-title"><img src="./assets/icons/login/email.png" alt="">Email</p>
-                <input class="form-input"type="email" placeholder="Email" required>
+                <input name="email" class="form-input"type="email" placeholder="Email" required>
+
                 <p class="details-title"><img src="./assets/icons/login/user.png" alt="">Username</p>
-                <input class="form-input"type="email" placeholder="Username" required>
+                <input name="username" class="form-input"type="text" placeholder="Username" required>
+
                 <p class="details-title"><img src="./assets/icons/login/lock.png" alt="">Password</p>
-                <input class="form-input"type="password" placeholder="Password" required>
+                <input name="password" class="form-input"type="password" placeholder="Password" required>
+
                 <p class="details-title"><img src="./assets/icons/login/lock.png" alt="">Confirm Password</p>
-                <input class="form-input"type="password" placeholder="Confirm Password" required>
-                <button type="submit" class="btn">Login</button>
+                <input name="confirmPassword" class="form-input"type="password" placeholder="Confirm Password" required>
+
+                <button type="submit" class="btn">Register</button>
             </form>
             <p>Have an account already? <a href="/login">Click here</a></p>
             <p>or</p>
