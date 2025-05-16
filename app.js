@@ -27,7 +27,7 @@ app.get('/register', (req, res) => {
     res.sendFile(path.join(__dirname, 'dist', 'register.html'));
 });
 
-app.get('/sidebar.html', (req, res) => {
+app.get('/dashboard', (req, res) => {
     res.sendFile(path.join(__dirname, 'dist', 'dahboard.html'));
 });
 
