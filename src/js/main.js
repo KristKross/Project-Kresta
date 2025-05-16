@@ -1,5 +1,10 @@
 import '../scss/main.scss';
+
+const ignorePages = ['/login.html', '/register.html', '/dashboard.html'];
+
 document.addEventListener('DOMContentLoaded', () => {
+    const path = window.location.pathname;
+    if (ignorePages.includes(path)) return;
     const header = document.createElement('header');
     fetch('../templates/navbar.html')   
         .then(response => response.text())
