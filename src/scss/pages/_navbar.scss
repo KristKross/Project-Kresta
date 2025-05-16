@@ -1,0 +1,57 @@
+@use '../base/animations' as *;
+@use '../base/typography' as *;
+@use '../base/colors' as *;
+@use '../base/breakpoints' as *;
+
+nav{
+    display: flex;
+    flex-direction: row;
+    background-color: $primary-navy-blue;
+    justify-content: space-between;
+    align-items: center;
+    padding: 2rem;
+    position: relative;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
+    
+    .nav-links{
+        @extend .nav-primary;
+        display: flex;
+        flex-direction: row;
+        gap: 1rem;
+        flex: 1;
+        
+        .nav-link{
+            color: $accent-white;
+            text-decoration: none;
+            position: relative;
+        }
+
+        .nav-separator {
+            width: 2px;
+            // height: ;
+            background-color: rgba($accent-white, 0.4);
+            margin: 0 15px;
+            justify-self: center;
+        }
+    }
+    
+    .logo{
+        width: 100px;
+        height: 100px;
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+    
+    .login-btn{
+        @extend .nav-primary;
+        background-color: $tertiary-beige   ;
+        color: $primary-navy-blue;
+        border: none;
+        border-radius: 10px;
+        padding: 0.5rem 1rem;
+        margin-left: auto;
+        @include hover-lift;
+        @include button-border-animation($primary-navy-blue);
+    }
+}
