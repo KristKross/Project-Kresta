@@ -60,6 +60,12 @@ module.exports = {
             inject: 'body',
             chunks: ['main', 'register'],
         }),        
+        new HtmlWebpackPlugin({
+            filename: 'dashboard.html',
+            template: './src/dashboard.html',
+            inject: 'body',
+            chunks: ['main', 'dashboard'],
+        }),        
         ...(MODE === 'production' ? [
             new MiniCssExtractPlugin({
                 filename: "css/[name].[contenthash].css",

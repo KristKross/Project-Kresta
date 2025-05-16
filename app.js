@@ -27,6 +27,10 @@ app.get('/register', (req, res) => {
     res.sendFile(path.join(__dirname, 'dist', 'register.html'));
 });
 
+app.get('/sidebar.html', (req, res) => {
+    res.sendFile(path.join(__dirname, 'dist', 'dahboard.html'));
+});
+
 // API Routes
 const authRoutes = require("./routes/authRoute");
 app.use('/auth', authRoutes);
