@@ -1,0 +1,111 @@
+@use '../base/animations' as *;
+@use '../base/typography' as *;
+@use '../base/colors' as *;
+@use '../base/breakpoints' as *;
+
+.login-page {
+    .login-container {
+        display: flex;
+        flex-direction: row;
+        height: 100vh; // Fixed height
+
+        p {
+            @extend .body-regular;
+            color: $accent-white;
+        }
+
+        .login-container-left {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 50%;  // Changed from vw
+            background-color: $accent-white;
+
+            .login-logo {
+                width: 400px;
+                height: auto;
+            }
+        }
+
+        .login-container-right {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 50%;  // Changed from vw
+            background-color: $primary-navy-blue;
+            gap: 15px;
+            padding: 2rem;
+
+            h1 {
+                @extend .display-1;
+                color: $accent-white;
+            }
+
+            .subtitle {
+                @extend .subtitle;
+                color: $accent-white;
+            }
+
+            .login-form {
+                display: flex;
+                flex-direction: column;
+                gap: 15px;
+                width: 380px;
+
+                .details-title {
+                    display: flex;
+                    align-items: center;
+                    gap: 12px;
+                    @extend .body-large;
+                    color: $accent-white;
+
+                    img {
+                        width: 24px;
+                        height: 24px;
+                    }
+                }
+
+                .form-input {
+                    width: 100%;
+                    height: 50px;
+                    background-color: $accent-white;
+                    @extend .body-regular;
+                    border-radius: 8px;
+                    padding: 0 16px;
+                    border: none;
+
+                    &:focus {
+                        outline: 2px solid $tertiary-beige;
+                    }
+                }
+            }
+
+            .btn {
+                @extend .button-cta;
+                width: 380px;
+                background-color: $accent-white;
+                color: $primary-navy-blue;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                border-radius: 10px;
+                padding: 12px;
+                gap: 8px;
+                @include hover-lift;
+                @include button-border-animation($accent-black);
+
+                img {
+                    width: 24px;
+                    height: 24px;
+                }
+            }
+
+            .forgot-password a {
+                color: $accent-white;
+                text-decoration: underline;
+            }
+        }
+    }
+}
