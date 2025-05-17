@@ -1,6 +1,6 @@
 import '../scss/main.scss';
 
-const ignorePages = ['/login.html', '/register.html', '/dashboard.html'];
+const ignorePages = ['/login.html', '/register.html', '/dashboard.html', '/sidebar.html'];
 
 document.addEventListener('DOMContentLoaded', () => {
     const path = window.location.pathname;

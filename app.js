@@ -8,8 +8,8 @@ const app = express();
 const port = 3000;
 
 mongoose.connect(process.env.MONGO_URI)
-  .then(() => console.log("MongoDB connected"))
-  .catch(err => console.log(err));
+.then(() => console.log("MongoDB connected"))
+.catch(err => console.log(err));
 
 app.use(express.static(path.join(__dirname, 'dist')));
 app.use(express.json());
@@ -28,7 +28,11 @@ app.get('/register', (req, res) => {
 });
 
 app.get('/dashboard', (req, res) => {
-    res.sendFile(path.join(__dirname, 'dist', 'dahboard.html'));
+    res.sendFile(path.join(__dirname, 'dist', 'dashboard.html'));
+});
+
+app.get('/sidebar', (req, res) => {
+    res.sendFile(path.join(__dirname, 'dist', 'sidebar.html'));
 });
 
 // API Routes

@@ -1,157 +1,79 @@
-@use '../base/colors' as *;
-@use '../base/animations' as *;
+$collapsed-width: 60px;
+$expanded-width: 250px;
+$dark-bg: #111;
+$text-color: #818181;
+$text-hover: #f1f1f1;
 
-.sidebar {
+.sidenav {
+    height: 100%;
+    width: $collapsed-width;
     position: fixed;
-    left: 0;
+    z-index: 1;
     top: 0;
-    height: 100vh;
-    width: 72px; // Start collapsed
-    background-color: $primary-navy-blue;
-    color: $accent-white;
-    padding: 1.5rem 1rem;
-    display: flex;
-    flex-direction: column;
-    transition: all 0.3s ease;
-    box-shadow: 4px 0 10px rgba(0, 0, 0, 0.1);
-    overflow: hidden;
-    z-index: 1000;
+    left: 0;
+    background-color: $dark-bg;
+    overflow-x: hidden;
+    transition: 0.3s;
+    padding-top: 60px;
 
     &:hover {
-        width: 280px;
+        width: $expanded-width;
 
-        .sidebar__text,
-        .sidebar__user-name {
+        span {
             opacity: 1;
-            transform: translateX(0);
-            visibility: visible;
         }
 
-        .sidebar__link {
-            padding: 0.75rem 1rem;
-            justify-content: flex-start;
-        }
-
-        .sidebar__icon {
-            margin-right: 12px;
-        }
-
-        .sidebar__user {
-            justify-content: flex-start;
+        & + #main {
+            margin-left: $expanded-width;
         }
     }
 
-    &__logo {
-        height: 40px;
-        margin-bottom: 2rem;
-
-        &-img {
-            height: 100%;
-            width: auto;
-        }
-    }
-
-    &__nav {
-        flex: 1;
-    }
-
-    &__list {
-        list-style: none;
-        padding: 0;
-        margin: 0;
-    }
-
-    &__item {
-        margin-bottom: 0.5rem;
-    }
-
-    &__link {
+    a {
+        padding: 12px 15px;
+        text-decoration: none;
+        color: $text-color;
         display: flex;
         align-items: center;
-        padding: 0.75rem;
-        border-radius: 8px;
-        color: rgba($accent-white, 0.8);
-        text-decoration: none;
-        transition: all 0.2s ease;
-        justify-content: center;
+        white-space: nowrap;
 
         &:hover {
-            background-color: rgba($accent-white, 0.1);
-            color: $accent-white;
-            transform: translateX(4px);
-        }
-
-        &.active {
-            background-color: rgba($accent-white, 0.15);
-            color: $accent-white;
+            color: $text-hover;
         }
     }
 
-    &__icon {
-        font-size: 1.25rem;
+    img {
         width: 24px;
-        margin-right: 0;
-        transition: margin 0.3s ease;
+        height: 24px;
+        margin-right: 15px;
     }
 
-    &__text,
-    &__user-name {
+    span {
         opacity: 0;
-        transform: translateX(-10px);
-        transition: all 0.3s ease;
-        visibility: hidden;
-        white-space: nowrap;
+        transition: 0.2s;
     }
 
-    &__text {
-        font-size: 0.95rem;
-        font-weight: 500;
-    }
+    &.expanded {
+        width: $expanded-width;
 
-    &__footer {
-        border-top: 1px solid rgba($accent-white, 0.1);
-        padding-top: 1rem;
-    }
-
-    &__user {
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
-        justify-content: center;
-
-        &-avatar {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            object-fit: cover;
-        }
-
-        &-name {
-            font-size: 0.9rem;
-            font-weight: 500;
+        span {
+            opacity: 1;
         }
     }
+}
 
-    // Collapsed state
-    &.collapsed {
-        width: 72px;
+#main {
+    margin-left: $collapsed-width;
+    padding: 20px;
+    transition: 0.3s;
 
-        .sidebar__text,
-        .sidebar__user-name {
-            display: none;
-        }
-
-        .sidebar__link {
-            justify-content: center;
-            padding: 0.75rem;
-        }
-
-        .sidebar__icon {
-            margin-right: 0;
-        }
-
-        .sidebar__user {
-            justify-content: center;
-        }
+    &.shifted {
+        margin-left: $expanded-width;
     }
+}
+
+.toggle-btn {
+    font-size: 24px;
+    cursor: pointer;
+    background: none;
+    border: none;
 }
