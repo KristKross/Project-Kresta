@@ -7,9 +7,10 @@ $font-staatliches: 'Staatliches', sans-serif;
 
 // Display 1
 .display-1 {
-  font-family: $font-cardo;
-  font-weight: 700;
+  font-family: $font-staatliches;
+  font-weight: 500;
   line-height: 110%;
+  letter-spacing: 2px;
 
   @include mobile {
     font-size: 40px;
@@ -26,9 +27,11 @@ $font-staatliches: 'Staatliches', sans-serif;
 
 // Heading 1
 .h1 {
-  font-family: $font-cardo;
-  font-weight: 700;
+  font-family: $font-staatliches;
+  font-weight: 500;
   line-height: 120%;
+  letter-spacing: 2px;
+
 
   @include mobile {
     font-size: 32px;
@@ -45,9 +48,10 @@ $font-staatliches: 'Staatliches', sans-serif;
 
 // Heading 2
 .h2 {
-  font-family: $font-cardo;
-  font-weight: 700;
+  font-family: $font-staatliches;
+  font-weight: 500;
   line-height: 120%;
+  letter-spacing: 2px;
 
   @include mobile {
     font-size: 28px;
@@ -64,8 +68,8 @@ $font-staatliches: 'Staatliches', sans-serif;
 
 // Heading 3
 .h3 {
-  font-family: $font-cardo;
-  font-weight: 700;
+  font-family: $font-staatliches;
+  font-weight: 500;
   line-height: 130%;
 
   @include mobile {
@@ -103,7 +107,7 @@ $font-staatliches: 'Staatliches', sans-serif;
 
 // Subtitle
 .subtitle {
-  font-family: $font-red-hat;
+  font-family: $font-cardo;
   font-weight: 500;
   line-height: 130%;
 
@@ -199,7 +203,7 @@ $font-staatliches: 'Staatliches', sans-serif;
 
 // Navigation Primary
 .nav-primary {
-  font-family: $font-staatliches;
+  font-family: $font-red-hat;
   font-weight: 400;
   line-height: 120%;
 
@@ -218,7 +222,7 @@ $font-staatliches: 'Staatliches', sans-serif;
 
 // Navigation Secondary
 .nav-secondary {
-  font-family: $font-staatliches;
+  font-family: $font-red-hat;
   font-weight: 400;
   line-height: 120%;
 

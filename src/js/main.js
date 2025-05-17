@@ -1,21 +1,26 @@
 import '../scss/main.scss';
-import logo from '../assets/images/logo.png';
+
+const ignorePages = ['/login.html', '/register.html', '/dashboard.html'];
 
 document.addEventListener('DOMContentLoaded', () => {
+    const path = window.location.pathname;
+    if (ignorePages.includes(path)) return;
     const header = document.createElement('header');
     fetch('../templates/navbar.html')   
         .then(response => response.text())
         .then(data => {
             header.innerHTML = data;
             document.body.insertBefore(header, document.body.firstChild);
-
-            // Set logo in navbar section
-            const logoImg = document.querySelector('.logo');
-            if (logoImg) {
-                logoImg.src = logo;
-            } else {
-                console.error('Logo image not found');
-            }
         })
-    .catch(error => console.error('Error fetching navbar:', error));
+        .catch(error => console.error('Error fetching navbar:', error));
+
+    // Add footer
+    const footer = document.createElement('footer');
+    fetch('../templates/footer.html')   
+        .then(response => response.text())
+        .then(data => {
+            footer.innerHTML = data;
+            document.body.appendChild(footer); // Append footer at the end of body
+        })
+        .catch(error => console.error('Error fetching footer:', error));
 });

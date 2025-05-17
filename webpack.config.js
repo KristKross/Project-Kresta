@@ -2,7 +2,6 @@ const path = require('path');
 const dotenv = require('dotenv');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const CopyPlugin = require('copy-webpack-plugin');
 const NodemonPlugin = require('nodemon-webpack-plugin');
 
 dotenv.config();
@@ -12,7 +11,13 @@ module.exports = {
     mode: MODE,
     entry: {
         main: "./src/js/main.js",
-        index: "./src/js/index.js",
+        login: "./src/js/login.js",
+        register: "./src/js/register.js",
+    },
+    optimization: {
+        splitChunks: {
+            chunks: 'all',
+        },
     },
     output: {
         filename: "js/[name].[contenthash].js",
@@ -20,22 +25,47 @@ module.exports = {
         publicPath: '/', 
     },
     plugins: [
-        new CopyPlugin({
-            patterns: [
-                { from: 'src/templates', to: 'templates' },
-            ],
+        new HtmlWebpackPlugin({
+            filename: 'templates/navbar.html',
+            template: './src/templates/navbar.html',
+            inject: false,
+            chunks: ['main'],
         }),
         new HtmlWebpackPlugin({
-            filename: 'navbar.html',
-            template: './src/templates/navbar.html',
+            filename: 'templates/footer.html',
+            template: './src/templates/footer.html',
+            inject: false,
+            chunks: ['main'],
+        }),
+        new HtmlWebpackPlugin({
+            filename: 'templates/footer.html',
+            template: './src/templates/footer.html',
             inject: false,
         }),
         new HtmlWebpackPlugin({
             filename: 'index.html', 
             template: './src/index.html',
             inject: 'body',
-            chunks: ['main', 'index'],
+            chunks: ['main'],
         }),
+        new HtmlWebpackPlugin({
+            filename: 'login.html',
+            template: './src/login.html',
+            inject: 'body',
+            chunks: ['main', 'login'],
+        }),
+        new HtmlWebpackPlugin({
+            filename: 'register.html',
+            template: './src/register.html',
+            inject: 'body',
+            chunks: ['main', 'register'],
+        }),        
+        new HtmlWebpackPlugin({
+            filename: 'dashboard.html',
+            template: './src/dashboard.html',
+            inject: 'body',
+            chunks: ['main', 'dashboard'],
+        }),        
         ...(MODE === 'production' ? [
             new MiniCssExtractPlugin({
                 filename: "css/[name].[contenthash].css",
@@ -100,9 +130,9 @@ module.exports = {
     },
     devServer: {
         static: path.resolve(__dirname, 'dist'),
-        port: 3000,
+        port: 3001,
         open: true,
-        historyApiFallback: true,
+        historyApiFallback: false,
         watchFiles: [
             './src/**/*.html',
             './src/**/*.scss',
