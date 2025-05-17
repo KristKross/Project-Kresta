@@ -13,6 +13,7 @@ module.exports = {
         main: "./src/js/main.js",
         login: "./src/js/login.js",
         register: "./src/js/register.js",
+        register: "./src/js/sidebar.js",
     },
     optimization: {
         splitChunks: {
@@ -42,6 +43,12 @@ module.exports = {
             template: './src/templates/footer.html',
             inject: false,
         }),
+        new HtmlWebpackPlugin({
+            filename: 'sidebar.html',
+            template: './src/templates/sidebar.html',
+            inject: 'body',
+            chunks: ['main'],
+        }),        
         new HtmlWebpackPlugin({
             filename: 'index.html', 
             template: './src/index.html',
