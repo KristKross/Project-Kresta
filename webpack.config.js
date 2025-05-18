@@ -13,6 +13,11 @@ module.exports = {
         main: "./src/js/main.js",
         login: "./src/js/login.js",
         register: "./src/js/register.js",
+        dashboard: "./src/js/dashboard.js",
+        analytics: "./src/js/analytics.js",
+        planner: "./src/js/planner.js",
+        tasks: "./src/js/tasks.js",
+        profile: "./src/js/profile.js",
     },
     optimization: {
         splitChunks: {
@@ -38,11 +43,6 @@ module.exports = {
             chunks: ['main'],
         }),
         new HtmlWebpackPlugin({
-            filename: 'templates/footer.html',
-            template: './src/templates/footer.html',
-            inject: false,
-        }),
-        new HtmlWebpackPlugin({
             filename: 'index.html', 
             template: './src/index.html',
             inject: 'body',
@@ -65,7 +65,31 @@ module.exports = {
             template: './src/dashboard.html',
             inject: 'body',
             chunks: ['main', 'dashboard'],
-        }),        
+        }),    
+        new HtmlWebpackPlugin({
+            filename: 'analytics.html',
+            template: './src/analytics.html',
+            inject: 'body',
+            chunks: ['main', 'analytics'],
+        }),
+        new HtmlWebpackPlugin({
+            filename: 'planner.html',
+            template: './src/planner.html',
+            inject: 'body',
+            chunks: ['main', 'planner'],
+        }),
+        new HtmlWebpackPlugin({
+            filename: 'tasks.html',
+            template: './src/tasks.html',
+            inject: 'body',
+            chunks: ['main', 'tasks'],
+        }),
+        new HtmlWebpackPlugin({
+            filename: 'profile.html',
+            template: './src/profile.html',
+            inject: 'body',
+            chunks: ['main', 'profile'],
+        }),
         ...(MODE === 'production' ? [
             new MiniCssExtractPlugin({
                 filename: "css/[name].[contenthash].css",
