@@ -17,6 +17,7 @@ module.exports = {
         analytics: "./src/js/analytics.js",
         planner: "./src/js/planner.js",
         tasks: "./src/js/tasks.js",
+        notification: "./src/js/notification.js",
         profile: "./src/js/profile.js",
     },
     optimization: {
@@ -83,6 +84,12 @@ module.exports = {
             template: './src/tasks.html',
             inject: 'body',
             chunks: ['main', 'tasks'],
+        }),
+        new HtmlWebpackPlugin({
+            filename: 'notification.html',
+            template: './src/notification.html',
+            inject: 'body',
+            chunks: ['main', 'notification'],
         }),
         new HtmlWebpackPlugin({
             filename: 'profile.html',
