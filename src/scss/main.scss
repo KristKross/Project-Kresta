@@ -13,6 +13,11 @@
 @use 'pages/navbar';
 @use 'pages/footer';
 @use 'pages/login';
+@use 'pages/analytics';
+@use 'pages/dashboard';
+@use 'pages/notifications';
+@use 'pages/planner';
+@use 'pages/tasks';
 
 //RESPONSIVE STYLES
 @use 'responsive-styles/navbar-breakpoints';
