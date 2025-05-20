@@ -1,4 +1,5 @@
 const User = require("../models/User");
+const { initializeSession } = require("../utils/sessionUtil");
 const bcrypt = require("bcrypt");
 
 // @route   POST /auth/register
@@ -27,7 +28,16 @@ exports.register = async (req, res) => {
         const hashedPassword = await bcrypt.hash(password, 10);
 
         // Create a new User record with passwordHash stored directly
-        await new User({ username, email, passwordHash: hashedPassword }).save();
+        const newUser = await new User({ username, email, passwordHash: hashedPassword }).save();
+
+        // Initialize user session
+        initializeSession(req, 
+            { user: { 
+                _id: newUser._id, 
+                username, 
+                email 
+            } 
+        });
 
         res.status(201).json({ success: true, message: "User registered and logged in successfully!" });
     } catch (error) {
@@ -55,10 +65,37 @@ exports.login = async (req, res) => {
             return res.status(400).json({ success: false, message: "Invalid email or password" });
         }
 
+        // Initialize user session
+        initializeSession(req, {
+            user: {
+                _id: user._id,
+                username: user.username,
+                email: user.email,
+            },
+        });
+
         res.json({ success: true, message: "Login successful" });
 
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: "Error logging in. Please try again later." });
+    }
+};
+
+// @route   GET /api/auth/user
+exports.getUser = async (req, res) => {
+    try {
+        const user = req.session?.userData?.user;
+        if (!user) {
+            return res.status(401).json({ authenticated: false });
+        }
+
+        res.json({
+            authenticated: true,
+            user,
+        });
+    } catch (error) {
+        console.error("Error fetching user data:", error);
+        res.status(500).json({ message: "Error retrieving user details" });
     }
 };
