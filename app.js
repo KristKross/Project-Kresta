@@ -2,19 +2,24 @@ require("dotenv").config();
 const express = require('express');
 const path = require('path');
 const mongoose = require("mongoose");
+const cors = require("cors");
+const sessionMiddleware = require("./config/session");
 
 const app = express();
 
-const port = 3000;
-
+// Database connection
 mongoose.connect(process.env.MONGO_URI)
-  .then(() => console.log("MongoDB connected"))
-  .catch(err => console.log(err));
+.then(() => console.log("MongoDB connected"))
+.catch(err => console.log(err));
 
+// Middleware
 app.use(express.static(path.join(__dirname, 'dist')));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cors());
+app.use(sessionMiddleware);
 
+// Serve static files
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'dist', 'index.html'));
 });
@@ -28,13 +33,17 @@ app.get('/register', (req, res) => {
 });
 
 app.get('/dashboard', (req, res) => {
-    res.sendFile(path.join(__dirname, 'dist', 'dahboard.html'));
+    res.sendFile(path.join(__dirname, 'dist', 'dashboard.html'));
+});
+
+app.get('/sidebar', (req, res) => {
+    res.sendFile(path.join(__dirname, 'dist', 'sidebar.html'));
 });
 
 // API Routes
 const authRoutes = require("./routes/authRoute");
 app.use('/auth', authRoutes);
 
-app.listen(port, () => { 
-    console.log(`Server running at http://localhost:${port}`);
-});
+// Start the server
+const PORT = process.env.PORT;
+app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));

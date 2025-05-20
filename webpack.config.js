@@ -11,6 +11,7 @@ module.exports = {
     mode: MODE,
     entry: {
         main: "./src/js/main.js",
+        index: "./src/js/index.js",
         login: "./src/js/login.js",
         register: "./src/js/register.js",
         dashboard: "./src/js/dashboard.js",
@@ -47,7 +48,7 @@ module.exports = {
             filename: 'index.html', 
             template: './src/index.html',
             inject: 'body',
-            chunks: ['main'],
+            chunks: ['main', 'index'],
         }),
         new HtmlWebpackPlugin({
             filename: 'login.html',
