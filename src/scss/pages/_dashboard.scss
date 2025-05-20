@@ -1,0 +1,148 @@
+@use '../base/animations' as *;
+@use '../base/typography' as *;
+@use '../base/animations' as *;
+@use '../base/colors' as *;
+@use '../base/breakpoints' as *;
+
+.title-header{
+    background-color: $primary-navy-blue;
+    color: $accent-white;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 9vh;
+    gap: 50px;
+    .title-h1{
+        @extend .h1;
+        // padding: 0px 150px; // Add some padding
+        gap: 50px;
+        // margin-bottom: 20px; // Add some space below the title
+    }
+}
+
+.h1{
+    @extend .h1;
+    color: $accent-white;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px; // Add some padding
+    gap: 50px;
+    width: 100%;
+    background-color: $primary-navy-blue;
+    // flex: 1; // This makes the title take up available space
+    // flex-direction: row;
+}
+
+.dashboard-container{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    min-height: 90vh; // Add this to give container full viewport height
+    padding: 20px; // Add some padding
+    gap: 20px; // Add spacing between flex items
+
+    .vertical-separator{
+        width: 5px;
+        height: 80vh;
+        background-color: $accent-black;
+        align-self: center; // Add this to center the separator vertically
+    }
+
+    .dashboard-tasks{
+        min-width: 30vw;
+
+        @extend .body-regular;
+        display: flex;
+        gap: 30px;
+        flex-direction: column;
+        .date{
+            @extend .subtitle;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 10px; // Add space between date and line
+            
+            .line-fill{
+                flex: 1; // This makes the line fill remaining space
+                height: 1px;
+                background-color: $accent-black;
+            }
+        }
+
+        .tasks-container{
+            display: flex;
+            flex-direction: column;
+            gap: 30px; // Add space between tasks
+            .task-card{
+                display: flex;
+                flex-direction: column;
+                gap: 30px;
+            }
+        }
+
+        .task-bullet{
+            border-left: 5px solid $primary-navy-blue;
+            padding: 0px 10px;
+        }
+    }
+
+    .dashboard-middle-container{
+        min-width: 30vw;
+;
+
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
+        .dashboard-welcome{
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            justify-content: center;
+            align-items: center;
+            img {
+                width: 40%;
+                height: auto;
+                margin: 0 auto;
+            }
+        }
+        .dashboard-analytics{
+            @extend .body-regular;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            .analytics-card{
+                display: flex;
+                flex-direction: column;
+                gap: 30px;
+            }
+        }
+    }
+
+    .dashboard-workspace{
+        min-width: 30vw;
+
+        .people-list{
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            width: 100%;
+            gap: 20px; // Adding gap for spacing between wrapped items
+            .people-card{
+                padding: 10px 0px;
+                display:flex;
+                flex-direction: column;
+                justify-content: center; // Center the items
+                align-items: center; // Center the items vertically
+            }
+        }
+        
+        img {
+            width: 30%; // Fixed typo from '2o%' to '20%'
+            height: auto;
+            margin: 0 auto;
+        }
+    }
+}
