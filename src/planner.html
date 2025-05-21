@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Content Planner | Project Kresta</title>
+</head>
+<body class="planner-page">
+    <div class="title-header">
+        <h1 class="title-h1">
+            <img src="./assets/icons/dashboard/schedule-post.png" alt="">
+            Content Planner
+        </h1>
+    </div>
+
+    <div class="planner-container">
+        <div class="planner-sidebar">
+            <div class="platform-selector">
+                <div class="h2">Platforms</div>
+                <div class="platform-options">
+                    <label class="platform-checkbox">
+                        <input type="checkbox" checked>
+                        <span>Instagram</span>
+                        <img src="./assets/icons/footer/instagram.png" alt="">
+                    </label>
+                    <label class="platform-checkbox">
+                        <input type="checkbox">
+                        <span>LinkedIn</span>
+                        <img src="./assets/icons/footer/linkedin.png" alt="">
+                    </label>
+                </div>
+            </div>
+
+            <div class="quick-actions">
+                <div class="h2">Quick Actions</div>
+                <button class="action-btn">
+                    <img src="./assets/icons/dashboard/create-post.png" alt="">
+                    Create Post
+                </button>
+                <button class="action-btn">
+                    <img src="./assets/icons/dashboard/schedule-post.png" alt="">
+                    Schedule Post
+                </button>
+            </div>
+        </div>
+
+        <div class="planner-content">
+            <div class="planner-header">
+                <div class="date-nav">
+                    <button class="nav-btn"><img src="./assets/icons/dashboard/arrow-down.png" alt=""></button>
+                    <h2>June 2024</h2>
+                    <button class="nav-btn"><img src="./assets/icons/dashboard/arrow-up.png" alt=""></button>
+                </div>
+            </div>
+
+            <div class="planner-grid">
+                <div class="planner-column today">
+                    <div class="date-header">Today</div>
+                    <div class="post-card">
+                        <div class="post-time">10:00 AM</div>
+                        <img src="./assets/icons/dashboard/sample-post-3.png" alt="">
+                        <div class="post-info">
+                            <p>New product launch 🚀</p>
+                            <div class="post-meta">
+                                <span class="platform-icon">
+                                    <img src="./assets/icons/footer/instagram.png" alt="">
+                                </span>
+                                <span class="status scheduled">Scheduled</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="planner-column">
+                    <div class="date-header">Tomorrow</div>
+                    <div class="post-card draft">
+                        <div class="post-time">Draft</div>
+                        <img src="./assets/icons/dashboard/sample-post-3.png" alt="">
+                        <div class="post-info">
+                            <p>Behind the scenes 📸</p>
+                            <div class="post-meta">
+                                <span class="platform-icon">
+                                    <img src="./assets/icons/footer/linkedin.png" alt="">
+                                </span>
+                                <span class="status draft">Draft</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="planner-column">
+                    <div class="date-header">15 June</div>
+                    <div class="empty-state">
+                        <img src="./assets/icons/dashboard/create-post.png" alt="">
+                        <p>No posts scheduled</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analytics | Project Kresta</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="analytics-page">
+    <div class="title-header">
+        <h1 class="title-h1">
+            <img src="./assets/icons/dashboard/sample-post-3.png" alt="">
+            Analytics
+        </h1>
+    </div>
+
+    <div class="analytics-container">
+        <div class="metrics-overview">
+            <div class="metric-group engagement">
+                <h2>Engagement Metrics</h2>
+                <div class="metric-cards">
+                    <div class="metric-card">
+                        <div class="metric-icon">
+                            <img src="./assets/icons/dashboard/like.png" alt="">
+                        </div>
+                        <div class="metric-data">
+                            <span class="metric-value">1.2K</span>
+                            <span class="metric-label">Likes</span>
+                            <span class="metric-trend positive">+12.5%</span>
+                        </div>
+                    </div>
+                    <!-- Repeat for Comments, Replies, Interactions -->
+                </div>
+            </div>
+
+            <div class="metric-group audience">
+                <h2>Audience Metrics</h2>
+                <div class="metric-cards">
+                    <div class="metric-card">
+                        <div class="metric-icon">
+                            <img src="./assets/icons/dashboard/interactions.png" alt="">
+                        </div>
+                        <div class="metric-data">
+                            <span class="metric-value">5.4K</span>
+                            <span class="metric-label">Followers</span>
+                            <span class="metric-trend positive">+8.3%</span>
+                        </div>
+                    </div>
+                    <!-- Repeat for Views -->
+                </div>
+            </div>
+
+            <div class="metric-group distribution">
+                <h2>Distribution Metrics</h2>
+                <div class="metric-cards">
+                    <!-- Reach and Shares cards -->
+                </div>
+            </div>
+        </div>
+
+        <div class="charts-container">
+            <div class="chart-wrapper">
+                <h3>Performance Overview</h3>
+                <canvas id="groupedBarChart"></canvas>
+            </div>
+
+            <div class="chart-wrapper">
+                <h3>Metric Distribution</h3>
+                <canvas id="radarChart"></canvas>
+            </div>
+
+            <div class="chart-wrapper wide">
+                <h3>Trends Over Time</h3>
+                <canvas id="stackedAreaChart"></canvas>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

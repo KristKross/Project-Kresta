@@ -1,5 +1,183 @@
 @use '../base/animations' as *;
 @use '../base/typography' as *;
-@use '../base/animations' as *;
 @use '../base/colors' as *;
 @use '../base/breakpoints' as *;
+
+// Custom task colors
+$priority-high: #C44536;
+$priority-medium: #D4A418;
+$priority-low: #6B8E6B;
+
+.tasks-page {
+    height: 100vh;
+    overflow: hidden;
+    background-color: $accent-white;
+
+    .tasks-container {
+        height: calc(100vh - 80px);
+        padding: 20px;
+        
+        .tasks-list {
+            max-width: 800px;
+            margin: 0 auto;
+            
+            .tasks-header {
+                margin-bottom: 20px;
+                
+                .create-task-btn {
+                    @extend .button-cta;
+                    display: flex;
+                    align-items: center;
+                    gap: 10px;
+                    
+                    img {
+                        width: 20px;
+                        height: 20px;
+                    }
+                }
+            }
+
+            .task-card {
+                background: white;
+                border-radius: 10px;
+                padding: 20px;
+                margin-bottom: 15px;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+                transition: transform 0.2s ease;
+
+                &:hover {
+                    transform: translateY(-2px);
+                    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+                }
+
+                .task-header {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    margin-bottom: 10px;
+
+                    .task-title {
+                        @extend .body-large;
+                    }
+
+                    .priority {
+                        padding: 4px 8px;
+                        border-radius: 4px;
+                        font-size: 0.8em;
+
+                        &.high { background: $priority-high; color: white; }
+                        &.medium { background: $priority-medium; color: white; }
+                        &.low { background: $priority-low; color: white; }
+                    }
+                }
+
+                .task-meta {
+                    display: flex;
+                    gap: 15px;
+                    margin-bottom: 15px;
+                    font-size: 0.9em;
+
+                    .status {
+                        padding: 4px 8px;
+                        border-radius: 4px;
+                        background: $primary-navy-blue;
+                        color: white;
+                    }
+
+                    .date {
+                        color: $accent-black;
+                    }
+                }
+
+                .task-preview {
+                    @extend .body-regular;
+                    color: $accent-black;
+                    margin-bottom: 15px;
+                    padding-left: 20px;
+                }
+
+                .assignees {
+                    display: flex;
+                    gap: -10px;
+
+                    img {
+                        width: 30px;
+                        height: 30px;
+                        border-radius: 50%;
+                        border: 2px solid white;
+                    }
+                }
+            }
+        }
+    }
+
+    .task-creator-panel {
+        position: fixed;
+        top: 0;
+        right: -400px;
+        width: 400px;
+        height: 100vh;
+        background: white;
+        box-shadow: -2px 0 10px rgba(0,0,0,0.1);
+        transition: right 0.3s ease;
+        padding: 20px;
+
+        &.active {
+            right: 0;
+        }
+
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+
+            .close-panel {
+                background: none;
+                border: none;
+                font-size: 24px;
+                cursor: pointer;
+            }
+        }
+
+        .task-title-input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid rgba($accent-black, 0.1);
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+
+        .task-options {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+
+            select, input {
+                width: 100%;
+                padding: 8px;
+                border: 1px solid rgba($accent-black, 0.1);
+                border-radius: 5px;
+            }
+        }
+
+        .bullet-editor {
+            min-height: 200px;
+            border: 1px solid rgba($accent-black, 0.1);
+            border-radius: 5px;
+            padding: 10px;
+            margin-bottom: 20px;
+
+            &:focus {
+                outline: none;
+                border-color: $primary-navy-blue;
+            }
+        }
+
+        .create-btn {
+            @extend .button-cta;
+            width: 100%;
+        }
+    }
+}

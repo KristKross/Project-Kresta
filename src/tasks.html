@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tasks | Project Kresta</title>
+</head>
+<body class="tasks-page">
+    <div class="title-header">
+        <h1 class="title-h1">
+            <img src="./assets/icons/dashboard/create-task.png" alt="">
+            Tasks
+        </h1>
+    </div>
+
+    <div class="tasks-container">
+        <div class="tasks-list">
+            <div class="tasks-header">
+                <button class="create-task-btn">
+                    <img src="./assets/icons/dashboard/create-task.png" alt="">
+                    Create Task
+                </button>
+            </div>
+
+            <div class="task-card">
+                <div class="task-header">
+                    <h3 class="task-title">Update Social Media Guidelines</h3>
+                    <span class="priority high">High</span>
+                </div>
+                <div class="task-meta">
+                    <span class="status pending">Pending</span>
+                    <span class="date">June 15, 2024</span>
+                </div>
+                <div class="task-preview">
+                    • Review current guidelines
+                    • Update brand voice section
+                    • Add new platform rules
+                </div>
+                <div class="assignees">
+                    <img src="./assets/images/dashboard/user-pfp.png" alt="John Doe">
+                    <img src="./assets/images/dashboard/user-pfp.png" alt="Jane Smith">
+                </div>
+            </div>
+
+            <!-- More task cards... -->
+        </div>
+    </div>
+
+    <!-- Sliding Task Creator Panel -->
+    <div class="task-creator-panel">
+        <div class="panel-header">
+            <h2>Create Task</h2>
+            <button class="close-panel">&times;</button>
+        </div>
+
+        <div class="panel-content">
+            <input type="text" class="task-title-input" placeholder="Task title">
+            
+            <div class="task-options">
+                <div class="option-group">
+                    <label>Priority</label>
+                    <select class="priority-select">
+                        <option value="high">High</option>
+                        <option value="medium">Medium</option>
+                        <option value="low">Low</option>
+                    </select>
+                </div>
+
+                <div class="option-group">
+                    <label>Status</label>
+                    <select class="status-select">
+                        <option value="pending">Pending</option>
+                        <option value="in-progress">In Progress</option>
+                        <option value="completed">Completed</option>
+                    </select>
+                </div>
+
+                <div class="option-group">
+                    <label>Due Date</label>
+                    <input type="date" class="date-input">
+                </div>
+            </div>
+
+            <div class="assignee-selector">
+                <label>Assign to</label>
+                <div class="assignee-list">
+                    <div class="assignee">
+                        <img src="./assets/images/dashboard/user-pfp.png" alt="">
+                        <span>John Doe</span>
+                    </div>
+                    <!-- More assignees... -->
+                </div>
+            </div>
+
+            <div class="task-details">
+                <label>Task Details</label>
+                <div class="bullet-editor" contenteditable="true">
+                    • Type your task details here...
+                </div>
+            </div>
+
+            <button class="create-btn">Create Task</button>
+        </div>
+    </div>
+</body>
+</html>

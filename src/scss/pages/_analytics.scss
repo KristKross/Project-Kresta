@@ -1,5 +1,137 @@
 @use '../base/animations' as *;
 @use '../base/typography' as *;
-@use '../base/animations' as *;
 @use '../base/colors' as *;
 @use '../base/breakpoints' as *;
+
+// Custom colors
+$priority-high: #C44536;
+$priority-medium: #D4A418;
+$priority-low: #6B8E6B;
+
+// Chart colors
+$engagement-color: $primary-navy-blue;
+$audience-color: #6B8E6B;
+$distribution-color: #D4A418;
+
+.analytics-page {
+    height: 100vh;
+    overflow: hidden;
+    background-color: $accent-white;
+
+    .analytics-container {
+        height: calc(100vh - 80px);
+        padding: 20px;
+        display: grid;
+        grid-template-rows: auto 1fr; // This ensures proper distribution
+        gap: 30px;
+        overflow: hidden; // Changed from overflow-y: auto
+
+        .metrics-overview {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+
+            .metric-group {
+                background: white;
+                border-radius: 10px;
+                padding: 20px;
+
+                h2 {
+                    @extend .body-large;
+                    margin-bottom: 15px;
+                }
+
+                .metric-cards {
+                    display: grid;
+                    gap: 15px;
+
+                    .metric-card {
+                        display: flex;
+                        align-items: center;
+                        gap: 15px;
+                        padding: 15px;
+                        border-radius: 8px;
+                        background: rgba($accent-black, 0.02);
+
+                        .metric-icon {
+                            width: 40px;
+                            height: 40px;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            border-radius: 8px;
+
+                            img {
+                                width: 24px;
+                                height: 24px;
+                            }
+                        }
+
+                        .metric-data {
+                            display: flex;
+                            flex-direction: column;
+
+                            .metric-value {
+                                @extend .body-large;
+                                color: $primary-navy-blue;
+                            }
+
+                            .metric-label {
+                                font-size: 0.9em;
+                                color: $accent-black;
+                            }
+
+                            .metric-trend {
+                                font-size: 0.8em;
+
+                                &.positive {
+                                    color: $priority-low;
+                                }
+
+                                &.negative {
+                                    color: $priority-high;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        .charts-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            grid-template-rows: 1fr 1fr; // Fixed height distribution
+            gap: 20px;
+            height: 100%; // Ensure it takes available space
+            overflow: hidden; // Prevent overflow
+
+            .chart-wrapper {
+                background: white;
+                border-radius: 10px;
+                padding: 20px;
+                position: relative; // Added for proper canvas positioning
+                height: 100%; // Take full height of grid cell
+
+                h3 {
+                    @extend .body-large;
+                    margin-bottom: 15px;
+                }
+
+                &.wide {
+                    grid-column: 1 / -1;
+                }
+
+                canvas {
+                    position: absolute; // Position canvas absolutely
+                    top: 50px; // Account for header
+                    left: 20px;
+                    right: 20px;
+                    bottom: 20px;
+                    width: calc(100% - 40px) !important; // Account for padding
+                    height: calc(100% - 70px) !important; // Account for header and padding
+                }
+            }
+        }
+    }
+}
