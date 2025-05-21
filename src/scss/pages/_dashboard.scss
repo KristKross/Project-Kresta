@@ -44,6 +44,77 @@
     padding: 20px; // Add some padding
     gap: 20px; // Add spacing between flex items
 
+    .dashboard-left-container{
+        min-width: 30vw;
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
+        .dashboard-analytics{
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            @extend .body-regular;
+            .engagement-metrics{
+                display: flex;
+                flex-direction: column;
+                gap: 30px;
+                .stat-container{
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: space-between;
+                    .stat-1{
+                        display: flex;
+                        gap:20px;
+                    }
+                    .numbers{
+                        display: flex;
+                        gap:20px;
+                    }
+                }
+            }
+        }
+        .actions-container{
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            .actions{
+                @extend .body-regular;
+                display: flex;
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;  // Center items vertically
+                padding: 20px 30px;   // Add padding for better spacing
+                width: 100%;
+                height: 90px;
+                border: 1px solid $accent-black;
+                border-radius: 10px;
+                margin: auto;
+                text-decoration: none;  // Remove underline from links
+                color: $accent-black;   // Add text color
+                transition: all 0.3s ease; // Smooth hover transition
+            
+                &:hover {
+                    background-color: $primary-navy-blue;
+                    color: $accent-white;
+                    transform: translateY(-2px);
+                    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            
+                    img {
+                        filter: brightness(0) invert(1); // Makes the image white on hover
+                    }
+                }
+            
+                img{
+                    width: 25px;
+                    height: 25px;
+                    object-fit: contain;
+                    filter: brightness(0); // Makes the image black initially
+                    transition: filter 0.3s ease; // Smooth transition for the filter change
+                }
+            }
+        }
+    }
+
     .vertical-separator{
         width: 5px;
         height: 80vh;
@@ -91,8 +162,7 @@
 
     .dashboard-middle-container{
         min-width: 30vw;
-;
-
+        max-width: 35vw; // Add max-width to prevent expansion
         display: flex;
         flex-direction: column;
         gap: 30px;
@@ -117,6 +187,97 @@
                 display: flex;
                 flex-direction: column;
                 gap: 30px;
+            }
+        }
+
+        .content-planner {
+            display: flex;
+            gap: 15px; // Reduced gap between columns
+            padding: 15px;
+            background-color: $accent-white;
+            border-radius: 10px;
+            width: 100%; // Ensure it takes full width of container
+            
+            .planner-column {
+                flex: 1;
+                min-width: 150px; // Reduced min-width
+                max-width: calc(33.33% - 10px); // Set maximum width for each column
+                
+                .date-header {
+                    @extend .body-large;
+                    color: $primary-navy-blue;
+                    padding: 10px;
+                    border-bottom: 2px solid $primary-navy-blue;
+                    margin-bottom: 15px;
+                }
+                
+                .post-preview {
+                    background: white;
+                    border: 1px solid rgba($accent-black, 0.1);
+                    border-radius: 8px;
+                    overflow: hidden;
+                    transition: transform 0.2s ease;
+                    
+                    &:hover {
+                        transform: translateY(-2px);
+                        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+                    }
+                    
+                    img {
+                        width: 100%;
+                        height: 120px; // Reduced height
+                        object-fit: cover;
+                    }
+                    
+                    .post-info {
+                        padding: 8px; // Reduced padding
+                        
+                        .post-text {
+                            @extend .body-regular;
+                            margin-bottom: 8px;
+                            font-size: 0.9em; // Slightly smaller text
+                        }
+                        
+                        .post-stats {
+                            display: flex;
+                            gap: 10px; // Reduced gap
+                            flex-wrap: wrap; // Allow stats to wrap if needed
+                            
+                            span {
+                                font-size: 0.8em; // Smaller text for stats
+                                
+                                img {
+                                    width: 14px; // Smaller icons
+                                    height: 14px;
+                                }
+                            }
+                        }
+                        
+                        .schedule-time {
+                            @extend .body-regular;
+                            color: $primary-navy-blue;
+                            font-size: 0.9em;
+                        }
+                    }
+                    
+                    &.scheduled {
+                        border: 1px solid rgba($primary-navy-blue, 0.3);
+                    }
+                    
+                    &.draft {
+                        background: rgba($accent-black, 0.02);
+                        
+                        .draft-label {
+                            background: $accent-black;
+                            color: $accent-white;
+                            padding: 4px 8px;
+                            font-size: 0.8em;
+                            display: inline-block;
+                            margin: 8px;
+                            border-radius: 4px;
+                        }
+                    }
+                }
             }
         }
     }
