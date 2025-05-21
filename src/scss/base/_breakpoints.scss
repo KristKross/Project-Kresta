@@ -1,21 +1,22 @@
-$mobile: 417px;
-$tablet: 768px;
+// Breakpoint variables
+$mobile: 350px;
+$tablet: 600px;
 $desktop: 1024px;
 
 @mixin mobile {
-  @media screen and (max-width: #{$mobile}) {
-    @content;
-  }
+    @media screen and (max-width: #{$mobile}) {
+        @content;
+    }
 }
 
 @mixin tablet {
-  @media screen and (min-width: #{$mobile + 1}) and (max-width: #{$desktop - 1}) {
-    @content;
-  }
+    @media screen and (min-width: #{$mobile + 1}) and (max-width: #{$desktop - 1}) {
+        @content;
+    }
 }
 
 @mixin desktop {
-  @media screen and (min-width: #{$desktop}) {
-    @content;
-  }
+    @media screen and (min-width: #{$desktop}) {
+        @content;
+    }
 }
