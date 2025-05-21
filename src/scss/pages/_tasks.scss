@@ -163,6 +163,8 @@ $priority-low: #6B8E6B;
         }
 
         .bullet-editor {
+            resize: none;
+            width: 100%;
             min-height: 200px;
             border: 1px solid rgba($accent-black, 0.1);
             border-radius: 5px;
