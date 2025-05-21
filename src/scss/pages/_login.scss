@@ -82,9 +82,16 @@
                 }
             }
 
+            .auth-buttons {
+                width: 380px;
+                display: flex;
+                flex-direction: column;
+                gap: 15px;
+            }
+
             .btn {
                 @extend .button-cta;
-                width: 380px;
+                width: 380px;  // This ensures all buttons are 380px wide
                 background-color: $accent-white;
                 color: $primary-navy-blue;
                 display: flex;
