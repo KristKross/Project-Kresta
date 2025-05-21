@@ -44,6 +44,12 @@ app.get('/sidebar', (req, res) => {
 const authRoutes = require("./routes/authRoute");
 app.use('/auth', authRoutes);
 
+const socialRoutes = require("./routes/socialsRoute");
+app.use('/api/social', socialRoutes);
+
+const instagramRoutes = require("./routes/instagramRoute");
+app.use('/api/instagram', instagramRoutes);
+
 // Start the server
 const PORT = process.env.PORT;
 app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));

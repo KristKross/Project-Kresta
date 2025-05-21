@@ -1,4 +1,5 @@
 const User = require("../models/User");
+const Social = require("../models/Social");
 const { initializeSession } = require("../utils/sessionUtil");
 const bcrypt = require("bcrypt");
 
@@ -29,6 +30,7 @@ exports.register = async (req, res) => {
 
         // Create a new User record with passwordHash stored directly
         const newUser = await new User({ username, email, passwordHash: hashedPassword }).save();
+        await new Social({ userId: newUser._id }).save();
 
         // Initialize user session
         initializeSession(req, 
@@ -90,9 +92,12 @@ exports.getUser = async (req, res) => {
             return res.status(401).json({ authenticated: false });
         }
 
+        const socialData = await Social.findOne({ userId: user._id });
+
         res.json({
             authenticated: true,
             user,
+            social: socialData,
         });
     } catch (error) {
         console.error("Error fetching user data:", error);

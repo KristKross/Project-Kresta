@@ -169,6 +169,10 @@ module.exports = {
             './src/**/*.html',
             './src/**/*.scss',
             './src/**/*.js',
+            './controllers/**/*.js',
+            './models/**/*.js',
+            './routes/**/*.js',
+            './utils/**/*.js',
         ],
     },
 };
