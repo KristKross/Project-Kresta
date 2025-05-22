@@ -20,6 +20,10 @@ module.exports = {
         tasks: "./src/js/tasks.js",
         notification: "./src/js/notification.js",
         profile: "./src/js/profile.js",
+        settings: "./src/js/settings.js",
+        about: "./src/js/about.js",
+        contact: "./src/js/contact.js",
+        pricing: "./src/js/pricing.js",
     },
     optimization: {
         splitChunks: {
@@ -41,6 +45,12 @@ module.exports = {
         new HtmlWebpackPlugin({
             filename: 'templates/footer.html',
             template: './src/templates/footer.html',
+            inject: false,
+            chunks: ['main'],
+        }),
+        new HtmlWebpackPlugin({
+            filename: 'templates/sidebar.html',
+            template: './src/templates/sidebar.html',
             inject: false,
             chunks: ['main'],
         }),
@@ -97,6 +107,30 @@ module.exports = {
             template: './src/profile.html',
             inject: 'body',
             chunks: ['main', 'profile'],
+        }),
+        new HtmlWebpackPlugin({
+            filename: 'settings.html',
+            template: './src/settings.html',
+            inject: 'body',
+            chunks: ['main', 'settings'],
+        }),
+        new HtmlWebpackPlugin({
+            filename: 'about.html',
+            template: './src/about.html',
+            inject: 'body',
+            chunks: ['main', 'about'],
+        }),
+        new HtmlWebpackPlugin({
+            filename: 'contact.html',
+            template: './src/contact.html',
+            inject: 'body',
+            chunks: ['main', 'contact'],
+        }),
+        new HtmlWebpackPlugin({
+            filename: 'pricing.html',
+            template: './src/pricing.html',
+            inject: 'body',
+            chunks: ['main', 'pricing'],
         }),
         ...(MODE === 'production' ? [
             new MiniCssExtractPlugin({
