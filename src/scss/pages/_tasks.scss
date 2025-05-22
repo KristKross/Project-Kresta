@@ -3,6 +3,7 @@
 @use '../base/colors' as *;
 @use '../base/breakpoints' as *;
 @use '../components/buttons' as *;
+@use "sass:color";  // Add this line to import the color module
 
 // Custom task colors
 $priority-high: #C44536;
@@ -41,6 +42,7 @@ $priority-low: #6B8E6B;
             }
 
             .task-card {
+                position: relative;
                 background: white;
                 border-radius: 10px;
                 padding: 20px;
@@ -51,6 +53,10 @@ $priority-low: #6B8E6B;
                 &:hover {
                     transform: translateY(-2px);
                     box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+
+                    .delete-task {
+                        opacity: 1;
+                    }
                 }
 
                 .task-header {
@@ -69,9 +75,18 @@ $priority-low: #6B8E6B;
                         border-radius: 4px;
                         font-size: 0.8em;
 
-                        &.high { background: $priority-high; color: white; }
-                        &.medium { background: $priority-medium; color: white; }
-                        &.low { background: $priority-low; color: white; }
+                        &.high { 
+                            background: $priority-high; 
+                            color: white; 
+                        }
+                        &.medium { 
+                            background: $priority-medium; 
+                            color: white; 
+                        }
+                        &.low { 
+                            background: $priority-low; 
+                            color: white; 
+                        }
                     }
                 }
 
@@ -102,17 +117,110 @@ $priority-low: #6B8E6B;
                     color: $accent-black;
                     margin-bottom: 15px;
                     padding-left: 20px;
-                }
 
-                .assignees {
+                    // Remove the automatic first bullet
+                    // &::before {
+                    //     content: "•";
+                    //     margin-right: 8px;
+                    // }
+
+                    // Only add bullets after line breaks
+                    br + * {
+                        &::before {
+                            content: "•";
+                            margin-right: 8px;
+                        }
+                    }
+                }                .assignees {
                     display: flex;
                     gap: -10px;
 
+                    .assignee-wrapper {
+                        position: relative;
+
+                        img {
+                            width: 30px;
+                            height: 30px;
+                            border-radius: 50%;
+                            border: 2px solid white;
+                            cursor: pointer;
+                            transition: transform 0.2s ease;
+
+                            &:hover {
+                                transform: scale(1.1);
+                                & + .assignee-tooltip {
+                                    opacity: 1;
+                                    visibility: visible;
+                                    transform: translateY(0) translateX(-50%);
+                                }
+                            }
+                        }
+
+                        .assignee-tooltip {
+                            @extend .body-regular;
+                            position: absolute;
+                            bottom: calc(100% + 10px);
+                            left: 50%;
+                            transform: translateY(5px) translateX(-50%);
+                            background: $primary-navy-blue;
+                            color: white;
+                            padding: 8px 16px;
+                            border-radius: 6px;
+                            font-size: 0.9em;
+                            white-space: nowrap;
+                            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+                            opacity: 0;
+                            visibility: hidden;
+                            transition: all 0.2s ease;
+                            z-index: 100;
+
+                            &::after {
+                                content: '';
+                                position: absolute;
+                                top: 100%;
+                                left: 50%;
+                                transform: translateX(-50%);
+                                border: 8px solid transparent;
+                                border-top-color: $primary-navy-blue;
+                            }
+                        }
+                    }
+                }
+
+                .delete-task {
+                    position: absolute;
+                    bottom: 10px;
+                    right: 10px;
+                    background: none;
+                    border: none;
+                    cursor: pointer;
+                    opacity: 0;
+                    transition: opacity 0.3s ease;
+                    padding: 8px 12px;
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;
+                    border-radius: 4px;
+                    background-color: rgba($priority-high, 0.1);
+                    color: $priority-high;
+
                     img {
-                        width: 30px;
-                        height: 30px;
-                        border-radius: 50%;
-                        border: 2px solid white;
+                        width: 16px;
+                        height: 16px;
+                    }
+
+                    span {
+                        @extend .body-regular;
+                        font-size: 0.9em;
+                    }
+
+                    &:hover {
+                        background-color: $priority-high;
+                        color: white;
+
+                        img {
+                            filter: brightness(0) invert(1);
+                        }
                     }
                 }
             }
@@ -297,6 +405,90 @@ $priority-low: #6B8E6B;
             @extend .button-cta;
             @include action-button;
             width: 100%;
+
+            img{
+                width: 35px;
+                height: 35px;
+            }
+        }
+    }
+
+    .delete-confirmation-dialog {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba($accent-black, 0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+        z-index: 1000;
+
+        &.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .dialog-content {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            width: 400px;
+            transform: translateY(20px);
+            transition: transform 0.3s ease;
+
+            h3 {
+                @extend .body-large;
+                color: $priority-high;
+                margin-bottom: 15px;
+            }
+
+            p {
+                @extend .body-regular;
+                color: $accent-black;
+                margin-bottom: 20px;
+            }
+
+            .dialog-buttons {
+                display: flex;
+                justify-content: flex-end;
+                gap: 10px;
+
+                button {
+                    padding: 8px 20px;
+                    border-radius: 5px;
+                    border: none;
+                    cursor: pointer;
+                    @extend .body-regular;
+                    transition: all 0.2s ease;
+
+                    &.cancel-delete {
+                        background: rgba($accent-black, 0.1);
+                        color: $accent-black;
+
+                        &:hover {
+                            background: rgba($accent-black, 0.2);
+                        }
+                    }
+
+                    &.confirm-delete {
+                        background: $priority-high;
+                        color: white;
+
+                        &:hover {
+                            background: color.adjust($priority-high, $lightness: -10%);
+                        }
+                    }
+                }
+            }
+        }
+
+        &.active .dialog-content {
+            transform: translateY(0);
         }
     }
 }
