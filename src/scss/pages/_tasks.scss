@@ -2,6 +2,7 @@
 @use '../base/typography' as *;
 @use '../base/colors' as *;
 @use '../base/breakpoints' as *;
+@use '../components/buttons' as *;
 
 // Custom task colors
 $priority-high: #C44536;
@@ -25,14 +26,16 @@ $priority-low: #6B8E6B;
                 margin-bottom: 20px;
                 
                 .create-task-btn {
-                    @extend .button-cta;
+                    @include action-button;
+                    @extend .body-large;
                     display: flex;
                     align-items: center;
                     gap: 10px;
+
                     
                     img {
-                        width: 20px;
-                        height: 20px;
+                        width: 40px;
+                        height: 40px;
                     }
                 }
             }
@@ -51,6 +54,7 @@ $priority-low: #6B8E6B;
                 }
 
                 .task-header {
+                    @extend .body-large;
                     display: flex;
                     justify-content: space-between;
                     align-items: center;
@@ -78,6 +82,7 @@ $priority-low: #6B8E6B;
                     font-size: 0.9em;
 
                     .status {
+                        @extend .body-regular;
                         padding: 4px 8px;
                         border-radius: 4px;
                         background: $primary-navy-blue;
@@ -85,11 +90,14 @@ $priority-low: #6B8E6B;
                     }
 
                     .date {
+                        @extend .body-regular;
                         color: $accent-black;
                     }
                 }
 
                 .task-preview {
+                    display: flex;
+                    flex-direction: column;
                     @extend .body-regular;
                     color: $accent-black;
                     margin-bottom: 15px;
@@ -126,12 +134,118 @@ $priority-low: #6B8E6B;
             right: 0;
         }
 
+        .panel-content {
+            .assignee-selector {
+                @extend .body-regular;
+                margin-bottom: 20px;
+
+                label {
+                    display: block;
+                    margin-bottom: 8px;
+                }
+
+                .custom-select {
+                    position: relative;
+                    width: 100%;
+
+                    .select-header {
+                        display: flex;
+                        align-items: center;
+                        gap: 10px;
+                        padding: 8px 12px;
+                        border: 1px solid rgba($accent-black, 0.1);
+                        border-radius: 5px;
+                        cursor: pointer;
+                        background: white;
+
+                        img {
+                            width: 24px;
+                            height: 24px;
+                            border-radius: 50%;
+                            object-fit: cover;
+
+                            &.dropdown-arrow {
+                                width: 12px;
+                                height: 12px;
+                                border-radius: 0;
+                                margin-left: auto;
+                            }
+                        }
+                    }
+
+                    .select-options {
+                        position: absolute;
+                        top: 100%;
+                        left: 0;
+                        right: 0;
+                        background: white;
+                        border: 1px solid rgba($accent-black, 0.1);
+                        border-radius: 5px;
+                        margin-top: 4px;
+                        max-height: 200px;
+                        overflow-y: auto;
+                        display: none;
+                        z-index: 100;
+
+                        .option {
+                            display: flex;
+                            align-items: center;
+                            gap: 10px;
+                            padding: 8px 12px;
+                            cursor: pointer;
+
+                            &:hover {
+                                background: rgba($accent-black, 0.05);
+                            }
+
+                            img {
+                                width: 24px;
+                                height: 24px;
+                                border-radius: 50%;
+                                object-fit: cover;
+                            }
+                        }
+                    }
+
+                    &.active {
+                        .select-options {
+                            display: block;
+                        }
+
+                        .dropdown-arrow {
+                            transform: rotate(180deg);
+                        }
+                    }
+                }
+            }
+
+            .task-details{
+                @extend .body-regular;
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+
+                .task-priority {
+                    display: flex;
+                    gap: 10px;
+
+                    select {
+                        width: 100%;
+                        padding: 8px;
+                        border-radius: 5px;
+                        border: 1px solid rgba($accent-black, 0.1);
+                    }
+                }
+            }
+        }
+        
         .panel-header {
+            @extend .body-regular;
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 20px;
-
+            
             .close-panel {
                 background: none;
                 border: none;
@@ -139,8 +253,9 @@ $priority-low: #6B8E6B;
                 cursor: pointer;
             }
         }
-
+        
         .task-title-input {
+            @extend .body-regular;
             width: 100%;
             padding: 10px;
             border: 1px solid rgba($accent-black, 0.1);
@@ -149,6 +264,7 @@ $priority-low: #6B8E6B;
         }
 
         .task-options {
+            @extend .body-regular;
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 15px;
@@ -179,6 +295,7 @@ $priority-low: #6B8E6B;
 
         .create-btn {
             @extend .button-cta;
+            @include action-button;
             width: 100%;
         }
     }
