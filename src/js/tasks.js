@@ -124,13 +124,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const newTask = createTaskCard(taskData);
         tasksList.insertBefore(newTask, tasksList.querySelector('.task-card'));
-        
-        // Reset form and close panel
+          // Reset form and close panel
         taskForm.reset();
-        document.querySelector('.task-creator-panel').classList.remove('active');
-    });
-
-    // Enhanced bullet editor
+        const panel = document.querySelector('.task-creator-panel');
+        if (isMobileView()) {
+            panel.style.transform = 'translateY(100%)';
+            panel.addEventListener('transitionend', () => {
+                panel.classList.remove('active');
+                // Keep mobile positioning after close
+                panel.style.position = 'fixed';
+                panel.style.bottom = '0';
+                panel.style.right = '0';
+                panel.style.left = '0';
+                panel.style.width = '100%';
+            }, { once: true });
+        } else {
+            panel.classList.remove('active');
+            cleanupPanelStyles(panel);
+        }
+    });    // Enhanced bullet editor
     bulletEditor.addEventListener('keydown', (e) => {
         if (e.key === 'Enter') {
             e.preventDefault();
@@ -140,13 +152,105 @@ document.addEventListener('DOMContentLoaded', () => {
             bulletEditor.value = newValue;
             bulletEditor.selectionStart = bulletEditor.selectionEnd = cursorPosition + 1;
         }
+    });    // Helper function to check if we're in mobile view
+    function isMobileView() {
+        return window.matchMedia('(max-width: 600px)').matches;
+    }
+
+    // Handle body scroll locking with position preservation
+    function toggleBodyScroll(lock) {
+        if (lock) {
+            // Store current scroll position
+            const scrollY = window.scrollY;
+            document.body.style.position = 'fixed';
+            document.body.style.width = '100%';
+            document.body.style.top = `-${scrollY}px`;
+            document.body.style.overflow = 'hidden';
+        } else {
+            // Restore scroll position
+            const scrollY = document.body.style.top;
+            document.body.style.position = '';
+            document.body.style.width = '';
+            document.body.style.top = '';
+            document.body.style.overflow = '';
+            window.scrollTo(0, parseInt(scrollY || '0') * -1);
+        }
+    }
+
+    // Function to clean up inline styles
+    function cleanupPanelStyles(panel) {
+        if (isMobileView()) {
+            // In mobile, preserve required styles
+            const requiredStyles = {
+                position: 'fixed',
+                bottom: '0',
+                right: '0',
+                left: '0',
+                width: '100%',
+                height: '90vh',
+                transform: 'translateY(100%)',
+                transition: 'transform 0.3s ease-in-out'
+            };
+            
+            Object.assign(panel.style, requiredStyles);
+        } else {
+            // In desktop, remove all inline styles
+            panel.style.cssText = '';
+        }
+    }
+
+    // Initialize panel position based on view
+    function initializePanelPosition(panel) {
+        cleanupPanelStyles(panel);
+        
+        // Add smooth transition for both views
+        panel.style.transition = 'transform 0.3s ease-in-out';
+        
+        if (isMobileView()) {
+            panel.style.transform = 'translateY(100%)';
+        }
+    }
+
+    const panel = document.querySelector('.task-creator-panel');
+
+    // Handle resize events
+    let resizeTimer;
+    window.addEventListener('resize', () => {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(() => {
+            if (panel.classList.contains('active')) {
+                cleanupPanelStyles(panel);
+                initializePanelPosition(panel);
+                if (isMobileView()) {
+                    panel.style.transform = 'translateY(0)';
+                }
+            } else {
+                cleanupPanelStyles(panel);
+                initializePanelPosition(panel);
+            }
+        }, 250);
+    });    // Handle panel opening
+    document.querySelector('.create-task-btn').addEventListener('click', () => {
+        initializePanelPosition(panel);
+        panel.classList.add('active');
+        if (isMobileView()) {
+            toggleBodyScroll(true);
+            requestAnimationFrame(() => {
+                panel.style.transform = 'translateY(0)';
+            });
+        }
+    });    // Handle panel closing
+    document.querySelector('.close-panel').addEventListener('click', () => {
+        if (isMobileView()) {
+            panel.style.transform = 'translateY(100%)';
+            panel.addEventListener('transitionend', () => {
+                panel.classList.remove('active');
+                cleanupPanelStyles(panel);
+                toggleBodyScroll(false);
+            }, { once: true });
+        } else {
+            panel.classList.remove('active');
+            cleanupPanelStyles(panel);
+        }
     });
-});
-
-document.querySelector('.create-task-btn').addEventListener('click', () => {
-    document.querySelector('.task-creator-panel').classList.add('active');
-});
-
-document.querySelector('.close-panel').addEventListener('click', () => {
-    document.querySelector('.task-creator-panel').classList.remove('active');
 });

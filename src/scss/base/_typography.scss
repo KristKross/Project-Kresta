@@ -145,23 +145,18 @@ $font-staatliches: 'Staatliches', sans-serif;
 }
 
 // Body Regular
-.body-regular {
-  font-family: $font-red-hat;
-  font-weight: 400;
-  line-height: 150%;
-
-  @include mobile {
+@mixin body-regular {
+    font-family: $font-red-hat;
+    font-weight: 400;
+    line-height: 150%;
     font-size: 16px;
-  }
-
-  @include tablet {
-    font-size: 18px;
-  }
-
-  @include desktop {
-    font-size: 20px;
-  }
+    
+    @include mobile { font-size: 16px; }
+    @include tablet { font-size: 18px; }
+    @include desktop { font-size: 20px; }
 }
+
+.body-regular { @include body-regular; }
 
 // Button CTA
 .button-cta {

@@ -28,8 +28,11 @@
     <!-- Sliding Task Creator Panel -->
     <div class="task-creator-panel">
         <div class="panel-header">
-            <h2>Create Task</h2>
-            <button class="close-panel">&times;</button>
+            <div class="title-container">
+                <h2>Create Task</h2>
+                <button class="close-panel"><img src="./assets/icons/close.png" alt=""></button>
+            </div>
+            <div class="seperator"></div>
         </div>
 
         <form class="panel-content">            <input type="text" class="task-title-input" placeholder="Task title" required>
@@ -66,8 +69,8 @@
                 <div class="custom-select">
                     <div class="select-header">
                         <img src="../src/assets/images/dashboard/user-pfp.png" alt="">
-                        <span>Select assignee</span>
-                        <img src="../src/assets/icons/dashboard/arrow-down.png" alt="" class="dropdown-arrow">
+                        <span>Select Assignee</span>
+                        <img src="../src/assets/icons/tasks/arrow-down.png" alt="" class="dropdown-arrow">
                     </div>
                     <div class="select-options">
                         <div class="option" data-value="john">

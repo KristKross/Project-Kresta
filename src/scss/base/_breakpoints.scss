@@ -1,7 +1,7 @@
 // Breakpoint variables
-$mobile: 350px;
-$tablet: 600px;
-$desktop: 1024px;
+$mobile: 600px;
+$tablet: 1024px;
+$desktop: 1200px;
 
 @mixin mobile {
     @media screen and (max-width: #{$mobile}) {
