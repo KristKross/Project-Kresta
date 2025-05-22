@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
             header.innerHTML = data;
             document.body.insertBefore(header, document.body.firstChild);
         })
-        .catch(error => console.error('Error fetching navbar:', error));
+    .catch(error => console.error('Error fetching navbar:', error));
 
     // Add footer
     const footer = document.createElement('footer');
@@ -23,4 +23,14 @@ document.addEventListener('DOMContentLoaded', () => {
             document.body.appendChild(footer); // Append footer at the end of body
         })
         .catch(error => console.error('Error fetching footer:', error));
+
+    // Add sidebar
+    const sidebar = document.createElement('aside');
+    fetch('../templates/sidebar.html')   
+        .then(response => response.text())
+        .then(data => {
+            sidebar.innerHTML = data;
+            document.body.insertBefore(sidebar, document.body.firstChild);
+        })
+    .catch(error => console.error('Error fetching sidebar:', error));
 });
