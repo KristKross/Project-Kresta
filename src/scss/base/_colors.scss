@@ -17,6 +17,9 @@ $ui-surface: #F8F9FA;
 $ui-border: #E9ECEF;
 $ui-hover: #F1F3F5;
 
-// Status Colors
-$status-success: #2ECC71;
-$status-error: #E74C3C;
+// Status Colors (using our existing color palette)
+$status-draft: $accent-black;
+$status-scheduled: $primary-navy-blue;
+$status-success: #6B8E6B;  // Using priority-low
+$status-error: #C44536;    // Using priority-high
+$status-warning: #D4A418;  // Using priority-medium

@@ -90,19 +90,134 @@ body.dragging-post {
                         cursor: pointer;
                         
                         img {
-                            width: 24px;
-                            height: 24px;
+                            width: 50px;
+                            height: 50px;
+                        }
+                    }
+                }
+                .header-controls {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    margin-bottom: 20px;
+
+                    .view-toggle {
+                        display: flex;
+                        gap: 2px;
+                        background: rgba($primary-navy-blue, 0.1);
+                        padding: 4px;
+                        border-radius: 8px;
+
+                        .view-btn {
+                            padding: 8px 16px;
+                            border: none;
+                            background: none;
+                            border-radius: 6px;
+                            cursor: pointer;
+                            color: $primary-navy-blue;
+                            font-weight: 500;
+                            transition: all 0.2s ease;
+
+                            &.active {
+                                background: white;
+                                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                            }
+
+                            &:hover:not(.active) {
+                                background: rgba(white, 0.5);
+                            }
                         }
                     }
                 }
             }
 
             .planner-grid {
-                display: grid;
-                grid-template-columns: repeat(3, 1fr);
-                gap: 20px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
                 height: calc(100vh - 200px);
-                
+
+                .day-labels {
+                    display: grid;
+                    grid-template-columns: repeat(7, 1fr);
+                    gap: 12px;
+                    padding: 0 4px;
+                    
+                    .day-label {
+                        @extend .body-regular;
+                        color: $accent-black;
+                        text-align: center;
+                        font-size: 0.9em;
+                        opacity: 0.7;
+                        padding: 4px 0;
+                    }
+                }
+
+                .calendar-grid {
+                    display: grid;
+                    gap: 12px;
+                    flex: 1;
+
+                    &.week-view {
+                        grid-template-columns: repeat(7, 1fr);
+                        grid-template-rows: 1fr;
+                        
+                        .planner-column {
+                            min-height: 150px;
+                        }
+                    }
+
+                    &.month-view {
+                        grid-template-columns: repeat(7, 1fr);
+                        grid-template-rows: repeat(5, 1fr); // Changed to just 1fr
+                        gap: 8px;
+                        
+                        .planner-column {
+                            min-height: 0; // Remove min-height
+                            max-height: none; // Remove max-height
+                            padding: 8px;
+                            overflow: hidden; // Hide scrollbar
+                            aspect-ratio: 1 / 1; // Make cells square
+                            
+                            .posts-container {
+                                overflow: hidden; // Hide scrollbar
+                                min-height: 0; // Remove min-height
+                                max-height: calc(100% - 30px); // Account for date header
+                                
+                                .post-card {
+                                    padding: 2px 4px;
+                                    margin-bottom: 2px;
+                                    border: none;
+                                    background: rgba($primary-navy-blue, 0.05);
+                                    
+                                    .post-info {
+                                        p {
+                                            font-size: 0.75em;
+                                            line-height: 1.2;
+                                        }
+                                    }
+
+                                    // Hide media in month view to save space
+                                    .post-media {
+                                        display: none;
+                                    }
+
+                                    // Simplify post meta in month view
+                                    .post-meta {
+                                        margin-top: 2px;
+                                    }
+                                }
+                            }
+
+                            .date-header {
+                                font-size: 0.9em;
+                                margin-bottom: 8px;
+                                padding-bottom: 4px;
+                            }
+                        }
+                    }
+                }
+
                 .planner-column {
                     background: white;
                     border-radius: 10px;
@@ -113,7 +228,7 @@ body.dragging-post {
                     transition: all 0.2s ease;
 
                     .date-header {
-                        @extend .h3;
+                        @extend .subtitle;
                         color: $primary-navy-blue;
                         margin-bottom: 15px;
                         position: sticky;
@@ -143,117 +258,21 @@ body.dragging-post {
                         gap: 15px;
                         overflow-y: auto;
                         flex-grow: 1;
-                        min-height: 100px;
+                        min-height: 0; // Change from 100px to 0
                         transition: background-color 0.2s ease;
                         border-radius: 6px;
                         padding: 5px;
 
                         &:empty {
-                            padding: 20px;
-                            border: 2px dashed rgba($accent-black, 0.1);
+                            padding: 0; // Remove empty state padding
+                            border: none; // Remove empty state border
+                            min-height: 0; // Ensure no minimum height
                         }
                     }
 
-                    .post-card {
-                        background: white;
-                        border: 1px solid rgba($accent-black, 0.1);
-                        border-radius: 8px;
-                        overflow: hidden;
-                        transition: all 0.2s ease;
-                        cursor: grab;
-                        user-select: none;
-
-                        &:hover {
-                            transform: translateY(-2px);
-                            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-                        }
-
-                        &:active {
-                            cursor: grabbing;
-                        }
-
-                        &.dragging {
-                            opacity: 0.5;
-                            transform: scale(0.95);
-                        }
-
-                        .post-time {
-                            @extend .body-regular;
-                            padding: 8px;
-                            background: $tertiary-beige;
-                        }
-
-                        .post-media {
-                            width: 100%;
-                            height: 200px;
-                            overflow: hidden;
-                            
-                            img {
-                                width: 100%;
-                                height: 100%;
-                                object-fit: cover;
-                                display: block;
-                            }
-                        }
-
-                        .post-info {
-                            padding: 12px;
-
-                            p {
-                                @extend .body-regular;
-                                color: $accent-black;
-                                margin-bottom: 8px;
-                            }
-
-                            .post-meta {
-                                display: flex;
-                                align-items: center;
-                                justify-content: space-between;
-                                margin-top: 8px;
-
-                                .platform-icon img {
-                                    width: 20px;
-                                    height: 20px;
-                                }
-
-                                .status {
-                                    font-size: 0.8em;
-                                    padding: 4px 8px;
-                                    border-radius: 4px;
-
-                                    &.scheduled {
-                                        background: $primary-navy-blue;
-                                        color: white;
-                                    }
-
-                                    &.draft {
-                                        background: $accent-black;
-                                        color: white;
-                                    }
-                                }
-                            }
-                        }
-                    }
-
+                    // Remove the entire empty-state class
                     .empty-state {
-                        display: flex;
-                        flex-direction: column;
-                        align-items: center;
-                        justify-content: center;
-                        height: 200px;
-                        gap: 10px;
-                        opacity: 0.5;
-
-                        p {
-                            @extend .body-regular;
-                            color: $accent-black;
-                        }
-
-                        img {
-                            width: 32px;
-                            height: 32px;
-                            opacity: 0.5;
-                        }
+                        display: none; // Hide it completely
                     }
                 }
             }
@@ -341,12 +360,127 @@ body.dragging-post {
                         }
                     }
                 }
+                .header-controls {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    margin-bottom: 20px;
+
+                    .view-toggle {
+                        display: flex;
+                        gap: 2px;
+                        background: rgba($primary-navy-blue, 0.1);
+                        padding: 4px;
+                        border-radius: 8px;
+
+                        .view-btn {
+                            padding: 8px 16px;
+                            border: none;
+                            background: none;
+                            border-radius: 6px;
+                            cursor: pointer;
+                            color: $primary-navy-blue;
+                            font-weight: 500;
+                            transition: all 0.2s ease;
+
+                            &.active {
+                                background: white;
+                                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                            }
+
+                            &:hover:not(.active) {
+                                background: rgba(white, 0.5);
+                            }
+                        }
+                    }
+                }
             }            .planner-grid {
-                display: grid;
-                grid-template-columns: repeat(3, 1fr);
-                gap: 20px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
                 height: calc(100vh - 200px);
-                
+
+                .day-labels {
+                    display: grid;
+                    grid-template-columns: repeat(7, 1fr);
+                    gap: 12px;
+                    padding: 0 4px;
+                    
+                    .day-label {
+                        @extend .body-regular;
+                        color: $accent-black;
+                        text-align: center;
+                        font-size: 0.9em;
+                        opacity: 0.7;
+                        padding: 4px 0;
+                    }
+                }
+
+                .calendar-grid {
+                    display: grid;
+                    gap: 12px;
+                    flex: 1;
+
+                    &.week-view {
+                        grid-template-columns: repeat(7, 1fr);
+                        grid-template-rows: 1fr;
+                        
+                        .planner-column {
+                            min-height: 150px;
+                        }
+                    }
+
+                    &.month-view {
+                        grid-template-columns: repeat(7, 1fr);
+                        grid-template-rows: repeat(5, 1fr); // Changed to just 1fr
+                        gap: 8px;
+                        
+                        .planner-column {
+                            min-height: 0; // Remove min-height
+                            max-height: none; // Remove max-height
+                            padding: 8px;
+                            overflow: hidden; // Hide scrollbar
+                            aspect-ratio: 1 / 1; // Make cells square
+                            
+                            .posts-container {
+                                overflow: hidden; // Hide scrollbar
+                                min-height: 0; // Remove min-height
+                                max-height: calc(100% - 30px); // Account for date header
+                                
+                                .post-card {
+                                    padding: 2px 4px;
+                                    margin-bottom: 2px;
+                                    border: none;
+                                    background: rgba($primary-navy-blue, 0.05);
+                                    
+                                    .post-info {
+                                        p {
+                                            font-size: 0.75em;
+                                            line-height: 1.2;
+                                        }
+                                    }
+
+                                    // Hide media in month view to save space
+                                    .post-media {
+                                        display: none;
+                                    }
+
+                                    // Simplify post meta in month view
+                                    .post-meta {
+                                        margin-top: 2px;
+                                    }
+                                }
+                            }
+
+                            .date-header {
+                                font-size: 0.9em;
+                                margin-bottom: 8px;
+                                padding-bottom: 4px;
+                            }
+                        }
+                    }
+                }
+
                 .planner-column {
                     background: white;
                     border-radius: 10px;
@@ -357,7 +491,7 @@ body.dragging-post {
                     transition: all 0.2s ease;
 
                     .date-header {
-                        @extend .h3;
+                        @extend .subtitle;
                         color: $primary-navy-blue;
                         margin-bottom: 15px;
                         position: sticky;
@@ -366,6 +500,7 @@ body.dragging-post {
                         z-index: 1;
                         padding-bottom: 10px;
                         border-bottom: 2px solid rgba($primary-navy-blue, 0.1);
+                    }
 
                     &.drag-over {
                         background: rgba($primary-navy-blue, 0.05);
@@ -386,113 +521,194 @@ body.dragging-post {
                         gap: 15px;
                         overflow-y: auto;
                         flex-grow: 1;
-                        min-height: 100px;
+                        min-height: 0; // Change from 100px to 0
                         transition: background-color 0.2s ease;
                         border-radius: 6px;
                         padding: 5px;
 
                         &:empty {
-                            padding: 20px;
-                            border: 2px dashed rgba($accent-black, 0.1);
+                            padding: 0; // Remove empty state padding
+                            border: none; // Remove empty state border
+                            min-height: 0; // Ensure no minimum height
                         }
                     }
 
-                    .post-card {
-                        background: white;
-                        border: 1px solid rgba($accent-black, 0.1);
-                        border-radius: 8px;
-                        overflow: hidden;
-                        transition: all 0.2s ease;
-                        cursor: grab;
-                        user-select: none;
-
-                        &:hover {
-                            transform: translateY(-2px);
-                            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-                        }
-
-                        &:active {
-                            cursor: grabbing;
-                        }
-
-                        &.dragging {
-                            opacity: 0.5;
-                            transform: scale(0.95);
-                        }                        .post-time {
-                            @extend .body-regular;
-                            padding: 8px;
-                            background: $tertiary-beige;
-                        }.post-media {
-                            width: 100%;
-                            height: 200px;
-                            overflow: hidden;
-                            
-                            img {
-                                width: 100%;
-                                height: 100%;
-                                object-fit: cover;
-                                display: block;
-                            }
-                        }                        .post-info {
-                            padding: 12px;
-
-                            p {
-                                @extend .body-regular;
-                                color: $accent-black;
-                                margin-bottom: 8px;
-                            }
-
-                            .post-meta {
-                                display: flex;
-                                align-items: center;
-                                justify-content: space-between;
-                                margin-top: 8px;
-
-                                .platform-icon img {
-                                    width: 20px;
-                                    height: 20px;
-                                }
-
-                                .status {
-                                    font-size: 0.8em;
-                                    padding: 4px 8px;
-                                    border-radius: 4px;
-
-                                    &.scheduled {
-                                        background: $primary-navy-blue;
-                                        color: white;
-                                    }
-
-                                    &.draft {
-                                        background: $accent-black;
-                                        color: white;
-                                    }
-                                }
-                            }
-                        }
-                    }                    .empty-state {
-                        display: flex;
-                        flex-direction: column;
-                        align-items: center;
-                        justify-content: center;
-                        height: 200px;
-                        gap: 10px;
-                        opacity: 0.5;
-
-                        p {
-                            @extend .body-regular;
-                            color: $accent-black;
-                        }
-
-                        img {
-                            width: 32px;
-                            height: 32px;
-                            opacity: 0.5;
-                        }
+                    // Remove the entire empty-state class
+                    .empty-state {
+                        display: none; // Hide it completely
                     }
                 }
             }
         }
     }
 }
+
+.post-card {
+    // Base card styles
+    background: white;
+    border-radius: 8px;
+    padding: 8px;
+    cursor: grab;
+    transition: all 0.2s ease;
+    border: 1px solid rgba($primary-navy-blue, 0.1);
+
+    // Card states
+    &.draft {
+        background: rgba($status-draft, 0.05);
+        border-left: 3px solid $status-draft;
+    }
+
+    &.scheduled {
+        background: rgba($status-scheduled, 0.05);
+        border-left: 3px solid $status-scheduled;
+    }
+
+    &.posted {
+        background: rgba($status-success, 0.05);
+        border-left: 3px solid $status-success;
+    }
+
+    &.failed {
+        background: rgba($status-error, 0.05);
+        border-left: 3px solid $status-error;
+    }
+
+    // Status badge styles
+    .status {
+        font-size: 0.75em;
+        padding: 2px 8px;
+        border-radius: 12px;
+        
+        &.draft {
+            background: rgba($status-draft, 0.1);
+            color: $status-draft;
+        }
+
+        &.scheduled {
+            background: rgba($status-scheduled, 0.1);
+            color: $status-scheduled;
+        }
+
+        &.posted {
+            background: rgba($status-success, 0.1);
+            color: $status-success;
+        }
+
+        &.failed {
+            background: rgba($status-error, 0.1);
+            color: $status-error;
+        }
+    }
+
+    .post-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 8px;
+
+        .edit-btn {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 8px;
+            border: none;
+            background: none;
+            border-radius: 4px;
+            cursor: pointer;
+            color: $primary-navy-blue;
+            font-size: 0.8em;
+            transition: all 0.2s ease;
+
+            img {
+                width: 14px;
+                height: 14px;
+            }
+
+            span {
+                @extend .body-regular;
+            }
+
+            &:hover {
+                background: rgba($primary-navy-blue, 0.05);
+            }
+        }
+    }
+
+    // Month view specific styles
+    .calendar-grid.month-view & {
+        padding: 4px 6px;
+        border-radius: 4px;
+
+        .post-info p {
+            font-size: 0.75em;
+            line-height: 1.2;
+        }
+
+        .status {
+            font-size: 0.7em;
+            padding: 1px 6px;
+        }
+
+        .post-header {
+            .edit-btn {
+                padding: 2px;
+                
+                span {
+                    display: none; // Hide text in month view
+                }
+                
+                img {
+                    width: 12px;
+                    height: 12px;
+                }
+            }
+        }
+    }
+}
+
+.edit-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    padding: 4px;
+    border: none;
+    background: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    img {
+        width: 14px;
+        height: 14px;
+    }
+
+    &:hover {
+        background: rgba($primary-navy-blue, 0.05);
+    }
+}
+
+// Month view specific styles
+.calendar-grid.month-view .post-card {
+    .edit-btn {
+        width: 20px;
+        height: 20px;
+        padding: 2px;
+        
+        img {
+            width: 12px;
+            height: 12px;
+        }
+    }
+}
+
+.calendar-grid.month-view {
+    .planner-column {
+        .date-header {
+            font-size: 0.85em;
+            margin-bottom: 8px;
+            padding-bottom: 4px;
+        }
+    }
 }

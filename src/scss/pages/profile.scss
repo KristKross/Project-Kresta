@@ -1,0 +1,319 @@
+@use 'sass:color';
+@use '../base/animations' as *;
+@use '../base/typography' as *;
+@use '../base/colors' as *;
+@use '../base/breakpoints' as *;
+@use '../components/buttons' as *;
+
+.profile-container {
+    display: flex;
+    gap: 30px;
+    padding: 20px;
+    min-height: calc(100vh - 80px);
+
+    .profile-sidebar {
+        width: 300px;
+        background: $ui-background;
+        border-radius: 10px;
+        padding: 20px;
+        border: 1px solid $ui-border;
+
+        .profile-header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid $ui-border;
+
+            .profile-picture {
+                width: 120px;
+                height: 120px;
+                border-radius: 50%;
+                border: 3px solid $primary-navy-blue;
+                padding: 3px;
+            }
+        }
+
+        .profile-tabs {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 20px;
+
+            .tab-button {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                padding: 12px;
+                border: none;
+                border-radius: 8px;
+                background: none;
+                cursor: pointer;
+                transition: all 0.2s ease;
+                @extend .body-regular;
+
+                img {
+                    width: 20px;
+                    height: 20px;
+                }
+
+                .material-icons {
+                    font-size: 20px;
+                    width: 20px;
+                    height: 20px;
+                    transition: all 0.2s ease;
+                }
+
+                &:hover {
+                    background: $ui-hover;
+                }
+
+                &.active {
+                    background: $primary-navy-blue;
+                    color: $accent-white;
+
+                    img {
+                        filter: brightness(0) invert(1);
+                    }
+
+                    .material-icons {
+                        color: $accent-white;
+                    }
+                }
+            }
+        }
+    }
+
+    .profile-content {
+        flex: 1;
+        background: $ui-background;
+        border-radius: 10px;
+        padding: 30px;
+        border: 1px solid $ui-border;
+
+        .tab-content {
+            display: none;
+
+            &.active {
+                display: block;
+            }
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+
+            label {
+                display: block;
+                margin-bottom: 8px;
+                @extend .body-regular;
+            }
+
+            .form-input {
+                width: 100%;
+                padding: 12px;
+                border: 1px solid $ui-border;
+                border-radius: 8px;
+                @extend .body-regular;
+
+                &:focus {
+                    outline: none;
+                    border-color: $primary-navy-blue;
+                }
+            }
+        }
+
+        .profile-picture-upload {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+
+            img {
+                width: 100px;
+                height: 100px;
+                border-radius: 50%;
+                border: 3px solid $primary-navy-blue;
+                padding: 3px;
+            }
+
+            .change-picture-btn {
+                @extend .button-cta;
+                @include action-button;
+            }
+        }
+
+        .platform-link {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px;
+            border: 1px solid $ui-border;
+            border-radius: 8px;
+            background: $ui-background;
+            width: 100%;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+
+            img {
+                width: 24px;
+                height: 24px;
+            }
+
+            &.connected {
+                border-color: $primary-navy-blue;
+                background: rgba($primary-navy-blue, 0.05);
+            }
+
+            &:hover {
+                background: $ui-hover;
+            }
+        }
+
+        .save-changes-btn {
+            @extend .button-cta;
+            @include action-button;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        .info-card {
+            background: $ui-background;
+            border: 1px solid $ui-border;
+            border-radius: 10px;
+            padding: 20px;
+
+            .info-group {
+                margin-bottom: 20px;
+
+                label {
+                    @extend .body-regular;
+                    color: $accent-black;
+                    opacity: 0.6;
+                }
+
+                p {
+                    @extend .body-large;
+                    margin-top: 5px;
+                }
+            }
+        }
+
+        .platform-badges {
+            display: flex;
+            gap: 10px;
+            margin-top: 5px;
+
+            .platform-badge {
+                background: rgba($primary-navy-blue, 0.1);
+                color: $primary-navy-blue;
+                padding: 4px 12px;
+                border-radius: 20px;
+                font-size: 0.9em;
+            }
+        }
+
+        .setting-group {
+            margin-bottom: 20px;
+            padding: 20px;
+            border: 1px solid $ui-border;
+            border-radius: 10px;
+
+            .setting-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 10px;
+            }
+
+            .setting-description {
+                @extend .body-regular;
+                color: $accent-black;
+                opacity: 0.6;
+            }
+        }
+
+        .toggle {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+
+            input {
+                opacity: 0;
+                width: 0;
+                height: 0;
+
+                &:checked + .slider {
+                    background-color: $primary-navy-blue;
+                }
+
+                &:checked + .slider:before {
+                    transform: translateX(26px);
+                }
+            }
+
+            .slider {
+                position: absolute;
+                cursor: pointer;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background-color: #ccc;
+                transition: .4s;
+                border-radius: 34px;
+
+                &:before {
+                    position: absolute;
+                    content: "";
+                    height: 16px;
+                    width: 16px;
+                    left: 4px;
+                    bottom: 4px;
+                    background-color: white;
+                    transition: .4s;
+                    border-radius: 50%;
+                }
+            }
+        }
+
+        .download-data-btn {
+            @extend .button-cta;
+            @include action-button;
+            margin-top: 20px;
+        }
+
+        .danger-zone {
+            margin-top: 40px;
+            padding: 20px;
+            border: 1px solid $status-error;
+            border-radius: 10px;
+
+            .delete-account-btn {
+                background: $status-error;
+                color: $accent-white;
+                border: none;
+                padding: 12px 24px;
+                border-radius: 8px;
+                cursor: pointer;
+                margin-top: 10px;
+                transition: all 0.2s ease;
+
+                &:hover {
+                    background: color.adjust($status-error, $lightness: -10%);
+                }
+            }
+        }
+    }
+}
+
+@include mobile {
+    .profile-container {
+        flex-direction: column;
+
+        .profile-sidebar {
+            width: 100%;
+        }
+    }
+}

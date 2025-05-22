@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./scss/main.scss">
+    <title>Profile | Project Kresta</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<script defer src="./js/profile.js"></script>
+<body class="profile-page">
+    <div class="title-header">
+        <h1 class="title-h1">
+            <i class="material-icons">account_circle</i>
+            Profile Settings
+        </h1>
+    </div>
+
+    <div class="profile-container">
+        <div class="profile-sidebar">
+            <div class="profile-header">
+                <img src="./assets/images/dashboard/user-pfp.png" alt="Profile Picture" class="profile-picture">
+                <h2 class="h2">John Doe</h2>
+                <p class="subtitle">@johndoe</p>
+            </div>
+            
+            <div class="profile-tabs">
+                <button class="tab-button active" data-tab="edit-profile">
+                    <i class="material-icons">edit</i>
+                    Edit Profile
+                </button>
+                <button class="tab-button" data-tab="account-info">
+                    <i class="material-icons">info</i>
+                    Account Info
+                </button>
+                <button class="tab-button" data-tab="privacy">
+                    <i class="material-icons">security</i>
+                    Privacy & Data
+                </button>
+                <button class="tab-button" data-tab="security">
+                    <i class="material-icons">lock</i>
+                    Security
+                </button>
+            </div>
+        </div>
+
+        <div class="profile-content">
+            <!-- Edit Profile Tab -->
+            <div class="tab-content active" id="edit-profile">
+                <h2 class="h2">Edit Profile</h2>
+                <form class="profile-form">
+                    <div class="form-group">
+                        <label>Profile Picture</label>
+                        <div class="profile-picture-upload">
+                            <img src="./assets/images/dashboard/user-pfp.png" alt="Profile Picture">
+                            <button type="button" class="change-picture-btn">Change Picture</button>
+                            <input type="file" hidden id="profile-picture-input" accept="image/*">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Username</label>
+                        <input type="text" value="johndoe" class="form-input">
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" value="john@example.com" class="form-input">
+                    </div>
+                    <div class="form-group">
+                        <label>Linked Accounts</label>
+                        <div class="linked-accounts">
+                            <button type="button" class="platform-link">
+                                <img src="./assets/icons/footer/instagram.png" alt="Instagram">
+                                <span>Connect Instagram</span>
+                            </button>
+                            <button type="button" class="platform-link connected">
+                                <img src="./assets/icons/footer/facebook.png" alt="Facebook">
+                                <span>Connected to Facebook</span>
+                            </button>
+                        </div>
+                    </div>
+                    <button type="submit" class="save-changes-btn">Save Changes</button>
+                </form>
+            </div>
+
+            <!-- Account Info Tab -->
+            <div class="tab-content" id="account-info">
+                <h2 class="h2">Account Information</h2>
+                <div class="info-card">
+                    <div class="info-group">
+                        <label>Account Type</label>
+                        <p>Creator Plan</p>
+                    </div>
+                    <div class="info-group">
+                        <label>Member Since</label>
+                        <p>June 2024</p>
+                    </div>
+                    <div class="info-group">
+                        <label>Last Login</label>
+                        <p>Today at 9:30 AM</p>
+                    </div>
+                    <div class="info-group">
+                        <label>Connected Platforms</label>
+                        <div class="platform-badges">
+                            <span class="platform-badge">Instagram</span>
+                            <span class="platform-badge">Facebook</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Privacy Tab -->
+            <div class="tab-content" id="privacy">
+                <h2 class="h2">Privacy & Data</h2>
+                <div class="privacy-settings">
+                    <div class="setting-group">
+                        <div class="setting-header">
+                            <h3 class="h3">Data Collection</h3>
+                            <label class="toggle">
+                                <input type="checkbox" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <p class="setting-description">Allow us to collect usage data to improve your experience</p>
+                    </div>
+                    <div class="setting-group">
+                        <div class="setting-header">
+                            <h3 class="h3">Email Notifications</h3>
+                            <label class="toggle">
+                                <input type="checkbox" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <p class="setting-description">Receive email notifications about your account</p>
+                    </div>
+                    <button class="download-data-btn">Download My Data</button>
+                </div>
+            </div>
+
+            <!-- Security Tab -->
+            <div class="tab-content" id="security">
+                <h2 class="h2">Security Settings</h2>
+                <div class="security-settings">
+                    <form class="security-form">
+                        <div class="form-group">
+                            <label>Current Password</label>
+                            <input type="password" class="form-input" required>
+                        </div>
+                        <div class="form-group">
+                            <label>New Password</label>
+                            <input type="password" class="form-input" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Confirm New Password</label>
+                            <input type="password" class="form-input" required>
+                        </div>
+                        <button type="submit" class="change-password-btn">Update Password</button>
+                    </form>
+                    <div class="danger-zone">
+                        <h3 class="h3">Danger Zone</h3>
+                        <button type="button" class="delete-account-btn">Delete Account</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

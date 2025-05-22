@@ -132,24 +132,11 @@ document.addEventListener('DOMContentLoaded', () => {
             targetColumn.appendChild(postsContainer);
         }
         
-        // Remove empty state if it exists
-        const emptyState = targetColumn.querySelector('.empty-state');
-        if (emptyState) {
-            emptyState.remove();
-        }
-
         // Remove the original post card
-        const originalColumn = draggedPost.closest('.planner-column');
         draggedPost.remove();
         
         // Create new post card in target column
-        const newPostCard = createPostCard(postData, postsContainer);
-        
-        // Check if original column is now empty
-        const originalPostsContainer = originalColumn.querySelector('.posts-container');
-        if (originalPostsContainer && !originalPostsContainer.children.length) {
-            originalColumn.appendChild(createEmptyState());
-        }
+        createPostCard(postData, postsContainer);
         
         draggedPost = null;
         return false;
@@ -158,13 +145,13 @@ document.addEventListener('DOMContentLoaded', () => {
     // Post Creator Panel Functionality
     const postCreatorPanel = document.querySelector('.post-creator-panel');
     const createPostBtn = document.querySelector('.action-btn');
+    const schedulePostBtn = document.querySelectorAll('.action-btn')[1]; // Get the second action button
     const closePanel = document.querySelector('.close-panel');
     const platformOptions = document.querySelectorAll('.platform-option');
     const mediaUpload = document.querySelector('.media-upload');
     const mediaInput = document.querySelector('#media-input');
     const scheduleToggle = document.querySelector('#schedule-toggle');
     const scheduleInputs = document.querySelector('.schedule-inputs');
-    const schedulePostBtn = document.querySelector('.schedule-post');
     const postForm = document.querySelector('.panel-content');
 
     // Post Preview Functionality
@@ -248,6 +235,28 @@ document.addEventListener('DOMContentLoaded', () => {
         if (isMobileView()) {
             toggleBodyScroll(true);
         }
+        // Ensure scheduling is unchecked
+        scheduleToggle.checked = false;
+        scheduleInputs.style.display = 'none';
+    });
+
+    schedulePostBtn.addEventListener('click', () => {
+        postCreatorPanel.classList.add('active');
+        if (isMobileView()) {
+            toggleBodyScroll(true);
+        }
+        // Pre-check scheduling
+        scheduleToggle.checked = true;
+        scheduleInputs.style.display = 'flex';
+        
+        // Set default date and time
+        const tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        const dateInput = document.querySelector('.schedule-date');
+        const timeInput = document.querySelector('.schedule-time');
+        
+        dateInput.value = tomorrow.toISOString().split('T')[0];
+        timeInput.value = '09:00';
     });
 
     closePanel.addEventListener('click', () => {
@@ -298,23 +307,42 @@ document.addEventListener('DOMContentLoaded', () => {
         if (selectedPlatforms.length === 0) {
             alert('Please select at least one platform');
             return;
-        }        let mediaUrl = null;
+        }
+
+        let mediaUrl = null;
         if (mediaInput.files[0]) {
             mediaUrl = URL.createObjectURL(mediaInput.files[0]);
         }
 
         const formData = {
+            id: postForm.dataset.editingPostId || Date.now().toString(),
             title: postForm.querySelector('.post-title').value,
             description: postForm.querySelector('.post-description').value,
             platforms: selectedPlatforms,
-            mediaUrl: mediaUrl,
+            mediaUrl: mediaUrl || (postForm.dataset.editingPostId ? JSON.parse(document.querySelector(`[data-post-id="${postForm.dataset.editingPostId}"]`)?.dataset.postData || '{}').mediaUrl : null),
             scheduled: scheduleToggle.checked,
             scheduledDate: scheduleToggle.checked ? 
                 `${postForm.querySelector('.schedule-date').value} ${postForm.querySelector('.schedule-time').value}` : 
-                null
+                null,
+            time: scheduleToggle.checked ? postForm.querySelector('.schedule-time').value : null,
+            status: scheduleToggle.checked ? 'scheduled' : 'draft'
         };
 
-        createPostCard(formData);
+        if (postForm.dataset.editingPostId) {
+            // Update existing post
+            const existingPost = document.querySelector(`[data-post-id="${postForm.dataset.editingPostId}"]`);
+            if (existingPost) {
+                existingPost.dataset.postData = JSON.stringify(formData);
+                existingPost.innerHTML = createPostCardHtml(formData);
+                existingPost.className = `post-card ${formData.status}`;
+            }
+        } else {
+            // Create new post
+            createPostCard(formData);
+        }
+
+        // Reset form and close panel
+        postForm.dataset.editingPostId = '';
         closePanel.click();
     });
 
@@ -328,24 +356,12 @@ document.addEventListener('DOMContentLoaded', () => {
             `${monthNames[currentDate.getMonth()]} ${currentDate.getFullYear()}`;
     }
 
-    function createEmptyState() {
-        const emptyState = document.createElement('div');
-        emptyState.className = 'empty-state';
-        emptyState.innerHTML = `
-            <img src="./assets/icons/dashboard/create-post.png" alt="">
-            <p>No posts scheduled</p>
-        `;
-        return emptyState;
-    }
-
     function createDayColumn(date, posts = []) {
         const today = new Date();
         const isToday = date.toDateString() === today.toDateString();
-        const isTomorrow = date.toDateString() === new Date(today.setDate(today.getDate() + 1)).toDateString();
         
-        const dateLabel = isToday ? 'Today' : 
-                         isTomorrow ? 'Tomorrow' : 
-                         `${date.getDate()} ${monthNames[date.getMonth()]}`;
+        // Simplified date label without indicators
+        const dateLabel = `${date.getDate()} ${monthNames[date.getMonth()]}`;
 
         const column = document.createElement('div');
         column.className = `planner-column${isToday ? ' today' : ''}`;
@@ -355,12 +371,6 @@ document.addEventListener('DOMContentLoaded', () => {
             <div class="posts-container">
                 ${posts.length ? posts.map(post => createPostCardHtml(post)).join('') : ''}
             </div>
-            ${!posts.length ? `
-                <div class="empty-state">
-                    <img src="./assets/icons/dashboard/create-post.png" alt="">
-                    <p>No posts scheduled</p>
-                </div>
-            ` : ''}
         `;
 
         // Find or create the posts container
@@ -378,12 +388,15 @@ document.addEventListener('DOMContentLoaded', () => {
     function createPostCard(data, container = null) {
         if (container === null) {
             const grid = document.getElementById('planner-grid');
+            const calendarGrid = grid.querySelector('.calendar-grid'); // Get the calendar grid
             const today = new Date();
             const targetDate = data.scheduled ? new Date(data.scheduledDate) : today;
             
-            // Find or create the target column
-            let targetColumn = Array.from(grid.children).find(col => {
-                const headerDate = col.querySelector('.date-header').textContent;
+            // Find or create the target column within calendar grid
+            let targetColumn = calendarGrid ? Array.from(calendarGrid.children).find(col => {
+                const headerDate = col.querySelector('.date-header')?.textContent;
+                if (!headerDate) return false;
+                
                 if (!data.scheduled) {
                     return headerDate === 'Today';
                 }
@@ -399,31 +412,30 @@ document.addEventListener('DOMContentLoaded', () => {
                 // For other dates, check day and month match
                 return headerDate.includes(targetDate.getDate().toString()) &&
                        headerDate.includes(monthNames[targetDate.getMonth()]);
-            });
+            }) : null;
 
             if (!targetColumn) {
                 targetColumn = createDayColumn(targetDate);
-                grid.appendChild(targetColumn);
+                calendarGrid?.appendChild(targetColumn);
             }
 
             // Find or create the posts container
-            container = targetColumn.querySelector('.posts-container');
+            container = targetColumn?.querySelector('.posts-container');
             if (!container) {
                 container = document.createElement('div');
                 container.className = 'posts-container';
-                targetColumn.appendChild(container);
+                targetColumn?.appendChild(container);
             }
+        }
 
-            // Remove empty state if it exists
-            const emptyState = targetColumn.querySelector('.empty-state');
-            if (emptyState) {
-                emptyState.remove();
-            }
+        // Determine post status
+        if (!data.status) {
+            data.status = data.scheduled ? 'scheduled' : 'draft';
         }
 
         // Create and setup the post card
         const postCard = document.createElement('div');
-        postCard.className = 'post-card';
+        postCard.className = `post-card ${data.status}`;
         postCard.draggable = true;
         postCard.innerHTML = createPostCardHtml(data);
         postCard.dataset.postData = JSON.stringify(data);
@@ -431,61 +443,216 @@ document.addEventListener('DOMContentLoaded', () => {
         // Add drag and drop event listeners
         postCard.addEventListener('dragstart', handleDragStart);
         postCard.addEventListener('dragend', handleDragEnd);
-        postCard.addEventListener('click', () => previewModal.show(postCard.dataset.postData));
 
-        container.appendChild(postCard);
+        // Separate click handlers for preview and edit
+        postCard.addEventListener('click', (e) => {
+            if (!e.target.closest('.edit-btn')) {
+                previewModal.show(postCard.dataset.postData);
+            }
+        });
+
+        container?.appendChild(postCard);
         return postCard;
     }
-      function createPostCardHtml(post) {
+
+    function createPostCardHtml(post) {
         const mediaHtml = post.mediaUrl ? 
             `<div class="post-media">
                 <img src="${post.mediaUrl}" alt="${post.title}">
             </div>` : '';
 
         return `
-            <div class="post-card${post.status === 'draft' ? ' draft' : ''}">
-                <div class="post-time">${post.time}</div>
+            <div class="post-info">
+                <div class="post-header">
+                    <div class="post-time">${post.time || 'Not scheduled'}</div>
+                    <button class="edit-btn" type="button" title="Edit post">
+                        <img src="./assets/icons/dashboard/pen.png" alt="Edit">
+                    </button>
+                </div>
                 ${mediaHtml}
-                <div class="post-info">
-                    <p>${post.title}</p>
-                    <div class="post-meta">
-                        <span class="platform-icon">
-                            ${post.platforms.map(platform => 
-                                `<img src="./assets/icons/footer/${platform}.png" alt="${platform}">`
-                            ).join('')}
-                        </span>
-                        <span class="status ${post.status}">${post.status}</span>
-                    </div>
+                <p>${post.title}</p>
+                <div class="post-meta">
+                    <span class="platform-icons">
+                        ${post.platforms.map(platform => 
+                            `<img src="./assets/icons/footer/${platform}.png" alt="${platform}">`
+                        ).join('')}
+                    </span>
+                    <span class="status ${post.status}">${post.status}</span>
                 </div>
             </div>
         `;
     }
 
+    // Add this right after the createPostCard function
+    function handlePostEdit(e) {
+        e.stopPropagation(); // Prevent post preview from opening
+        const postCard = e.target.closest('.post-card');
+        if (!postCard) return;
+
+        const postData = JSON.parse(postCard.dataset.postData);
+        
+        // Populate post creator panel with existing data
+        const postForm = document.querySelector('.panel-content');
+        postForm.querySelector('.post-title').value = postData.title;
+        postForm.querySelector('.post-description').value = postData.description || '';
+        
+        // Select platforms
+        const platformOptions = document.querySelectorAll('.platform-option');
+        platformOptions.forEach(option => {
+            const platform = option.dataset.platform;
+            if (postData.platforms.includes(platform)) {
+                option.classList.add('selected');
+            } else {
+                option.classList.remove('selected');
+            }
+        });
+        
+        // Show media if exists
+        const mediaUpload = document.querySelector('.media-upload');
+        if (postData.mediaUrl) {
+            mediaUpload.classList.add('has-media');
+            const img = mediaUpload.querySelector('img');
+            img.src = postData.mediaUrl;
+            img.classList.add('preview');
+            mediaUpload.querySelector('p').textContent = 'Media uploaded';
+        }
+        
+        // Set scheduling
+        const scheduleToggle = document.querySelector('#schedule-toggle');
+        const scheduleInputs = document.querySelector('.schedule-inputs');
+        if (postData.scheduled) {
+            scheduleToggle.checked = true;
+            scheduleInputs.style.display = 'flex';
+            const date = new Date(postData.scheduledDate);
+            postForm.querySelector('.schedule-date').value = date.toISOString().split('T')[0];
+            postForm.querySelector('.schedule-time').value = postData.time;
+        }
+        
+        // Show panel
+        document.querySelector('.post-creator-panel').classList.add('active');
+        
+        // Store reference to edited post
+        postForm.dataset.editingPostId = postData.id;
+    }
+
+    // Add event delegation for edit buttons
+    document.addEventListener('click', (e) => {
+        if (e.target.closest('.edit-btn')) {
+            handlePostEdit(e);
+        }
+    });
+
+    let currentView = 'week';
+
+    function getMonthDays(date) {
+        const year = date.getFullYear();
+        const month = date.getMonth();
+        const currentDay = date.getDate();
+        
+        // Calculate the start date (2 weeks before current day)
+        const start = new Date(year, month, currentDay - 14);
+        start.setDate(start.getDate() - start.getDay()); // Align to Sunday
+        
+        const days = [];
+        let current = new Date(start);
+        
+        // Generate 35 days (5 weeks)
+        for (let i = 0; i < 35; i++) {
+            days.push(new Date(current));
+            current.setDate(current.getDate() + 1);
+        }
+        
+        return days;
+    }
+
+    function getWeekDays(date) {
+        const start = new Date(date);
+        start.setDate(start.getDate() - start.getDay()); // Start from Sunday
+        
+        const days = [];
+        for (let i = 0; i < 7; i++) {
+            const current = new Date(start);
+            current.setDate(current.getDate() + i);
+            days.push(current);
+        }
+        
+        return days;
+    }
+
     function updatePlannerGrid() {
         const grid = document.getElementById('planner-grid');
         grid.innerHTML = '';
-        
-        for (let i = 0; i < 3; i++) {
-            const date = new Date(currentDate);
-            date.setDate(date.getDate() + i);
-            grid.appendChild(createDayColumn(date));
-        }
+
+        // Create and add day labels row
+        const dayLabelsRow = document.createElement('div');
+        dayLabelsRow.className = 'day-labels';
+        const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+        dayNames.forEach(day => {
+            const label = document.createElement('div');
+            label.className = 'day-label';
+            label.textContent = day;
+            dayLabelsRow.appendChild(label);
+        });
+        grid.appendChild(dayLabelsRow);
+
+        // Create and add calendar grid
+        const calendarGrid = document.createElement('div');
+        calendarGrid.className = `calendar-grid ${currentView}-view`;
+
+        const days = currentView === 'week' ? 
+            getWeekDays(currentDate) : 
+            getMonthDays(currentDate);
+
+        days.forEach((date, index) => {
+            const column = createDayColumn(date);
+            if (currentView === 'month') {
+                if (isDateToday(date)) {
+                    column.classList.add('current-day');
+                }
+                if (date.getMonth() !== currentDate.getMonth()) {
+                    column.classList.add('other-month');
+                }
+            }
+            calendarGrid.appendChild(column);
+        });
+
+        grid.appendChild(calendarGrid);
     }
 
-    // Initialize the planner
-    updateCurrentMonth();
-    updatePlannerGrid();
+    // Add view toggle event listeners
+    document.querySelectorAll('.view-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            if (!btn.classList.contains('active')) {
+                document.querySelector('.view-btn.active').classList.remove('active');
+                btn.classList.add('active');
+                currentView = btn.dataset.view;
+                updatePlannerGrid();
+            }
+        });
+    });
 
-    // Month navigation
+    // Update navigation buttons to handle both views
     document.querySelector('.prev-month').addEventListener('click', () => {
-        currentDate.setMonth(currentDate.getMonth() - 1);
+        if (currentView === 'week') {
+            currentDate.setDate(currentDate.getDate() - 7);
+        } else {
+            currentDate.setMonth(currentDate.getMonth() - 1);
+        }
         updateCurrentMonth();
         updatePlannerGrid();
     });
 
     document.querySelector('.next-month').addEventListener('click', () => {
-        currentDate.setMonth(currentDate.getMonth() + 1);
+        if (currentView === 'week') {
+            currentDate.setDate(currentDate.getDate() + 7);
+        } else {
+            currentDate.setMonth(currentDate.getMonth() + 1);
+        }
         updateCurrentMonth();
         updatePlannerGrid();
     });
+
+    // Initialize the planner
+    updateCurrentMonth();
+    updatePlannerGrid();
 });

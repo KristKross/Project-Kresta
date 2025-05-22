@@ -25,11 +25,6 @@
                         <span>Instagram</span>
                         <img src="./assets/icons/footer/instagram.png" alt="">
                     </label>
-                    <label class="platform-checkbox">
-                        <input type="checkbox">
-                        <span>LinkedIn</span>
-                        <img src="./assets/icons/footer/linkedin.png" alt="">
-                    </label>
                 </div>
             </div>
 
@@ -48,10 +43,16 @@
 
     <div class="planner-content">
             <div class="planner-header">
-                <div class="date-nav">
-                    <button class="nav-btn prev-month"><img src="./assets/icons/dashboard/arrow-down.png" alt=""></button>
-                    <h2 id="current-month">Loading...</h2>
-                    <button class="nav-btn next-month"><img src="./assets/icons/dashboard/arrow-up.png" alt=""></button>
+                <div class="header-controls">
+                    <div class="view-toggle">
+                        <button class="view-btn active" data-view="week">Week</button>
+                        <button class="view-btn" data-view="month">Month</button>
+                    </div>
+                    <div class="date-nav">
+                        <button class="nav-btn prev-month"><img src="./assets/icons/planner/arrow-left.png" alt=""></button>
+                        <h2 id="current-month" class="subtitle">Loading...</h2>
+                        <button class="nav-btn next-month"><img src="./assets/icons/planner/arrow-right.png" alt=""></button>
+                    </div>
                 </div>
             </div>
 
@@ -93,10 +94,6 @@
                     <div class="platform-option" data-platform="instagram">
                         <img src="./assets/icons/footer/instagram.png" alt="">
                         <span>Instagram</span>
-                    </div>
-                    <div class="platform-option" data-platform="linkedin">
-                        <img src="./assets/icons/footer/linkedin.png" alt="">
-                        <span>LinkedIn</span>
                     </div>
                 </div>
             </div>
