@@ -1,0 +1,30 @@
+@use '../base/colors' as *;
+@use '../base/typography' as *;
+
+@mixin action-button {
+    @extend .body-regular;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 30px;
+    width: 100%;
+    height: 90px;
+    border: 1px solid $accent-black;
+    border-radius: 10px;
+    margin: auto;
+    text-decoration: none;
+    color: $accent-black;
+    transition: all 0.3s ease;
+
+    &:hover {
+        background-color: $primary-navy-blue;
+        color: $accent-white;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+
+        img {
+            filter: brightness(0) invert(1);
+        }
+    }
+}

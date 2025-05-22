@@ -1,0 +1,44 @@
+@use '../base/breakpoints' as *;
+@use '../base/colors' as *;
+
+.tasks-page {
+    @include mobile {
+        .task-creator-panel {            position: fixed !important;
+            bottom: 0 !important;
+            right: 0 !important;
+            left: 0 !important;
+            width: 100% !important;
+            height: 85vh;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transform: translateY(100%);
+            border-radius: 20px 20px 0 0;
+            padding: 20px;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+
+            &.active {
+                transform: translateY(-100%);
+                right: 0;
+            }
+
+            .panel-content {
+                max-height: calc(90vh - 60px);
+                overflow-y: auto;
+                padding-bottom: 20px;
+            }
+
+            .task-options {
+                grid-template-columns: 1fr;
+            }
+        }
+    }    @include tablet {
+        .task-creator-panel {
+            width: 80%;
+            transform: translateX(100%);
+
+            &.active {
+                transform: translateX(0);
+            }
+        }
+    }
+}
