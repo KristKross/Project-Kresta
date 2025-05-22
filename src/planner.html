@@ -3,8 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./scss/main.scss">
     <title>Content Planner | Project Kresta</title>
 </head>
+<script defer src="./js/planner.js"></script>
 <body class="planner-page">
     <div class="title-header">
         <h1 class="title-h1">
@@ -44,56 +46,106 @@
             </div>
         </div>
 
-        <div class="planner-content">
+    <div class="planner-content">
             <div class="planner-header">
                 <div class="date-nav">
-                    <button class="nav-btn"><img src="./assets/icons/dashboard/arrow-down.png" alt=""></button>
-                    <h2>June 2024</h2>
-                    <button class="nav-btn"><img src="./assets/icons/dashboard/arrow-up.png" alt=""></button>
+                    <button class="nav-btn prev-month"><img src="./assets/icons/dashboard/arrow-down.png" alt=""></button>
+                    <h2 id="current-month">Loading...</h2>
+                    <button class="nav-btn next-month"><img src="./assets/icons/dashboard/arrow-up.png" alt=""></button>
                 </div>
             </div>
 
-            <div class="planner-grid">
-                <div class="planner-column today">
-                    <div class="date-header">Today</div>
-                    <div class="post-card">
-                        <div class="post-time">10:00 AM</div>
-                        <img src="./assets/icons/dashboard/sample-post-3.png" alt="">
-                        <div class="post-info">
-                            <p>New product launch 🚀</p>
-                            <div class="post-meta">
-                                <span class="platform-icon">
-                                    <img src="./assets/icons/footer/instagram.png" alt="">
-                                </span>
-                                <span class="status scheduled">Scheduled</span>
-                            </div>
-                        </div>
+            <div class="planner-grid" id="planner-grid">
+                <!-- Content will be populated by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Post Creator Panel -->
+    <div class="post-creator-panel">
+        <div class="panel-header">
+            <div class="title-container">
+                <h2>
+                    <img src="./assets/icons/dashboard/create-post.png" alt="">
+                    Create Post
+                </h2>
+                <button class="close-panel">
+                    <img src="./assets/icons/close.png" alt="">
+                </button>
+            </div>
+            <div class="seperator"></div>
+        </div>
+
+        <form class="panel-content">
+            <div class="form-group">
+                <label>Post Title</label>
+                <input type="text" class="post-title" placeholder="Enter a title for your post" required>
+            </div>
+
+            <div class="form-group">
+                <label>Post Description</label>
+                <textarea class="post-description" placeholder="Write your post content here..." required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Platforms</label>
+                <div class="platform-select">
+                    <div class="platform-option" data-platform="instagram">
+                        <img src="./assets/icons/footer/instagram.png" alt="">
+                        <span>Instagram</span>
+                    </div>
+                    <div class="platform-option" data-platform="linkedin">
+                        <img src="./assets/icons/footer/linkedin.png" alt="">
+                        <span>LinkedIn</span>
                     </div>
                 </div>
+            </div>
 
-                <div class="planner-column">
-                    <div class="date-header">Tomorrow</div>
-                    <div class="post-card draft">
-                        <div class="post-time">Draft</div>
-                        <img src="./assets/icons/dashboard/sample-post-3.png" alt="">
-                        <div class="post-info">
-                            <p>Behind the scenes 📸</p>
-                            <div class="post-meta">
-                                <span class="platform-icon">
-                                    <img src="./assets/icons/footer/linkedin.png" alt="">
-                                </span>
-                                <span class="status draft">Draft</span>
-                            </div>
-                        </div>
-                    </div>
+            <div class="form-group">
+                <label>Media</label>
+                <div class="media-upload">
+                    <input type="file" id="media-input" accept="image/*,video/*" hidden>
+                    <img src="./assets/icons/dashboard/create-post.png" alt="" class="upload-icon">
+                    <p>Click to upload media (optional)</p>
                 </div>
+            </div>
 
-                <div class="planner-column">
-                    <div class="date-header">15 June</div>
-                    <div class="empty-state">
-                        <img src="./assets/icons/dashboard/create-post.png" alt="">
-                        <p>No posts scheduled</p>
+            <div class="form-group schedule-section">
+                <div class="schedule-toggle">
+                    <input type="checkbox" id="schedule-toggle">
+                    <label for="schedule-toggle">Schedule this post</label>
+                </div>
+                <div class="schedule-inputs" style="display: none;">
+                    <input type="date" class="schedule-date">
+                    <input type="time" class="schedule-time">
+                </div>
+            </div>
+
+            <div class="action-buttons">
+                <button type="submit" class="post-now">Post Now</button>
+                <button type="button" class="schedule-post" disabled>Schedule Post</button>            </div>
+        </form>
+    </div>    <!-- Post Preview Overlay -->
+    <div class="post-preview-overlay">
+        <div class="preview-container">
+            <div class="preview-header">
+                <img src="./assets/icons/dashboard/create-post.png" alt="Platform" class="platform-icon">
+                <span class="post-time">Loading...</span>
+                <button class="close-preview">
+                    <img src="./assets/icons/close.png" alt="Close">
+                </button>
+            </div>
+            <div class="preview-media">
+                <!-- Media will be inserted here by JavaScript -->
+            </div>
+            <div class="preview-content">
+                <h3 class="post-title">Loading...</h3>
+                <p class="post-description">Loading...</p>
+                <div class="post-meta">
+                    <div class="platform-icons">
+                        <!-- Platform icons will be inserted here by JavaScript -->
                     </div>
+                    <span class="status">Loading...</span>
                 </div>
             </div>
         </div>

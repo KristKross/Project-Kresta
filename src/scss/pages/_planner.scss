@@ -2,15 +2,33 @@
 @use '../base/typography' as *;
 @use '../base/colors' as *;
 @use '../base/breakpoints' as *;
+@use '../components/buttons' as *;
+@use '../components/post-creator' as *;
+
+// Drag and drop styles
+body.dragging-post {
+    cursor: grabbing !important;
+    
+    .post-card {
+        cursor: grabbing !important;
+    }
+}
 
 .planner-page {
     height: 100vh;
     overflow: hidden;
-    background-color: $accent-white;
-
+    background-color: $accent-white;      
+    
+    .post-creator-panel {
+        .action-buttons {
+            margin-bottom: 60px;
+            padding-bottom: 20px;
+        }
+    }
+    
     .planner-container {
         display: flex;
-        height: calc(100vh - 80px); // Subtract header height
+        height: calc(100vh - 80px);
         gap: 30px;
         padding: 20px;
 
@@ -40,6 +58,7 @@
 
             .action-btn {
                 @extend .button-cta;
+                @include action-button;
                 width: 100%;
                 display: flex;
                 align-items: center;
@@ -83,22 +102,56 @@
                 grid-template-columns: repeat(3, 1fr);
                 gap: 20px;
                 height: calc(100vh - 200px);
-
+                
                 .planner-column {
                     background: white;
                     border-radius: 10px;
                     padding: 15px;
+                    display: flex;
+                    flex-direction: column;
+                    overflow-y: auto;
+                    transition: all 0.2s ease;
+
+                    .date-header {
+                        @extend .h3;
+                        color: $primary-navy-blue;
+                        margin-bottom: 15px;
+                        position: sticky;
+                        top: 0;
+                        background: white;
+                        z-index: 1;
+                        padding-bottom: 10px;
+                        border-bottom: 2px solid rgba($primary-navy-blue, 0.1);
+                    }
+
+                    &.drag-over {
+                        background: rgba($primary-navy-blue, 0.05);
+                        border: 2px dashed $primary-navy-blue;
+                    }
 
                     &.today {
                         border: 2px solid $primary-navy-blue;
+
+                        &.drag-over {
+                            border-style: dashed;
+                        }
                     }
 
-                    .date-header {
-                        @extend .body-large;
-                        color: $primary-navy-blue;
-                        padding-bottom: 10px;
-                        border-bottom: 2px solid $primary-navy-blue;
-                        margin-bottom: 15px;
+                    .posts-container {
+                        display: flex;
+                        flex-direction: column;
+                        gap: 15px;
+                        overflow-y: auto;
+                        flex-grow: 1;
+                        min-height: 100px;
+                        transition: background-color 0.2s ease;
+                        border-radius: 6px;
+                        padding: 5px;
+
+                        &:empty {
+                            padding: 20px;
+                            border: 2px dashed rgba($accent-black, 0.1);
+                        }
                     }
 
                     .post-card {
@@ -106,27 +159,51 @@
                         border: 1px solid rgba($accent-black, 0.1);
                         border-radius: 8px;
                         overflow: hidden;
-                        transition: transform 0.2s ease;
+                        transition: all 0.2s ease;
+                        cursor: grab;
+                        user-select: none;
 
                         &:hover {
                             transform: translateY(-2px);
                             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
                         }
 
-                        .post-time {
-                            padding: 8px;
-                            background: $tertiary-beige;
-                            font-size: 0.9em;
+                        &:active {
+                            cursor: grabbing;
                         }
 
-                        img {
+                        &.dragging {
+                            opacity: 0.5;
+                            transform: scale(0.95);
+                        }
+
+                        .post-time {
+                            @extend .body-regular;
+                            padding: 8px;
+                            background: $tertiary-beige;
+                        }
+
+                        .post-media {
                             width: 100%;
-                            height: 120px;
-                            object-fit: cover;
+                            height: 200px;
+                            overflow: hidden;
+                            
+                            img {
+                                width: 100%;
+                                height: 100%;
+                                object-fit: cover;
+                                display: block;
+                            }
                         }
 
                         .post-info {
                             padding: 12px;
+
+                            p {
+                                @extend .body-regular;
+                                color: $accent-black;
+                                margin-bottom: 8px;
+                            }
 
                             .post-meta {
                                 display: flex;
@@ -165,8 +242,12 @@
                         justify-content: center;
                         height: 200px;
                         gap: 10px;
-                        color: $accent-black;
                         opacity: 0.5;
+
+                        p {
+                            @extend .body-regular;
+                            color: $accent-black;
+                        }
 
                         img {
                             width: 32px;
@@ -178,4 +259,240 @@
             }
         }
     }
+}
+
+.planner-page {
+    height: 100vh;
+    overflow: hidden;
+    background-color: $accent-white;      
+    
+    .post-creator-panel {
+        .action-buttons {
+            margin-bottom: 60px;
+            padding-bottom: 20px;
+        }
+    }
+    
+    .planner-container {
+        display: flex;
+        height: calc(100vh - 80px); // Subtract header height
+        gap: 30px;
+        padding: 20px;
+
+        .planner-sidebar {
+            width: 300px;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+
+            .platform-selector {
+                .platform-checkbox {
+                    display: flex;
+                    align-items: center;
+                    gap: 10px;
+                    padding: 10px;
+                    cursor: pointer;
+                    
+                    img {
+                        width: 20px;
+                        height: 20px;
+                    }
+                }
+            }
+
+            .action-btn {
+                @extend .button-cta;
+                @include action-button;
+                width: 100%;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                margin-top: 10px;
+                
+                img {
+                    width: 20px;
+                    height: 20px;
+                }
+            }
+        }
+
+        .planner-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;            .planner-header {
+                
+                .date-nav {
+                    display: flex;
+                    align-items: center;
+                    gap: 20px;
+                    
+                    .nav-btn {
+                        background: none;
+                        border: none;
+                        cursor: pointer;
+                        
+                        img {
+                            width: 24px;
+                            height: 24px;
+                        }
+                    }
+                }
+            }            .planner-grid {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 20px;
+                height: calc(100vh - 200px);
+                
+                .planner-column {
+                    background: white;
+                    border-radius: 10px;
+                    padding: 15px;
+                    display: flex;
+                    flex-direction: column;
+                    overflow-y: auto;
+                    transition: all 0.2s ease;
+
+                    .date-header {
+                        @extend .h3;
+                        color: $primary-navy-blue;
+                        margin-bottom: 15px;
+                        position: sticky;
+                        top: 0;
+                        background: white;
+                        z-index: 1;
+                        padding-bottom: 10px;
+                        border-bottom: 2px solid rgba($primary-navy-blue, 0.1);
+
+                    &.drag-over {
+                        background: rgba($primary-navy-blue, 0.05);
+                        border: 2px dashed $primary-navy-blue;
+                    }
+
+                    &.today {
+                        border: 2px solid $primary-navy-blue;
+
+                        &.drag-over {
+                            border-style: dashed;
+                        }
+                    }
+
+                    .posts-container {
+                        display: flex;
+                        flex-direction: column;
+                        gap: 15px;
+                        overflow-y: auto;
+                        flex-grow: 1;
+                        min-height: 100px;
+                        transition: background-color 0.2s ease;
+                        border-radius: 6px;
+                        padding: 5px;
+
+                        &:empty {
+                            padding: 20px;
+                            border: 2px dashed rgba($accent-black, 0.1);
+                        }
+                    }
+
+                    .post-card {
+                        background: white;
+                        border: 1px solid rgba($accent-black, 0.1);
+                        border-radius: 8px;
+                        overflow: hidden;
+                        transition: all 0.2s ease;
+                        cursor: grab;
+                        user-select: none;
+
+                        &:hover {
+                            transform: translateY(-2px);
+                            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+                        }
+
+                        &:active {
+                            cursor: grabbing;
+                        }
+
+                        &.dragging {
+                            opacity: 0.5;
+                            transform: scale(0.95);
+                        }                        .post-time {
+                            @extend .body-regular;
+                            padding: 8px;
+                            background: $tertiary-beige;
+                        }.post-media {
+                            width: 100%;
+                            height: 200px;
+                            overflow: hidden;
+                            
+                            img {
+                                width: 100%;
+                                height: 100%;
+                                object-fit: cover;
+                                display: block;
+                            }
+                        }                        .post-info {
+                            padding: 12px;
+
+                            p {
+                                @extend .body-regular;
+                                color: $accent-black;
+                                margin-bottom: 8px;
+                            }
+
+                            .post-meta {
+                                display: flex;
+                                align-items: center;
+                                justify-content: space-between;
+                                margin-top: 8px;
+
+                                .platform-icon img {
+                                    width: 20px;
+                                    height: 20px;
+                                }
+
+                                .status {
+                                    font-size: 0.8em;
+                                    padding: 4px 8px;
+                                    border-radius: 4px;
+
+                                    &.scheduled {
+                                        background: $primary-navy-blue;
+                                        color: white;
+                                    }
+
+                                    &.draft {
+                                        background: $accent-black;
+                                        color: white;
+                                    }
+                                }
+                            }
+                        }
+                    }                    .empty-state {
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
+                        justify-content: center;
+                        height: 200px;
+                        gap: 10px;
+                        opacity: 0.5;
+
+                        p {
+                            @extend .body-regular;
+                            color: $accent-black;
+                        }
+
+                        img {
+                            width: 32px;
+                            height: 32px;
+                            opacity: 0.5;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
 }
