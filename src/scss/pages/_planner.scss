@@ -15,266 +15,80 @@ body.dragging-post {
 }
 
 .planner-page {
-    height: 100vh;
-    overflow: hidden;
+    // height: 100vh;
     background-color: $accent-white;      
     
-    .post-creator-panel {
-        .action-buttons {
-            margin-bottom: 60px;
-            padding-bottom: 20px;
+    .planner-container {
+        min-height: calc(100vh - 80px);
+        
+        @include mobile {
+            height: auto; // Allow content to determine height
+            overflow-y: auto; // Enable scrolling
+            padding: 10px;
         }
     }
-    
-    .planner-container {
-        display: flex;
-        height: calc(100vh - 80px);
-        gap: 30px;
-        padding: 20px;
 
-        .planner-sidebar {
-            width: 300px;
-            padding: 20px;
-            background: white;
-            border-radius: 10px;
-            display: flex;
-            flex-direction: column;
-            gap: 30px;
-
-            .platform-selector {
-                .platform-checkbox {
-                    display: flex;
-                    align-items: center;
-                    gap: 10px;
-                    padding: 10px;
-                    cursor: pointer;
-                    
-                    img {
-                        width: 20px;
-                        height: 20px;
-                    }
-                }
+    .planner-content {
+        min-height: 600px;
+        
+        @include mobile {
+            height: auto; // Remove fixed height
+            min-height: auto;
+        }
+        
+        .planner-grid {
+            min-height: 500px;
+            height: auto; // Allow content to determine height
+            
+            @include mobile {
+                height: auto;
+                overflow-y: auto;
             }
+        }
+    }
 
-            .action-btn {
-                @extend .button-cta;
-                @include action-button;
-                width: 100%;
-                display: flex;
-                align-items: center;
-                gap: 10px;
-                margin-top: 10px;
-                
-                img {
-                    width: 20px;
-                    height: 20px;
-                }
+    .post-creator-panel {
+        position: fixed;
+        top: 0;
+        right: 0;
+        width: 40vw;
+        height: 100vh;
+        min-width: 320px;
+        background: white;
+        box-shadow: -2px 0 10px rgba(0,0,0,0.1);
+        padding: 20px;
+        z-index: 1000;
+        transform: translateX(100%);
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+        @include mobile {
+            width: 100%;
+            height: 90vh;
+            bottom: 0;
+            top: auto;
+            transform: translateY(100%);
+            border-radius: 20px 20px 0 0;
+        }
+
+        &.active {
+            transform: translateX(0);
+
+            @include mobile {
+                transform: translateY(0);
             }
         }
 
-        .planner-content {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-
-            .planner-header {
-                .date-nav {
-                    display: flex;
-                    align-items: center;
-                    gap: 20px;
-                    
-                    .nav-btn {
-                        background: none;
-                        border: none;
-                        cursor: pointer;
-                        
-                        img {
-                            width: 50px;
-                            height: 50px;
-                        }
-                    }
-                }
-                .header-controls {
-                    display: flex;
-                    justify-content: space-between;
-                    align-items: center;
-                    margin-bottom: 20px;
-
-                    .view-toggle {
-                        display: flex;
-                        gap: 2px;
-                        background: rgba($primary-navy-blue, 0.1);
-                        padding: 4px;
-                        border-radius: 8px;
-
-                        .view-btn {
-                            padding: 8px 16px;
-                            border: none;
-                            background: none;
-                            border-radius: 6px;
-                            cursor: pointer;
-                            color: $primary-navy-blue;
-                            font-weight: 500;
-                            transition: all 0.2s ease;
-
-                            &.active {
-                                background: white;
-                                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-                            }
-
-                            &:hover:not(.active) {
-                                background: rgba(white, 0.5);
-                            }
-                        }
-                    }
-                }
+        .panel-content {
+            min-height: calc(100% - 60px);
+            overflow-y: auto;
+            padding: 20px;
+            
+            .form-group {
+                min-height: fit-content;
             }
-
-            .planner-grid {
-                display: flex;
-                flex-direction: column;
-                gap: 8px;
-                height: calc(100vh - 200px);
-
-                .day-labels {
-                    display: grid;
-                    grid-template-columns: repeat(7, 1fr);
-                    gap: 12px;
-                    padding: 0 4px;
-                    
-                    .day-label {
-                        @extend .body-regular;
-                        color: $accent-black;
-                        text-align: center;
-                        font-size: 0.9em;
-                        opacity: 0.7;
-                        padding: 4px 0;
-                    }
-                }
-
-                .calendar-grid {
-                    display: grid;
-                    gap: 12px;
-                    flex: 1;
-
-                    &.week-view {
-                        grid-template-columns: repeat(7, 1fr);
-                        grid-template-rows: 1fr;
-                        
-                        .planner-column {
-                            min-height: 150px;
-                        }
-                    }
-
-                    &.month-view {
-                        grid-template-columns: repeat(7, 1fr);
-                        grid-template-rows: repeat(5, 1fr); // Changed to just 1fr
-                        gap: 8px;
-                        
-                        .planner-column {
-                            min-height: 0; // Remove min-height
-                            max-height: none; // Remove max-height
-                            padding: 8px;
-                            overflow: hidden; // Hide scrollbar
-                            aspect-ratio: 1 / 1; // Make cells square
-                            
-                            .posts-container {
-                                overflow: hidden; // Hide scrollbar
-                                min-height: 0; // Remove min-height
-                                max-height: calc(100% - 30px); // Account for date header
-                                
-                                .post-card {
-                                    padding: 2px 4px;
-                                    margin-bottom: 2px;
-                                    border: none;
-                                    background: rgba($primary-navy-blue, 0.05);
-                                    
-                                    .post-info {
-                                        p {
-                                            font-size: 0.75em;
-                                            line-height: 1.2;
-                                        }
-                                    }
-
-                                    // Hide media in month view to save space
-                                    .post-media {
-                                        display: none;
-                                    }
-
-                                    // Simplify post meta in month view
-                                    .post-meta {
-                                        margin-top: 2px;
-                                    }
-                                }
-                            }
-
-                            .date-header {
-                                font-size: 0.9em;
-                                margin-bottom: 8px;
-                                padding-bottom: 4px;
-                            }
-                        }
-                    }
-                }
-
-                .planner-column {
-                    background: white;
-                    border-radius: 10px;
-                    padding: 15px;
-                    display: flex;
-                    flex-direction: column;
-                    overflow-y: auto;
-                    transition: all 0.2s ease;
-
-                    .date-header {
-                        @extend .subtitle;
-                        color: $primary-navy-blue;
-                        margin-bottom: 15px;
-                        position: sticky;
-                        top: 0;
-                        background: white;
-                        z-index: 1;
-                        padding-bottom: 10px;
-                        border-bottom: 2px solid rgba($primary-navy-blue, 0.1);
-                    }
-
-                    &.drag-over {
-                        background: rgba($primary-navy-blue, 0.05);
-                        border: 2px dashed $primary-navy-blue;
-                    }
-
-                    &.today {
-                        border: 2px solid $primary-navy-blue;
-
-                        &.drag-over {
-                            border-style: dashed;
-                        }
-                    }
-
-                    .posts-container {
-                        display: flex;
-                        flex-direction: column;
-                        gap: 15px;
-                        overflow-y: auto;
-                        flex-grow: 1;
-                        min-height: 0; // Change from 100px to 0
-                        transition: background-color 0.2s ease;
-                        border-radius: 6px;
-                        padding: 5px;
-
-                        &:empty {
-                            padding: 0; // Remove empty state padding
-                            border: none; // Remove empty state border
-                            min-height: 0; // Ensure no minimum height
-                        }
-                    }
-
-                    // Remove the entire empty-state class
-                    .empty-state {
-                        display: none; // Hide it completely
-                    }
-                }
+            
+            .media-upload {
+                min-height: 200px;
             }
         }
     }
@@ -282,12 +96,12 @@ body.dragging-post {
 
 .planner-page {
     height: 100vh;
-    overflow: hidden;
+    // overflow: hidden;
     background-color: $accent-white;      
     
     .post-creator-panel {
         .action-buttons {
-            margin-bottom: 60px;
+            margin-bottom: 160px;
             padding-bottom: 20px;
         }
     }
@@ -427,6 +241,7 @@ body.dragging-post {
                         
                         .planner-column {
                             min-height: 150px;
+                            max-height: 500px; // Adjust this value as needed
                         }
                     }
 
@@ -489,6 +304,8 @@ body.dragging-post {
                     flex-direction: column;
                     overflow-y: auto;
                     transition: all 0.2s ease;
+                    height: calc(100% - 40px); // Adjust total height accounting for padding
+                    max-height: 600px; // Add maximum height
 
                     .date-header {
                         @extend .subtitle;
@@ -502,6 +319,25 @@ body.dragging-post {
                         border-bottom: 2px solid rgba($primary-navy-blue, 0.1);
                     }
 
+                    .posts-container {
+                        display: flex;
+                        flex-direction: column;
+                        gap: 15px;
+                        overflow-y: auto;
+                        flex-grow: 1;
+                        height: calc(100% - 50px); // Account for date header height
+                        min-height: 0;
+                        transition: background-color 0.2s ease;
+                        border-radius: 6px;
+                        padding: 5px;
+
+                        &:empty {
+                            padding: 0;
+                            border: none;
+                            min-height: 0;
+                        }
+                    }
+
                     &.drag-over {
                         background: rgba($primary-navy-blue, 0.05);
                         border: 2px dashed $primary-navy-blue;
@@ -513,29 +349,6 @@ body.dragging-post {
                         &.drag-over {
                             border-style: dashed;
                         }
-                    }
-
-                    .posts-container {
-                        display: flex;
-                        flex-direction: column;
-                        gap: 15px;
-                        overflow-y: auto;
-                        flex-grow: 1;
-                        min-height: 0; // Change from 100px to 0
-                        transition: background-color 0.2s ease;
-                        border-radius: 6px;
-                        padding: 5px;
-
-                        &:empty {
-                            padding: 0; // Remove empty state padding
-                            border: none; // Remove empty state border
-                            min-height: 0; // Ensure no minimum height
-                        }
-                    }
-
-                    // Remove the entire empty-state class
-                    .empty-state {
-                        display: none; // Hide it completely
                     }
                 }
             }
@@ -709,6 +522,21 @@ body.dragging-post {
             font-size: 0.85em;
             margin-bottom: 8px;
             padding-bottom: 4px;
+        }
+    }
+}
+
+// Update calendar grid for mobile
+.calendar-grid {
+    @include mobile {
+        &.week-view, &.month-view {
+            height: auto;
+            overflow-y: auto;
+            
+            .planner-column {
+                min-height: 200px; // Give some minimum height
+                max-height: none; // Remove max height restriction
+            }
         }
     }
 }

@@ -1,6 +1,4 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Helper function to check if we're in mobile view
-    const isMobileView = () => window.matchMedia('(max-width: 600px)').matches;
 
     // Date helper functions
     function isDateToday(date) {
@@ -126,9 +124,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // Panel event handlers
     createPostBtn.addEventListener('click', () => {
         postCreatorPanel.classList.add('active');
-        if (isMobileView()) {
-            toggleBodyScroll(true);
-        }
         // Ensure scheduling is unchecked
         scheduleToggle.checked = false;
         scheduleInputs.style.display = 'none';
@@ -136,9 +131,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     schedulePostBtn.addEventListener('click', () => {
         postCreatorPanel.classList.add('active');
-        if (isMobileView()) {
-            toggleBodyScroll(true);
-        }
         // Pre-check scheduling
         scheduleToggle.checked = true;
         scheduleInputs.style.display = 'flex';
@@ -155,9 +147,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     closePanel.addEventListener('click', () => {
         postCreatorPanel.classList.remove('active');
-        if (isMobileView()) {
-            toggleBodyScroll(false);
-        }
         postForm.reset();
         mediaUpload.classList.remove('has-media');
         mediaUpload.querySelector('img').src = './assets/icons/dashboard/create-post.png';
@@ -261,9 +250,11 @@ document.addEventListener('DOMContentLoaded', () => {
         column.className = `planner-column${isToday ? ' today' : ''}`;
         
         column.innerHTML = `
-            <div class="date-header">${dateLabel}</div>
-            <div class="posts-container">
-                ${posts.length ? posts.map(post => createPostCardHtml(post)).join('') : ''}
+            <div class="column-content">
+                <div class="date-header">${dateLabel}</div>
+                <div class="posts-container">
+                    ${posts.length ? posts.map(post => createPostCardHtml(post)).join('') : ''}
+                </div>
             </div>
         `;
 
@@ -530,4 +521,5 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initialize the planner
     updateCurrentMonth();
     updatePlannerGrid();
+
 });

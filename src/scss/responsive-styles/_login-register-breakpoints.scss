@@ -1,0 +1,86 @@
+@use '../base/breakpoints' as *;
+@use '../base/colors' as *;
+
+@include mobile {
+    .login-page {
+        .login-container {
+            flex-direction: column;
+            height: auto;
+
+            .login-container-left {
+                width: 100%;
+                padding: 2rem;
+
+                .login-logo {
+                    width: 250px;
+                    margin: 1rem 0;
+                }
+            }
+
+            .login-container-right {
+                width: 100%;
+                padding: 2rem 1rem;
+
+                h1 {
+                    text-align: center;
+                }
+
+                .subtitle {
+                    text-align: center;
+                    padding: 0 1rem;
+                }
+
+                .login-form {
+                    width: 100%;
+                    max-width: 380px;
+                }
+
+                .auth-buttons {
+                    width: 100%;
+                    max-width: 380px;
+                }
+
+                .btn {
+                    width: 100%;
+                }
+            }
+        }
+    }
+}
+
+@include tablet {
+    .login-page {
+        .login-container {
+            .login-container-left {
+                .login-logo {
+                    width: 300px;
+                }
+            }
+
+            .login-container-right {
+                padding: 2rem;
+
+                .login-form, 
+                .auth-buttons,
+                .btn {
+                    width: 100%;
+                    max-width: 380px;
+                }
+            }
+        }
+    }
+}
+
+@include desktop {
+    .login-page {
+        .login-container {
+            flex-direction: row;
+            height: 100vh;
+
+            .login-container-left,
+            .login-container-right {
+                width: 50%;
+            }
+        }
+    }
+}

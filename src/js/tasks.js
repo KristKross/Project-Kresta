@@ -31,18 +31,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const tasksList = document.querySelector('.tasks-list');
     const bulletEditor = document.querySelector('.bullet-editor');
 
-    // Convert text to HTML with line breaks but without bullets
+    // Convert text to HTML with line breaks
     function formatTaskText(text) {
-        const lines = text.split('\n')
-            .map(line => line.trim())
-            .filter(line => line !== '');
+        if (!text.trim()) return '';
         
-        if (lines.length === 0) return '';
-        
-        // Add a class to help with styling
-        return `<div class="task-lines">
-            ${lines.map(line => `• ${line}`).join('<br>')}
-        </div>`;
+        return `<div class="task-lines">${text}</div>`;
     }
 
     // Create new task card
