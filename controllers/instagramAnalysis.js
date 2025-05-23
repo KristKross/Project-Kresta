@@ -33,28 +33,3 @@ exports.getInstagramAccountAnalytics = async (req, res) => {
         });
     }
 };
-
-// Get Instagram Business Posts Analytics
-exports.getInstagramPostAnalytics = async (req, res) => {
-    try {
-        const { accessToken } = await getSocialCredentials(req);
-        const { post_id } = req.params;
-
-        if (!accessToken || !post_id) {
-            return res.status(400).json({ error: "Missing required parameters: accessToken, and postId." });
-        }
-
-        const response = await axios.get(`https://graph.facebook.com/v22.0/${post_id}/insights`, {
-        params: {
-            metric: "reach,likes,comments,shares,saved,shares,views",
-            access_token: accessToken,
-        },
-        });
-
-        res.json(response.data);
-    } catch (error) {
-        console.error("Error fetching Instagram post analytics:", error.response?.data || error.message);
-        res.status(500).json({ error: "Failed to retrieve Instagram post analytics." });
-    }
-};
-

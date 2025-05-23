@@ -1,6 +1,7 @@
 const express = require("express");
 const instagramContentController = require("../controllers/instagramContent");
 const instagramAnalysisController = require("../controllers/instagramAnalysis");
+const instagramPublishController = require("../controllers/instagramPublish");
 
 const router = express.Router();
 
@@ -12,6 +13,8 @@ router.post("/reply/:comment_id", instagramContentController.replyToComment);
 
 // Analysis-related routes
 router.get("/analytics/account", instagramAnalysisController.getInstagramAccountAnalytics);
-router.get("/analytics/post/:post_id", instagramAnalysisController.getInstagramPostAnalytics);
+
+// Publish-related routes
+router.post("/publish", instagramPublishController.createScheduledPost);
 
 module.exports = router;

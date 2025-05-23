@@ -84,7 +84,8 @@ exports.login = async (req, res) => {
     }
 };
 
-// @route   GET /api/auth/user
+
+// @route   GET /auth/user
 exports.getUser = async (req, res) => {
     try {
         const user = req.session?.userData?.user;
