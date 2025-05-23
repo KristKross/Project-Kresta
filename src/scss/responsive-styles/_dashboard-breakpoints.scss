@@ -3,158 +3,144 @@
 
 // Tablet Styles
 @include tablet {
-  .dashboard-container {
-    flex-direction: column;
-    margin: 10px;
-    padding: 15px;
+    .dashboard-container {
+        display: flex;
+        flex-direction: column;
+        grid-template-columns: 1fr;
+        margin: 10px;
+        padding: 15px;
+        gap: 20px;
 
-    .dashboard-middle-container {
-      order: 1; // Will appear first
-      min-width: 100%;
-      max-width: 100%;
+        .dashboard-middle-container {
+            order: -1; // Moves it to the top
+            min-width: 100%;
+            max-width: 100%;
+        }
+
+        .dashboard-left-container {
+            order: 1;
+            min-width: 100%;
+            max-width: 100%;
+        }
+
+        .dashboard-workspace {
+            order: 2;
+            min-width: 100%;
+            max-width: 100%;
+        }
     }
 
-    .dashboard-left-container {
-      order: 2; // Will appear second
-      min-width: 100%;
-      max-width: 100%;
+    .user-welcome {
+        padding: 1.5rem;
+        
+        .user-info {
+            flex-direction: column;
+            text-align: center;
+            
+            .profile-picture {
+                width: 100px;
+                height: 100px;
+            }
+        }
     }
 
-    .dashboard-workspace {
-      order: 3; // Will appear last
-      min-width: 100%;
-      max-width: 100%;
+    .actions-grid {
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     }
-
-    .vertical-separator {
-      order: 4;
-      width: 100%;
-      height: 1px;
-      margin: 20px 0;
-    }
-  }
-
-  .content-planner {
-    overflow-x: auto;
-    padding-bottom: 15px;
-
-    .planner-column {
-      min-width: 200px;
-    }
-  }
 }
 
 // Mobile Styles
 @include mobile {
-  .title-h1 {
-    height: auto;
-    padding: 15px;
-    gap: 15px;
-    
-    img {
-      width: 24px;
-      height: 24px;
-    }
-  }
-
-  .dashboard-container {
-    margin: 5px;
-    padding: 10px;
-    gap: 15px;
-
-    .dashboard-middle-container {
-      order: 1; // Will appear first
-    }
-
-    .dashboard-left-container {
-      order: 2; // Will appear second
-
-      .stat-container {
+    .title-h1 {
+        height: auto;
         padding: 15px;
+        gap: 15px;
+        font-size: 1.5rem;
         
-        .numbers {
-          font-size: 1em;
-        }
-      }
-
-      .actions {
-        height: 70px;
-        padding: 15px;
-      }
-    }
-
-    .dashboard-workspace {
-      order: 3; // Will appear last
-
-      .people-list {
-        justify-content: center;
-        
-        .people-card {
-          width: calc(50% - 10px);
-        }
-      }
-    }
-
-    .task-bullet {
-      padding: 12px 15px;
-    }
-  }
-
-  .content-planner {
-    .planner-column {
-      min-width: 180px;
-      
-      .post-preview {
         img {
-          height: 100px;
+            width: 24px;
+            height: 24px;
         }
+    }
+
+    .dashboard-container {
+        margin: 5px;
+        padding: 10px;
+        gap: 15px;
+
+        .section-header {
+            padding: 12px 15px;
+            
+            h2 {
+                font-size: 1.2rem;
+                
+                img {
+                    width: 20px;
+                    height: 20px;
+                }
+            }
+        }
+    }
+
+    .user-welcome {
+        padding: 1rem;
+        margin-bottom: 1rem;
         
-        .post-info {
-          padding: 6px;
-          
-          .post-text {
-            font-size: 0.85em;
-          }
+        .user-info {
+            gap: 1rem;
+            
+            .user-details {
+                .welcome-text {
+                    font-size: 1rem;
+                }
+                
+                .user-name {
+                    font-size: 1.5rem;
+                }
+            }
         }
-      }
     }
-  }
 
-  // Adjust analytics cards for mobile
-  .engagement-metrics {
-    .stat-container {
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-      gap: 10px;
-
-      .stat-1 {
-        justify-content: center;
-      }
+    .actions-grid {
+        grid-template-columns: 1fr;
+        
+        .action-card {
+            padding: 15px;
+        }
     }
-  }
 
-  // Hide separators on mobile
-  .vertical-separator {
-    display: none;
-  }
+    .empty-state {
+        padding: 1.5rem;
+        min-height: 200px;
+        
+        img {
+            width: 80px;
+            height: 80px;
+        }
+    }
+
+    // Hide separators on mobile
+    .vertical-separator {
+        display: none;
+    }
 }
 
-// Additional helper for very small screens
+// Extra small devices
 @media screen and (max-width: 350px) {
-  .dashboard-workspace {
-      .people-list {
-        justify-content: center;
-        flex-direction: column;
-      .people-card {
-        width: 100%;
-        margin: auto;
-        align-self: center;
-      }
+    .dashboard-container {
+        margin: 0;
+        border-radius: 0;
     }
-  }
 
-  .stat-container {
-    width: 100%;
-  }
+    .user-welcome {
+        border-radius: 0;
+    }
+
+    .section-header {
+        border-radius: 8px;
+        
+        h2 {
+            font-size: 1.1rem;
+        }
+    }
 }

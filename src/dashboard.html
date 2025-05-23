@@ -3,140 +3,123 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Dashboard | Project Kresta</title>
 </head>
 <body>
     <div class="title-header">
-        <h1 class="title-h1"><img src="./assets/icons/dashboard/dashboard.png" alt="">
-Dashboard</h1>
+        <h1 class="title-h1">
+            <img src="./assets/icons/dashboard/dashboard.png" alt="">
+            Dashboard
+        </h1>
     </div>
 
     <div class="dashboard-container">
+        <!-- Left Container -->
         <div class="dashboard-left-container">
             <div class="dashboard-analytics">
-                <div class="h1">Daily analytics</div>
-                <div class="engagement-metrics">
-                    <div class="stat-container">
-                        <div class="stat-1"><img src="./assets/icons/dashboard/interactions.png" alt="">Engagement</div>
-                        <div class="numbers"><img src="./assets/icons/dashboard/arrow-up.png" alt="">+ 20%</div>
-                    </div>
-                    <div class="stat-container">
-                        <div class="stat-1"><img src="./assets/icons/dashboard/comments.png" alt="">Comments</div>
-                        <div class="numbers"><img src="./assets/icons/dashboard/arrow-up.png" alt="">+ 20%</div>
-                    </div>
-                    <div class="stat-container">
-                        <div class="stat-1"><img src="./assets/icons/dashboard/like.png" alt="">Likes</div>
-                        <div class="numbers"><img src="./assets/icons/dashboard/arrow-up.png" alt="">+ 20%</div>
-                    </div>
-                    <div class="stat-container">
-                        <div class="stat-1"><img src="./assets/icons/dashboard/reply.png" alt="">Replies</div>
-                        <div class="numbers"><img src="./assets/icons/dashboard/arrow-up.png" alt="">+ 20%</div>
-                    </div>
+                <div class="section-header">
+                    <h2>
+                        <img src="./assets/icons/analytics/analytics-logo.png" alt="">
+                        Daily Analytics
+                    </h2>
                 </div>
+                <div class="engagement-metrics"></div>
             </div>
+
             <div class="actions-container">
-                <div class="h1">Actions</div>
-                <a href="#" class="actions">
-                    <span>Create a post</span>
-                    <img src="./assets/icons/dashboard/create-post.png" alt="Create post icon">
-                </a>
-                <a href="#" class="actions">
-                    <span>Create a task</span>
-                    <img src="./assets/icons/dashboard/create-task.png" alt="Create task icon">
-                </a>
-                <a href="#" class="actions">
-                    <span>Schedule post</span>
-                    <img src="./assets/icons/dashboard/schedule-post.png" alt="Schedule post icon">
-                </a>
+                <div class="section-header">
+                    <h2>
+                        <img src="./assets/icons/dashboard/actions.png" alt="">
+                        Quick Actions
+                    </h2>
+                </div>
+                <div class="actions-grid">
+                    <a href="planner.html" class="action-card">
+                        <div class="action-icon">
+                            <img src="./assets/icons/dashboard/create-post.png" alt="Create post">
+                        </div>
+                        <span>Create Post</span>
+                    </a>
+                    <a href="tasks.html" class="action-card">
+                        <div class="action-icon">
+                            <img src="./assets/icons/dashboard/create-task.png" alt="Create task">
+                        </div>
+                        <span>Create Task</span>
+                    </a>
+                    <a href="planner.html" class="action-card">
+                        <div class="action-icon">
+                            <img src="./assets/icons/dashboard/schedule-post.png" alt="Schedule post">
+                        </div>
+                        <span>Schedule Post</span>
+                    </a>
+                </div>
             </div>
         </div>
 
         <div class="vertical-separator"></div>
 
+        <!-- Middle Container -->
         <div class="dashboard-middle-container">
-            <div class="dashboard-user">
-                <div class="dashboard-welcome">
-                    <div class="h1">Welcome, John Doe</div>
-                    <img src="./assets/images/dashboard/user-pfp.png" alt="">
-                    <div class="h1">13 June, 2024</div>
+            <div class="user-welcome">
+                <div class="user-info">
+                    <img src="./assets/images/dashboard/user-pfp.png" alt="Profile Picture" class="profile-picture">
+                    <div class="user-details">
+                        <h2 class="welcome-text">Welcome back,</h2>
+                        <h1 class="user-name" id="username"></h1>
+                        <p class="current-date" id="current-date"></p>
+                        <span class="plan-badge" id="plan-badge"></span>
+                        
+                    </div>
                 </div>
             </div>
 
             <div class="content-planner">
-                <div class="planner-column">
-                    <div class="date-header">Today</div>
-                    <div class="post-preview">
-                        <img src="./assets/icons/dashboard/sample-post-3.png" alt="Post preview">
-                        <div class="post-info">
-                            <p class="post-text">New product launch coming soon! 🚀</p>
-                            <div class="post-stats">
-                                <span><img src="./assets/icons/dashboard/like.png" alt="">24</span>
-                                <span><img src="./assets/icons/dashboard/comments.png" alt="">12</span>
-                                <span><img src="./assets/icons/dashboard/interactions.png" alt="">89</span>
-                            </div>
-                        </div>
-                    </div>
+                <div class="section-header">
+                    <h2>
+                        <img src="./assets/icons/planner/planner-logo.png" alt="">
+                        Content Calendar
+                    </h2>
+                    <a href="planner.html" class="view-all">View All</a>
                 </div>
-
-                <div class="planner-column">
-                    <div class="date-header">Tomorrow</div>
-                    <div class="post-preview scheduled">
-                        <img src="./assets/icons/dashboard/sample-post-3.png" alt="Post preview">
-                        <div class="post-info">
-                            <p class="post-text">Behind the scenes look at our team 👥</p>
-                            <div class="schedule-time">Scheduled for 10:00 AM</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="planner-column">
-                    <div class="date-header">15 June</div>
-                    <div class="post-preview draft">
-                        <div class="draft-label">Draft</div>
-                        <img src="./assets/icons/dashboard/sample-post-3.png" alt="Post preview">
-                        <div class="post-info">
-                            <p class="post-text">Customer success story #1</p>
-                        </div>
-                    </div>
+                
+                <!-- Empty State for Planner -->
+                <div class="empty-state planner-empty">
+                    <img src="./assets/icons/dashboard/dash-grey.png" alt="Empty calendar">
+                    <h3>No Scheduled Content</h3>
+                    <p>Start planning your social media content</p>
+                    <button class="create-post-btn">Create Your First Post</button>
                 </div>
             </div>
         </div>
 
         <div class="vertical-separator"></div>
-        
+
+        <!-- Right Container -->
         <div class="dashboard-workspace">
-            <div class="h1">People Workspace</div>
-            <div class="people-list">
-                <div class="people-card">
-                    <img src="./assets/images/dashboard/user-pfp.png" alt="">
-                    <div class="body-large">User 1</div>
+            <div class="workspace-section">
+                <div class="section-header">
+                    <h2>
+                        <img src="./assets/icons/dashboard/team-icon.png" alt="">
+                        Team Workspace
+                    </h2>
+                    <span class="plan-badge"></span>
                 </div>
-                <div class="people-card">
-                    <img src="./assets/images/dashboard/user-pfp.png" alt="">
-                    <div class="body-large">User 2</div>
-                </div>
-                <div class="people-card">
-                    <img src="./assets/images/dashboard/user-pfp.png" alt="">
-                    <div class="body-large">User 3</div>
-                </div>
+
+                <div class="empty-state workspace-empty"></div>
             </div>
 
-                    <div class="dashboard-tasks">
-            <div class="h1">Tasks To Do</div>
-            <div class="tasks-container">
-                <div class="task-card">
-                    <div class="date">18 June, 2025 <span class="line-fill"></span></div>
-                    <p class="task-bullet">Develop training program</p>
-                    <p class="task-bullet">Train Person 1</p>
-                    <p class="task-bullet">Create Story graphic</p>
+            <div class="tasks-section">
+                <div class="section-header">
+                    <h2 class="h2">Tasks</h2>
+                    <a href="tasks.html" class="view-all">View All</a>
                 </div>
-            </div>
-            <div class="tasks-container">
-                <div class="task-card">
-                    <div class="date">21 June, 2025 <span class="line-fill"></span></div>
-                    <p class="task-bullet">Train Person 2</p>
-                    <p class="task-bullet">Research competitors</p>
-                    <p class="task-bullet">Make a video on staff</p>
+                
+                <!-- Empty State for Tasks -->
+                <div class="empty-state tasks-empty">
+                    <img src="./assets/icons/dashboard/tasks-grey.png" alt="No tasks">
+                    <h3>No Tasks Yet</h3>
+                    <p>Create your first task to get started</p>
+                    <button class="create-task-btn">Create Task</button>
                 </div>
             </div>
         </div>

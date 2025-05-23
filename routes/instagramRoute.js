@@ -12,7 +12,7 @@ router.get("/comments/:post_id", instagramContentController.getInstagramComments
 router.post("/reply/:comment_id", instagramContentController.replyToComment);
 
 // Analysis-related routes
-router.get("/analytics/account", instagramAnalysisController.getInstagramAccountAnalytics);
+router.get("/analytics", instagramAnalysisController.getInstagramAccountAnalytics);
 
 // Publish-related routes
 router.post("/publish", instagramPublishController.createScheduledPost);

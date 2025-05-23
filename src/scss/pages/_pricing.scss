@@ -5,3 +5,232 @@
 @use '../base/breakpoints' as *;
 @use '../components/buttons' as *;
 
+.pricing-page {
+    background-color: $accent-white;
+
+    .pricing-hero {
+        background-color: $primary-navy-blue;
+        height: 50vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        padding: 2em;
+
+        .hero-content {
+            max-width: 800px;
+            
+            .display-1 {
+                color: $accent-white;
+                margin-bottom: 1em;
+            }
+
+            .seperator {
+                width: 200px;
+                height: 5px;
+                background-color: $tertiary-beige;
+                margin: 2em auto;
+                border-radius: 10px;
+            }
+
+            .subtitle {
+                @extend .subtitle;
+                color: $tertiary-beige;
+            }
+        }
+    }
+
+    .pricing-plans {
+        padding: 5em 2em;
+        background-color: $accent-white;
+
+        .plan-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: center;
+            gap: 2em;
+            flex-wrap: wrap;
+        }
+
+        .pricing-card {
+            width: 350px;
+            padding: 2em;
+            border-radius: 20px;
+            position: relative;
+            @include hover-lift;
+
+            &.free {
+                background-color: $tertiary-beige;
+                border: $primary-navy-blue 10px solid;
+                color: $accent-black;
+            }
+
+            &.creator {
+                background-color: $primary-navy-blue;
+                border: $tertiary-beige 10px solid;
+                color: $tertiary-beige;
+                transform: translateY(-20px);
+
+                .popular-tag {
+                    position: absolute;
+                    top: -15px;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    background: $accent-black;
+                    color: $accent-white;
+                    padding: 0.5em 1.5em;
+                    border-radius: 20px;
+                    font-size: 0.9em;
+                }
+            }
+
+            &.business {
+                background-color: $accent-black;
+                border: $accent-white 10px solid;
+                color: $accent-white;
+            }
+
+            .card-header {
+                text-align: center;
+                margin-bottom: 2em;
+
+                .price {
+                    font-family: $font-cardo;
+                    font-size: 65px;
+                    line-height: 1;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+
+                    .month {
+                        font-size: 20px;
+                        margin-top: 0.5em;
+                    }
+                }
+
+                .card-seperator {
+                    width: 200px;
+                    height: 10px;
+                    background-color: currentColor;
+                    border-radius: 20px;
+                    margin: 1em auto;
+                }
+
+                .plan {
+                    @extend .h1;
+                    letter-spacing: 3px;
+                }
+            }
+
+            .card-content {
+                ul {
+                    list-style: none;
+                    padding: 0;
+                    margin-bottom: 2em;
+
+                    li {
+                        @extend .body-large;
+                        display: flex;
+                        align-items: center;
+                        gap: 0.5em;
+                        margin: 1em 0;
+
+                        img {
+                            width: 20px;
+                            height: 20px;
+                        }
+                    }
+                }
+
+                .select-plan {
+                    @extend .button-cta;
+                    display: block;
+                    text-align: center;
+                    padding: 1em;
+                    border-radius: 10px;
+                    background: $accent-white;
+                    color: $primary-navy-blue;
+                    text-decoration: none;
+                    transition: all 0.3s ease;
+
+                    &:hover {
+                        transform: translateY(-3px);
+                        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+                    }
+                }
+            }
+        }
+    }
+
+    .faq-section {
+        background-color: $tertiary-beige;
+        padding: 5em 2em;
+        text-align: center;
+
+        .display-1 {
+            color: $primary-navy-blue;
+            margin-bottom: 1em;
+        }
+
+        .seperator {
+            width: 200px;
+            height: 5px;
+            background-color: $primary-navy-blue;
+            margin: 2em auto;
+            border-radius: 10px;
+        }
+
+        .faq-grid {
+            max-width: 1200px;
+            margin: 3em auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            gap: 2em;
+            text-align: left;
+
+            .faq-item {
+                background: $accent-white;
+                padding: 2em;
+                border-radius: 10px;
+                @include hover-lift;
+
+                h3 {
+                    @extend .h3;
+                    color: $primary-navy-blue;
+                    margin-bottom: 1em;
+                }
+
+                p {
+                    @extend .body-regular;
+                    color: $accent-black;
+                }
+            }
+        }
+    }
+
+    @include mobile {
+        .pricing-hero {
+            height: 40vh;
+            padding: 1em;
+        }
+
+        .pricing-plans {
+            padding: 3em 1em;
+
+            .pricing-card {
+                width: 100%;
+                max-width: 350px;
+
+                &.creator {
+                    transform: translateY(0);
+                }
+            }
+        }
+
+        .faq-grid {
+            grid-template-columns: 1fr !important;
+            padding: 0 1em;
+        }
+    }
+}
