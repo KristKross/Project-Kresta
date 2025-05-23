@@ -55,6 +55,12 @@ module.exports = {
             chunks: ['main'],
         }),
         new HtmlWebpackPlugin({
+            filename: 'templates/designs.html',
+            template: './src/templates/designs.html',
+            inject: false,
+            chunks: ['main'],
+        }),
+        new HtmlWebpackPlugin({
             filename: 'index.html', 
             template: './src/index.html',
             inject: 'body',
