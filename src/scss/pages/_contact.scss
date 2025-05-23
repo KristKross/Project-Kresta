@@ -5,3 +5,233 @@
 @use '../base/breakpoints' as *;
 @use '../components/buttons' as *;
 
+.contact-page {
+    background-color: $accent-white;
+
+    .contact-hero {
+        background-color: $primary-navy-blue;
+        height: 50vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        padding: 2em;
+
+        .hero-content {
+            max-width: 800px;
+            
+            .display-1 {
+                color: $accent-white;
+                margin-bottom: 1em;
+            }
+
+            .seperator {
+                width: 200px;
+                height: 5px;
+                background-color: $tertiary-beige;
+                margin: 2em auto;
+                border-radius: 10px;
+            }
+
+            .subtitle {
+                @extend .subtitle;
+                color: $tertiary-beige;
+            }
+        }
+    }
+
+    .contact-form-section {
+        padding: 5em 2em;
+
+        .form-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 3em;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1);
+
+            .form-group {
+                margin-bottom: 1.5em;
+
+                label {
+                    @extend .body-regular;
+                    display: block;
+                    margin-bottom: 0.5em;
+                    color: $accent-black;
+                }
+
+                .form-input {
+                    width: 100%;
+                    padding: 1em;
+                    border: 1px solid rgba($accent-black, 0.1);
+                    border-radius: 8px;
+                    @extend .body-regular;
+                    transition: border-color 0.2s ease;
+
+                    &:focus {
+                        outline: none;
+                        border-color: $primary-navy-blue;
+                    }
+                }
+
+                textarea.form-input {
+                    resize: vertical;
+                    min-height: 120px;
+                }
+            }
+
+            .submit-btn {
+                @extend .button-cta;
+                @include action-button;
+                width: 100%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 10px;
+
+                img {
+                    width: 24px;
+                    height: 24px;
+                }
+            }
+        }
+    }
+
+    .connect-section {
+        background-color: $tertiary-beige;
+        padding: 5em 2em;
+        text-align: center;
+
+        .section-content {
+            max-width: 1200px;
+            margin: 0 auto;
+
+            .display-1 {
+                color: $primary-navy-blue;
+                margin-bottom: 1em;
+            }
+
+            .seperator {
+                width: 200px;
+                height: 5px;
+                background-color: $primary-navy-blue;
+                margin: 2em auto;
+                border-radius: 10px;
+            }
+
+            .social-links {
+                display: flex;
+                justify-content: center;
+                flex-wrap: wrap;
+                gap: 2em;
+                margin-top: 3em;
+
+                .social-link {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    gap: 1em;
+                    text-decoration: none;
+                    transition: transform 0.2s ease;
+
+                    img {
+                        width: 35px;
+                        height: 35px;
+                        @include hover-grow;
+                    }
+
+                    span {
+                        @extend .body-regular;
+                        color: $primary-navy-blue;
+                    }
+
+                    &:hover {
+                        transform: translateY(-5px);
+                    }
+                }
+            }
+        }
+    }
+
+    .team-connect-section {
+        background-color: $primary-navy-blue;
+        padding: 5em 2em;
+        text-align: center;
+
+        .section-content {
+            max-width: 800px;
+            margin: 0 auto;
+
+            .display-1 {
+                color: $accent-white;
+                margin-bottom: 0.5em;
+            }
+
+            .seperator {
+                width: 200px;
+                height: 5px;
+                background-color: $tertiary-beige;
+                margin: 2em auto;
+                border-radius: 10px;
+            }
+
+            .subtitle {
+                @extend .subtitle;
+                color: $tertiary-beige;
+                margin-bottom: 2em;
+            }
+
+            .team-btn {
+                @extend .button-cta;
+                display: inline-flex;
+                align-items: center;
+                gap: 1em;
+                background-color: $accent-white;
+                color: $primary-navy-blue;
+                padding: 1em 2em;
+                border-radius: 10px;
+                text-decoration: none;
+                @include hover-lift;
+                @include button-border-animation($tertiary-beige);
+
+                img {
+                    width: 24px;
+                    height: 24px;
+                }
+            }
+        }
+    }
+
+    @include mobile {
+        .contact-hero {
+            height: 40vh;
+            padding: 1em;
+        }
+
+        .contact-form-section {
+            padding: 2em 1em;
+
+            .form-container {
+                padding: 1.5em;
+            }
+        }
+
+        .connect-section {
+            padding: 3em 1em;
+
+            .social-links {
+                gap: 1.5em;
+
+                .social-link img {
+                    width: 40px;
+                    height: 40px;
+                }
+            }
+        }
+
+        .team-connect-section {
+            padding: 3em 1em;
+        }
+    }
+}
