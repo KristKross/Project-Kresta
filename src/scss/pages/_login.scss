@@ -7,7 +7,10 @@
     .login-container {
         display: flex;
         flex-direction: row;
-        height: 100vh; // Fixed height
+        height: fit-content; // Fixed height
+        min-height: fit-content; // Fixed height
+        // width:fit-content; // Fixed width
+
 
         p {
             @extend .body-regular;
@@ -21,6 +24,8 @@
             align-items: center;
             width: 50%;  // Changed from vw
             background-color: $accent-white;
+            height: 100%;
+            min-height: 100%;
 
             .login-logo {
                 width: 400px;
@@ -37,6 +42,8 @@
             background-color: $primary-navy-blue;
             gap: 15px;
             padding: 2rem;
+            height: 100%;
+            min-height: fit-content;
 
             h1 {
                 @extend .display-1;

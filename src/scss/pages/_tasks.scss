@@ -125,20 +125,13 @@ label {
                     color: $accent-black;
                     margin-bottom: 15px;
                     padding-left: 20px;
-                    min-width: 200px; // Add minimum width for preview content
+                    min-width: 200px;
 
-                    // Remove the automatic first bullet
-                    // &::before {
-                    //     content: "•";
-                    //     margin-right: 8px;
-                    // }
-
-                    // Only add bullets after line breaks
-                    br + * {
-                        &::before {
-                            content: "•";
-                            margin-right: 8px;
-                        }
+                    .task-lines {
+                        white-space: pre-wrap;       /* CSS3 */
+                        word-wrap: break-word;       /* IE */
+                        overflow-wrap: break-word;   /* Modern browsers */
+                        max-width: 100%;            /* Ensure content doesn't overflow container */
                     }
                 }                .assignees {
                     display: flex;
