@@ -36,112 +36,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    // Drag and Drop Functionality
-    let draggedPost = null;
-
-    function handleDragStart(e) {
-        draggedPost = this;
-        this.style.opacity = '0.4';
-        e.dataTransfer.effectAllowed = 'move';
-        e.dataTransfer.setData('text/plain', this.dataset.postData);
-        document.body.classList.add('dragging-post');
-    }
-
-    function handleDragEnd(e) {
-        this.style.opacity = '1';
-        document.body.classList.remove('dragging-post');
-        document.querySelectorAll('.planner-column').forEach(col => {
-            col.classList.remove('drag-over');
-        });
-    }
-
-    function handleDragOver(e) {
-        e.preventDefault();
-        const column = e.currentTarget.closest('.planner-column');
-        if (column && !column.classList.contains('drag-over')) {
-            document.querySelectorAll('.planner-column').forEach(col => {
-                col.classList.remove('drag-over');
-            });
-            column.classList.add('drag-over');
-        }
-        return false;
-    }
-
-    function handleDragEnter(e) {
-        const column = e.currentTarget.closest('.planner-column');
-        if (column) {
-            column.classList.add('drag-over');
-        }
-    }
-
-    function handleDragLeave(e) {
-        const column = e.currentTarget.closest('.planner-column');
-        if (column) {
-            column.classList.remove('drag-over');
-        }
-    }
-
-    function handleDrop(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        
-        const targetColumn = e.currentTarget.closest('.planner-column');
-        if (!targetColumn || !draggedPost) {
-            return false;
-        }
-
-        targetColumn.classList.remove('drag-over');
-        
-        // Get the target date from the column header
-        const dateHeader = targetColumn.querySelector('.date-header');
-        if (!dateHeader) {
-            return false;
-        }
-
-        const targetDateHeader = dateHeader.textContent;
-        const postData = JSON.parse(draggedPost.dataset.postData);
-        
-        // Update the post's scheduled time
-        const today = new Date();
-        let targetDate = today;
-        
-        if (targetDateHeader === 'Today') {
-            targetDate = today;
-        } else if (targetDateHeader === 'Tomorrow') {
-            targetDate = new Date(today.setDate(today.getDate() + 1));
-        } else {
-            // Parse the date from format "DD Month"
-            const [day, month] = targetDateHeader.split(' ');
-            targetDate = new Date(today.getFullYear(), monthNames.indexOf(month), parseInt(day));
-        }
-        
-        // Keep the original time but update the date
-        const originalTime = postData.time ? postData.time.split(':') : ['09', '00'];
-        targetDate.setHours(parseInt(originalTime[0]), parseInt(originalTime[1]));
-        
-        // Update post data
-        postData.scheduledDate = targetDate.toISOString();
-        postData.time = targetDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-        postData.status = 'scheduled';
-        
-        // Find or create posts container
-        let postsContainer = targetColumn.querySelector('.posts-container');
-        if (!postsContainer) {
-            postsContainer = document.createElement('div');
-            postsContainer.className = 'posts-container';
-            targetColumn.appendChild(postsContainer);
-        }
-        
-        // Remove the original post card
-        draggedPost.remove();
-        
-        // Create new post card in target column
-        createPostCard(postData, postsContainer);
-        
-        draggedPost = null;
-        return false;
-    }
-
     // Post Creator Panel Functionality
     const postCreatorPanel = document.querySelector('.post-creator-panel');
     const createPostBtn = document.querySelector('.action-btn');
@@ -373,26 +267,16 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
         `;
 
-        // Find or create the posts container
-        const postsContainer = column.querySelector('.posts-container');
-        
-        // Add drag and drop event listeners directly to the posts container
-        postsContainer.addEventListener('dragover', handleDragOver);
-        postsContainer.addEventListener('dragenter', handleDragEnter);
-        postsContainer.addEventListener('dragleave', handleDragLeave);
-        postsContainer.addEventListener('drop', handleDrop);
-        
         return column;
     }
 
     function createPostCard(data, container = null) {
         if (container === null) {
             const grid = document.getElementById('planner-grid');
-            const calendarGrid = grid.querySelector('.calendar-grid'); // Get the calendar grid
+            const calendarGrid = grid.querySelector('.calendar-grid');
             const today = new Date();
             const targetDate = data.scheduled ? new Date(data.scheduledDate) : today;
             
-            // Find or create the target column within calendar grid
             let targetColumn = calendarGrid ? Array.from(calendarGrid.children).find(col => {
                 const headerDate = col.querySelector('.date-header')?.textContent;
                 if (!headerDate) return false;
@@ -401,7 +285,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     return headerDate === 'Today';
                 }
                 
-                // Handle special cases first
                 if (headerDate === 'Tomorrow' && isDateTomorrow(targetDate)) {
                     return true;
                 }
@@ -409,7 +292,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     return true;
                 }
                 
-                // For other dates, check day and month match
                 return headerDate.includes(targetDate.getDate().toString()) &&
                        headerDate.includes(monthNames[targetDate.getMonth()]);
             }) : null;
@@ -419,7 +301,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 calendarGrid?.appendChild(targetColumn);
             }
 
-            // Find or create the posts container
             container = targetColumn?.querySelector('.posts-container');
             if (!container) {
                 container = document.createElement('div');
@@ -428,23 +309,17 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
-        // Determine post status
         if (!data.status) {
             data.status = data.scheduled ? 'scheduled' : 'draft';
         }
 
-        // Create and setup the post card
         const postCard = document.createElement('div');
         postCard.className = `post-card ${data.status}`;
-        postCard.draggable = true;
+        // Remove draggable attribute
         postCard.innerHTML = createPostCardHtml(data);
         postCard.dataset.postData = JSON.stringify(data);
 
-        // Add drag and drop event listeners
-        postCard.addEventListener('dragstart', handleDragStart);
-        postCard.addEventListener('dragend', handleDragEnd);
-
-        // Separate click handlers for preview and edit
+        // Remove drag event listeners, keep only click handlers
         postCard.addEventListener('click', (e) => {
             if (!e.target.closest('.edit-btn')) {
                 previewModal.show(postCard.dataset.postData);
