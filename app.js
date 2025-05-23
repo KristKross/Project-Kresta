@@ -63,6 +63,9 @@ app.use('/api/instagram', isAuthenticated, instagramRoutes);
 const workspaceRoutes = require("./routes/workspaceRoute");
 app.use('/api/workspace', checkPremiumTier, isAuthenticated, workspaceRoutes);
 
+const taskRoutes = require("./routes/taskRoute");
+app.use('/api/tasks', checkPremiumTier, isAuthenticated, taskRoutes);
+
 // Start the server
 const PORT = process.env.PORT;
 app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));

@@ -254,3 +254,21 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 });
+
+async function loadTasks() {
+    try {
+        const response = await fetch('/api/tasks'); // Your backend endpoint to get all tasks
+        if (!response.ok) throw new Error('Failed to fetch tasks');
+            const tasks = await response.json();
+
+            tasks.forEach(taskData => {
+            const taskCard = createTaskCard(taskData);
+            tasksList.appendChild(taskCard);
+        });
+    } catch (error) {
+        console.error(error);
+        tasksList.innerHTML = '<p>Error loading tasks.</p>';
+    }
+}
+
+

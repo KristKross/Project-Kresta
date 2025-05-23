@@ -51,8 +51,8 @@ exports.getMyWorkspace = async (req, res) => {
         .populate('members', 'email')
 
         res.json({ 
-            success: true, 
-            workspace: workspace || null,
+            success: true,
+            workspace,
         });
     } catch (error) {
         console.error("Error fetching user's workspace:", error);
