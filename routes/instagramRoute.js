@@ -2,6 +2,7 @@ const express = require("express");
 const instagramContentController = require("../controllers/instagramContent");
 const instagramAnalysisController = require("../controllers/instagramAnalysis");
 const instagramPublishController = require("../controllers/instagramPublish");
+const checkPremiumTier = require('../middleware/checkPremiumTier');
 
 const router = express.Router();
 
@@ -12,7 +13,7 @@ router.get("/comments/:post_id", instagramContentController.getInstagramComments
 router.post("/reply/:comment_id", instagramContentController.replyToComment);
 
 // Analysis-related routes
-router.get("/analytics", instagramAnalysisController.getInstagramAccountAnalytics);
+router.get("/analytics", checkPremiumTier, instagramAnalysisController.getInstagramAccountAnalytics);
 
 // Publish-related routes
 router.post("/publish", instagramPublishController.createScheduledPost);

@@ -5,6 +5,7 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const sessionMiddleware = require("./config/session");
 const isAuthenticated = require("./middleware/sessionAuth");
+const checkPremiumTier = require("./middleware/checkPremiumTier");
 
 const app = express();
 
@@ -58,6 +59,9 @@ app.use('/api/social', isAuthenticated, socialRoutes);
 
 const instagramRoutes = require("./routes/instagramRoute");
 app.use('/api/instagram', isAuthenticated, instagramRoutes);
+
+const workspaceRoutes = require("./routes/workspaceRoute");
+app.use('/api/workspace', checkPremiumTier, isAuthenticated, workspaceRoutes);
 
 // Start the server
 const PORT = process.env.PORT;

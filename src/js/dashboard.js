@@ -73,6 +73,37 @@ async function fetchInstagramAnalysis() {
     }
 }
 
+async function fetchWorkspace() {
+    try {
+        const response = await fetch('/api/workspace/my', {
+            method: 'GET',
+            credentials: 'include'
+        });
+
+        if (response.status === 403) {
+            return { error: 'Forbidden', hasWorkspace: false };
+        }
+
+        if (!response.ok) {
+            return { error: `Error fetching workspace: ${response.statusText}`, hasWorkspace: false };
+        }
+
+        const data = await response.json();
+
+        if (data.success) {
+            if (!data.workspace) {
+                return { hasWorkspace: false };
+            }
+            return { hasWorkspace: true, workspace: data.workspace };
+        } else {
+            return { error: 'Failed to fetch workspace', hasWorkspace: false };
+        }
+
+    } catch (error) {
+        console.error('Fetch workspace failed:', error);
+        return { error: error.message, hasWorkspace: false };
+    }
+}
 
 function initDashboard() {
     const usernameEl = document.getElementById("username");
@@ -158,34 +189,39 @@ async function updateAnalyticsSection() {
     `;
 }
 
-function updateWorkspaceSection() {
+async function updateWorkspaceSection() {
     const workspaceContainer = document.querySelector('.workspace-section');
-    const workspaceEmpty = workspaceContainer.querySelector('.workspace-empty');
-    const tier = userData?.premium?.tier;
-    const workspace = userData?.workspace;
+    const workspaceEmpty = workspaceContainer?.querySelector('.workspace-empty');
 
     if (!workspaceContainer || !workspaceEmpty) return;
 
-    if (tier === 'free') {
+    const result = await fetchWorkspace();
+
+    if (result.error === 'Forbidden') {
         workspaceEmpty.innerHTML = `
             <img src="${dashboardImagePath}" alt="No team">
             <h3>No Team Members</h3>
             <p>Upgrade to add team members and collaborate</p>
             <a href="pricing.html" class="upgrade-btn">Upgrade Now</a>
         `;
-    } else if (!workspace) {
+        return;
+    }
+
+    if (!result.hasWorkspace) {
         workspaceEmpty.innerHTML = `
             <img src="${dashboardImagePath}" alt="No workspace">
             <h3>No Workspace Created</h3>
             <p>Create a workspace to start collaborating with your team</p>
-            <a href="/workspace/create" class="upgrade-btn">Create Workspace</a>
+            <a href="/api/workspace/create" class="upgrade-btn">Create Workspace</a>
         `;
-    } else {
-        workspaceEmpty.innerHTML = `
-            <img src="${dashboardImagePath}" alt="Workspace">
-            <h3>${workspace.name || 'Team Workspace'}</h3>
-            <p>You're part of a workspace</p>
-            <a href="/workspace/view" class="upgrade-btn">View Workspace</a>
-        `;
+        return;
     }
+
+    const workspace = result.workspace;
+    workspaceEmpty.innerHTML = `
+        <img src="${dashboardImagePath}" alt="Workspace">
+        <h3>${workspace.name || 'Team Workspace'}</h3>
+        <p>You're part of a workspace</p>
+        <a href="/workspace/view" class="upgrade-btn">View Workspace</a>
+    `;
 }
