@@ -140,8 +140,11 @@ module.exports = {
         new NodemonPlugin({
             script: './app.js',
             watch: [
-                path.resolve('./dist'), 
-                path.resolve('./app.js')
+                path.resolve('./controllers'),
+                path.resolve('./models'),
+                path.resolve('./routes'),
+                path.resolve('./utils'),
+                path.resolve('./app.js'),
             ],
             verbose: true,
         }),
@@ -203,10 +206,6 @@ module.exports = {
             './src/**/*.html',
             './src/**/*.scss',
             './src/**/*.js',
-            './controllers/**/*.js',
-            './models/**/*.js',
-            './routes/**/*.js',
-            './utils/**/*.js',
         ],
     },
 };
