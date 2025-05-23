@@ -68,4 +68,85 @@ document.addEventListener('DOMContentLoaded', () => {
         // Add your data download logic here
         alert('Your data is being prepared for download...');
     });
+
+    // Workspace management
+    const inviteForm = document.querySelector('.invite-form');
+    const membersList = document.querySelector('.members-list');
+    const deleteMemberPopup = document.querySelector('.delete-member-popup');
+    const inviteSuccessPopup = document.querySelector('.workspace-popup.invite-success-popup');
+
+    let memberToDelete = null;
+
+    function showPopup(popup) {
+        popup.classList.add('active');
+    }
+
+    function hidePopup(popup) {
+        popup.classList.remove('active');
+    }
+
+    function addMember(email) {
+        const memberElement = document.createElement('div');
+        memberElement.className = 'member';
+        memberElement.innerHTML = `
+            <img src="./assets/images/dashboard/default-avatar.png" alt="" class="member-avatar">
+            <div class="member-info">
+                <p class="member-name">Pending</p>
+                <p class="member-email">${email}</p>
+            </div>
+            <span class="member-role">Pending</span>
+            <button class="remove-member" title="Remove member">
+                <i class="material-icons">person_remove</i>
+            </button>
+        `;
+
+        // Add remove functionality
+        const removeButton = memberElement.querySelector('.remove-member');
+        removeButton.addEventListener('click', () => {
+            memberToDelete = memberElement;
+            showPopup(deleteMemberPopup);
+        });
+
+        membersList.appendChild(memberElement);
+    }
+
+    // Handle delete member popup actions
+    deleteMemberPopup?.querySelector('.cancel-btn').addEventListener('click', () => {
+        hidePopup(deleteMemberPopup);
+        memberToDelete = null;
+    });
+
+    deleteMemberPopup?.querySelector('.confirm-btn').addEventListener('click', () => {
+        if (memberToDelete) {
+            memberToDelete.remove();
+            memberToDelete = null;
+        }
+        hidePopup(deleteMemberPopup);
+    });
+
+    // Handle invite success popup close
+    inviteSuccessPopup?.querySelector('.close-btn').addEventListener('click', () => {
+        hidePopup(inviteSuccessPopup);
+    });
+
+    // Handle invite form submission
+    inviteForm?.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const emailInput = e.target.querySelector('input[type="email"]');
+        const email = emailInput.value.trim();
+
+        if (email) {
+            addMember(email);
+            emailInput.value = ''; // Clear input
+            showPopup(inviteSuccessPopup);
+        }
+    });
+
+    // Close popups when clicking outside
+    document.addEventListener('click', (e) => {
+        if (e.target.classList.contains('workspace-popup')) {
+            hidePopup(e.target);
+            memberToDelete = null;
+        }
+    });
 });
