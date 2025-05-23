@@ -1,0 +1,243 @@
+@use 'sass:color';
+@use '../base/animations' as *;
+@use '../base/typography' as *;
+@use '../base/colors' as *;
+@use '../base/breakpoints' as *;
+@use '../components/buttons' as *;
+
+.about-page {
+    background-color: $accent-white;
+
+    .about-hero {
+        background-color: $primary-navy-blue;
+        height: 50vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        padding: 2em;
+
+        .hero-content {
+            max-width: 800px;
+            
+            .display-1 {
+                color: $accent-white;
+                margin-bottom: 1em;
+            }
+
+            .seperator {
+                width: 200px;
+                height: 5px;
+                background-color: $tertiary-beige;
+                margin: 2em auto;
+                border-radius: 10px;
+            }
+
+            .subtitle {
+                @extend .subtitle;
+                color: $tertiary-beige;
+            }
+        }
+    }
+
+    .about-story {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 5em 2em;
+        gap: 4em;
+
+        .caption {
+            flex: 1;
+            max-width: 600px;
+
+            .display-1 {
+                color: $primary-navy-blue;
+                margin-bottom: 1em;
+            }
+
+            p {
+                color: $accent-black;
+                line-height: 1.6;
+            }
+        }
+
+        img {
+            flex: 1;
+            max-width: 500px;
+            border-radius: 20px;
+            @include hover-lift;
+        }
+    }
+
+    .team-section {
+        background-color: $primary-navy-blue;
+        padding: 5em 2em;
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4em;
+
+            .display-1 {
+                color: $accent-white;
+            }
+
+            .seperator {
+                width: 200px;
+                height: 5px;
+                background-color: $tertiary-beige;
+                margin: 2em auto;
+                border-radius: 10px;
+            }
+        }
+
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 3em;
+            max-width: 1200px;
+            margin: 0 auto;
+
+            .team-member {
+                background-color: $accent-white;
+                border-radius: 20px;
+                padding: 2em;
+                text-align: center;
+                @include hover-lift;  // Keep this for the card
+                transition: transform 0.3s ease;  // Add smooth transition
+
+                &:hover {
+                    transform: translateY(-10px);
+                }
+
+                .member-image {
+                    width: 200px;
+                    height: 200px;
+                    margin: 0 auto 1.5em;
+                    border-radius: 50%;
+                    overflow: hidden;
+                    border: 5px solid $accent-black;
+
+                    img {
+                        width: 100%;
+                        height: 100%;
+                        object-fit: cover;
+                        transition: transform 0.3s ease;  // Add smooth transition
+
+                        &:hover {
+                            transform: scale(1.05);  // Reduce scale amount
+                        }
+                    }
+                }
+
+                h3 {
+                    color: $primary-navy-blue;
+                    margin-bottom: 0.5em;
+                }
+
+                .role {
+                    @extend .body-large;
+                    color: $accent-black;
+                    margin-bottom: 1em;
+                    font-weight: 500;
+                }
+
+                .social-links {
+                    display: flex;
+                    justify-content: center;
+                    gap: 1em;
+                    margin-top: 1.5em;
+
+                    img {
+                        width: 50px;
+                        height: 50px;
+                        transition: transform 0.2s ease;  // Add smooth transition
+
+                        &:hover {
+                            transform: scale(1.15);  // Slightly larger than normal
+                        }
+                    }
+                }
+
+                .name {
+                    // margin-bottom: 1em;
+                    
+                    .first-name {
+                        @extend .name-first;
+                        color: $primary-navy-blue;
+                        transform: translateY(-0.1em);
+                    }
+                    
+                    .last-name {
+                        @extend .name-last;
+                        color: $primary-navy-blue;
+                    }
+                }
+            }
+        }
+    }
+
+    .kea4-section {
+        background-color: $tertiary-beige;
+        padding: 8em 2em;
+        text-align: center;
+
+        .section-content {
+            max-width: 800px;
+            margin: 0 auto;
+
+            .display-1 {
+                color: $primary-navy-blue;
+                margin-bottom: 0.5em;
+            }
+
+            .kea4-logo {
+                font-family: 'Staatliches', cursive;
+                font-size: 4.5rem;
+                color: $primary-navy-blue;
+                margin: 0.5em 0;
+                letter-spacing: 0.1em;
+                @include hover-lift;
+            }
+
+            .seperator {
+                width: 200px;
+                height: 5px;
+                background-color: $primary-navy-blue;
+                margin: 2em auto;
+                border-radius: 10px;
+            }
+
+            .subtitle {
+                color: $accent-black;
+                max-width: 600px;
+                margin: 0 auto;
+            }
+        }
+    }
+}
+
+@include mobile {
+    .about-story {
+        flex-direction: column;
+        text-align: center;
+
+        img {
+            max-width: 100%;
+        }
+    }
+
+    .team-grid {
+        grid-template-columns: 1fr !important;
+        padding: 0 1em;
+    }
+
+    .kea4-section {
+        padding: 4em 1em;
+
+        .kea4-logo {
+            font-size: 3rem;
+        }
+    }
+}
+

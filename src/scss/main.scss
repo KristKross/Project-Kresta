@@ -21,6 +21,10 @@
 @use 'pages/planner';
 @use 'pages/tasks';
 @use 'pages/profile';
+@use 'pages/about';
+@use 'pages/contact';
+@use 'pages/pricing';
+@use 'pages/settings';
 
 //RESPONSIVE STYLES
 @use 'responsive-styles/navbar-breakpoints';
