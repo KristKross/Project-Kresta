@@ -142,6 +142,54 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // Logout functionality
+    const logoutBtn = document.querySelector('.logout-btn');
+    const logoutPopup = document.querySelector('.logout-popup');
+    
+    logoutBtn?.addEventListener('click', () => {
+        showPopup(logoutPopup);
+    });
+    
+    logoutPopup?.querySelector('.cancel-btn').addEventListener('click', () => {
+        hidePopup(logoutPopup);
+    });
+    
+    logoutPopup?.querySelector('.confirm-btn').addEventListener('click', () => {
+        // Add your logout logic here
+        window.location.href = '/login.html'; // Redirect to login page
+    });
+
+    // Function to show specific workspace template
+    function showWorkspaceTemplate(type) {
+        // Hide all templates first
+        const templates = document.querySelectorAll('.workspace-template');
+        templates.forEach(template => template.classList.remove('active'));
+        
+        // Show the selected template
+        const activeTemplate = document.querySelector(`.workspace-template.${type}`);
+        if (activeTemplate) {
+            activeTemplate.classList.add('active');
+        }
+    }
+
+    // Example usage based on user's plan/status
+    function checkUserPlanAndWorkspace() {
+        // This is where you'd typically check the user's plan from your backend
+        const userHasPremium = true; // Example: set to false to show premium upgrade template
+        const hasWorkspace = true;   // Example: set to false to show empty workspace template
+
+        if (!userHasPremium) {
+            showWorkspaceTemplate('no-premium');
+        } else if (!hasWorkspace) {
+            showWorkspaceTemplate('no-workspace');
+        } else {
+            showWorkspaceTemplate('has-workspace');
+        }
+    }
+
+    // Call this when the page loads
+    checkUserPlanAndWorkspace();
+
     // Close popups when clicking outside
     document.addEventListener('click', (e) => {
         if (e.target.classList.contains('workspace-popup')) {

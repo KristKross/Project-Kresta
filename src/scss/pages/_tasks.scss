@@ -18,6 +18,8 @@ label {
     height: 100vh;
     overflow: hidden;
     background-color: $accent-white;
+    margin-left: 110px; // Add this line
+    width: calc(100% - 110px); // Add this line
 
     .tasks-container {
         height: calc(100vh - 80px);
@@ -445,6 +447,11 @@ label {
             &.active {
                 transform: translateY(0);
                 opacity: 1;
+            }
+
+            .custom-select {
+                width: 100%;
+                min-width: 0; // Remove minimum width on mobile
             }
         }
     }

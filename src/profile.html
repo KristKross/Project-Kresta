@@ -46,6 +46,10 @@
                     <i class="material-icons">groups</i>
                     Workspace
                 </button>
+                <button class="tab-button logout-btn">
+                    <i class="material-icons">logout</i>
+                    Logout
+                </button>
             </div>
         </div>
 
@@ -171,36 +175,58 @@
             <div class="tab-content" id="workspace">
                 <h2 class="h2">Workspace Management</h2>
                 
-                <div class="workspace-section">
-                    <div class="team-members">
-                        <h3 class="h3">Team Members</h3>
-                        <div class="members-list">
-                            <div class="member">
-                                <img src="./assets/images/dashboard/user-pfp.png" alt="John Doe" class="member-avatar">
-                                <div class="member-info">
-                                    <p class="member-name">John Doe</p>
-                                    <p class="member-email">john@example.com</p>
-                                </div>
-                                <span class="member-role">Owner</span>
-                            </div>
-                            <!-- Members added dynamically will appear here -->
-                        </div>
-                    </div>
+                <!-- No Premium Template -->
+                <div class="workspace-template no-premium">
+                    <img src="./assets/icons/workspace/creator-business.png" alt="Premium Feature">
+                    <h3 class="h3">Premium Feature</h3>
+                    <p>Upgrade to Premium to create and manage workspaces</p>
+                    <button class="upgrade-btn">Upgrade Now</button>
+                </div>
 
-                    <div class="invite-section">
-                        <h3 class="h3">Invite Team Members</h3>
-                        <form class="invite-form">
-                            <div class="form-group">
-                                <label>Email Address</label>
+                <!-- No Workspace Template -->
+                <div class="workspace-template no-workspace">
+                    <img src="./assets/icons/workspace/empty-workspace.png" alt="No Workspace">
+                    <h3 class="h3">No Workspace Created</h3>
+                    <p>Create your first workspace to start collaborating</p>
+                    <button class="create-workspace-btn">Create Workspace</button>
+                </div>
+
+                <!-- Existing Workspace Template -->
+                <div class="workspace-template has-workspace">
+                    <div class="workspace-section">
+                        <div class="workspace-header">
+                            <h3 class="h3">My Workspace</h3>
+                            <button class="settings-btn">
+                                <i class="material-icons">settings</i>
+                            </button>
+                        </div>
+
+                        <div class="team-members">
+                            <h4 class="h4">Team Members</h4>
+                            <div class="members-list">
+                                <div class="member">
+                                    <img src="./assets/images/dashboard/user-pfp.png" alt="Member">
+                                    <div class="member-info">
+                                        <p class="member-name">John Doe</p>
+                                        <span class="member-role">Owner</span>
+                                    </div>
+                                </div>
+                                <!-- Add more team members here -->
+                            </div>
+                        </div>
+
+                        <div class="invite-section">
+                            <h4 class="h4">Invite Team Members</h4>
+                            <form class="invite-form">
                                 <div class="input-group">
-                                    <input type="email" class="form-input" placeholder="Enter email address" required>
+                                    <input type="email" placeholder="Enter email address" class="form-input">
                                     <button type="submit" class="invite-btn">
-                                        <i class="material-icons">send</i>
-                                        Send Invite
+                                        <i class="material-icons">person_add</i>
+                                        Invite
                                     </button>
                                 </div>
-                            </div>
-                        </form>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -226,6 +252,19 @@
             <h3 class="h3">Invitation Sent</h3>
             <p>Team member has been invited successfully!</p>
             <button class="close-btn">Close</button>
+        </div>
+    </div>
+
+    <!-- Popup for logout confirmation -->
+    <div class="workspace-popup logout-popup">
+        <div class="popup-content">
+            <i class="material-icons warning-icon">warning</i>
+            <h3 class="h3">Logout Confirmation</h3>
+            <p>Are you sure you want to logout?</p>
+            <div class="popup-actions">
+                <button class="cancel-btn">Cancel</button>
+                <button class="confirm-btn">Logout</button>
+            </div>
         </div>
     </div>
 </body>
