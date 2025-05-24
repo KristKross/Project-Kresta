@@ -22,8 +22,6 @@ span, a{
     justify-content: center;
     align-items: center;
     gap: 50px;
-    margin-left: 110px; // Add sidebar offset
-    width: calc(100% - 110px); // Adjust width for sidebar
 }
 
 .h1{
@@ -52,8 +50,6 @@ span, a{
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
     border-radius: 20px;
     margin: 20px;
-    margin-left: 130px; // Add sidebar offset with some padding
-    width: calc(100% - 150px); // Adjust width for sidebar with padding
     min-width: 1200px; // Base minimum width for the entire dashboard
 
     // Modify container widths
@@ -375,13 +371,6 @@ span, a{
     }
 }
 
-.vertical-separator{
-    width: 2px;
-    height: 100%;
-    background-color: $ui-border;
-    margin: 0;
-}
-
 .dashboard-tasks{
     min-width: 30vw;
 
@@ -661,34 +650,5 @@ span, a{
                 filter: brightness(0) invert(1); // Change icon to white on hover
             }
         }
-    }
-}
-
-// Add responsive breakpoints
-@include tablet {
-    .dashboard-container {
-        min-width: 768px;
-    }
-    
-    .dashboard-left-container,
-    .dashboard-middle-container,
-    .dashboard-workspace {
-        min-width: 100%;
-    }
-}
-
-@include mobile {
-    .dashboard-container,
-    .dashboard-left-container,
-    .dashboard-middle-container,
-    .dashboard-workspace,
-    .section-header,
-    .empty-state,
-    .user-welcome,
-    .content-planner,
-    .actions-grid .action-card,
-    .people-card,
-    .task-bullet {
-        min-width: 280px; // Set minimum width for mobile
     }
 }

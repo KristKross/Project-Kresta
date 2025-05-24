@@ -16,7 +16,7 @@ label {
 
 .tasks-page {
     height: 100vh;
-    overflow: hidden;
+    // overflow: hidden;
     background-color: $accent-white;
     margin-left: 110px; // Add this line
     width: calc(100% - 110px); // Add this line

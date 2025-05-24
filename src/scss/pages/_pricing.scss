@@ -45,12 +45,12 @@
         background-color: $accent-white;
 
         .plan-container {
-            max-width: 1400px;
+            max-width: 1600px; // Increased to accommodate wider cards
             margin: 0 auto;
             display: flex;
             justify-content: center;
-            gap: 2em;
-                flex-wrap: nowrap; // Changed from wrap to nowrap
+            gap: 2.5em; // Slightly increased gap
+            flex-wrap: nowrap;
             align-items: stretch;
         }
 
@@ -58,17 +58,16 @@
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            width: calc((100% - 4em) / 3); // Divide available space by 3, accounting for gaps
-            min-width: 350px; // Reduced from 450px for better fit
-            max-width: 450px; // Added max-width to ensure consistency
-            padding: 3em; // Increased padding for better proportions
+            width: calc((100% - 5em) / 3); // Adjusted for new gap
+            min-width: 420px; // Increased minimum width
+            max-width: 500px; // Increased maximum width
+            min-height: 950px; // Consistent minimum height for all cards
+            padding: 3.5em; // Increased padding
             border-radius: 20px;
             position: relative;
             @include hover-lift;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08); // Base shadow for all cards
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
             transition: all 0.3s ease;
-            height: fit-content;
-            min-height: 900px; // Ensures all cards have a minimum height
 
             &.free {
                 background-color: $tertiary-beige;
@@ -90,7 +89,8 @@
                 color: $tertiary-beige;
                 transform: none;
                 margin-top: -20px;
-                box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15); // Stronger shadow for featured card
+                box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+                min-height: 970px; // Slightly taller to account for margin adjustment
 
                 &:hover {
                     box-shadow: 0 20px 45px rgba(0, 0, 0, 0.2);
@@ -118,7 +118,7 @@
                 background-color: $accent-black;
                 border: $accent-white 10px solid;
                 color: $accent-white;
-                box-shadow: 0 12px 35px rgba(0, 0, 0, 0.2); // Darker shadow for dark card
+                box-shadow: 0 12px 35px rgba(0, 0, 0, 0.2);
 
                 &:hover {
                     box-shadow: 0 18px 40px rgba(0, 0, 0, 0.25);
@@ -132,6 +132,7 @@
             .card-header {
                 text-align: center;
                 margin-bottom: 2em;
+                flex-shrink: 0; // Prevent header from shrinking
 
                 .price {
                     font-family: $font-cardo;
@@ -165,17 +166,20 @@
                 display: flex;
                 flex-direction: column;
                 justify-content: space-between;
+                flex-grow: 1; // Allow content to grow and fill space
+                
                 ul {
                     list-style: none;
                     padding: 0;
-                    margin-bottom: 2.5em; // Add consistent margin
+                    margin-bottom: 2.5em;
+                    flex-grow: 1; // Allow list to grow
 
                     li {
                         @extend .body-large;
                         display: flex;
                         align-items: center;
-                        gap: 0.8em;
-                        margin: 1.2em 0; // Increased spacing between list items
+                        gap: 1em; // Increased gap for better spacing
+                        margin: 1.3em 0; // Increased spacing between list items
 
                         .material-icons {
                             font-size: 24px;
@@ -184,13 +188,14 @@
                             display: inline-flex;
                             align-items: center;
                             justify-content: center;
+                            flex-shrink: 0; // Prevent icons from shrinking
 
                             &.check {
-                                color: #4CAF50; // Green for checkmarks
+                                color: #4CAF50;
                             }
 
                             &.cross {
-                                color: #F44336; // Red for crosses
+                                color: #F44336;
                             }
                         }
 
@@ -202,7 +207,7 @@
                         img.check-icon {
                             width: 20px;
                             height: 20px;
-                            fill: currentColor; // This will match the parent text color
+                            fill: currentColor;
                         }
                     }
                 }
@@ -211,16 +216,18 @@
                     @extend .button-cta;
                     display: block;
                     text-align: center;
-                    padding: 1.2em; // Slightly bigger button
+                    padding: 1.3em 2em; // Increased padding for better button proportions
                     border-radius: 10px;
                     background: $accent-white;
                     color: $primary-navy-blue;
                     text-decoration: none;
                     transition: all 0.3s ease;
+                    flex-shrink: 0; // Prevent button from shrinking
+                    margin-top: auto; // Push button to bottom
 
                     &:hover {
                         transform: translateY(-3px);
-                        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15); // Enhanced button hover shadow
+                        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
                     }
                 }
             }
@@ -283,17 +290,20 @@
             padding: 3em 1em;
 
             .plan-container {
-                flex-wrap: wrap; // Allow wrapping on mobile
+                flex-wrap: wrap;
+                gap: 2em;
             }
 
             .pricing-card {
                 width: 100%;
                 min-width: 320px;
                 max-width: 450px;
+                min-height: auto; // Allow natural height on mobile
                 padding: 2.5em;
                 
                 &.creator {
-                    margin-top: 0; // Remove floating effect on mobile
+                    margin-top: 0;
+                    min-height: auto;
                 }
             }
         }

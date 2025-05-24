@@ -12,23 +12,22 @@
         gap: 20px;
         min-width: 768px;
 
-        .dashboard-left-container,
-        .dashboard-middle-container,
-        .dashboard-workspace {
+        .dashboard-middle-container {
+            order: -1; // Moves it to the top
             min-width: 100%;
             max-width: 100%;
         }
 
-        .dashboard-middle-container {
-            order: -1; // Moves it to the top
-        }
-
         .dashboard-left-container {
             order: 1;
+            min-width: 100%;
+            max-width: 100%;
         }
 
         .dashboard-workspace {
             order: 2;
+            min-width: 100%;
+            max-width: 100%;
         }
     }
 
@@ -54,12 +53,12 @@
 // Mobile Styles
 @include mobile {
     .title-h1 {
-        margin-left: 0;
-        width: 100%;
         height: auto;
         padding: 15px;
         gap: 15px;
         font-size: 1.5rem;
+        width: 100%; // Ensure full width
+        justify-content: center; // Center content
         
         img {
             width: 24px;
@@ -68,30 +67,20 @@
     }
 
     .dashboard-container {
-        margin-left: 20px;
-        width: calc(100% - 40px);
-        min-width: 320px; // Minimum width for mobile
-        display: flex;
-        flex-direction: column;
         margin: 5px;
         padding: 10px;
         gap: 15px;
-
-        .dashboard-left-container,
-        .dashboard-middle-container,
-        .dashboard-workspace,
-        .section-header,
-        .empty-state,
-        .user-welcome,
-        .content-planner,
-        .actions-grid .action-card,
-        .people-card,
-        .task-bullet {
-            min-width: 280px; // Set minimum width for mobile
-        }
+        min-width: unset; // Remove min-width constraint
+        width: calc(100% - 10px); // Ensure full width minus margins
+        box-sizing: border-box; // Include padding in width calculation
+        display: flex;
+        flex-direction: column;
 
         .section-header {
             padding: 12px 15px;
+            min-width: unset; // Remove min-width
+            width: 100%;
+            box-sizing: border-box;
             
             h2 {
                 font-size: 1.2rem;
@@ -102,14 +91,28 @@
                 }
             }
         }
+
+        .dashboard-left-container,
+        .dashboard-middle-container,
+        .dashboard-workspace {
+            min-width: unset;
+            max-width: unset;
+            width: 100%;
+            box-sizing: border-box;
+        }
     }
 
     .user-welcome {
         padding: 1rem;
         margin-bottom: 1rem;
+        min-width: unset; // Remove min-width
+        width: 100%;
+        box-sizing: border-box;
         
         .user-info {
             gap: 1rem;
+            min-width: unset; // Remove min-width
+            width: 100%;
             
             .user-details {
                 .welcome-text {
@@ -125,20 +128,45 @@
 
     .actions-grid {
         grid-template-columns: 1fr;
+        width: 100%;
         
         .action-card {
             padding: 15px;
+            min-width: unset; // Remove min-width
+            width: 100%;
+            box-sizing: border-box;
         }
     }
 
     .empty-state {
         padding: 1.5rem;
         min-height: 200px;
+        min-width: unset; // Remove min-width
+        width: 100%;
+        box-sizing: border-box;
         
         img {
             width: 80px;
             height: 80px;
         }
+    }
+
+    .content-planner {
+        min-width: unset; // Remove min-width
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .people-card {
+        min-width: unset; // Remove min-width
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .task-bullet {
+        min-width: unset; // Remove min-width
+        width: 100%;
+        box-sizing: border-box;
     }
 
     // Hide separators on mobile
@@ -152,17 +180,25 @@
     .dashboard-container {
         margin: 0;
         border-radius: 0;
+        padding: 5px; // Reduce padding further
+        width: 100%;
     }
 
     .user-welcome {
         border-radius: 0;
+        padding: 0.8rem; // Reduce padding
     }
 
     .section-header {
         border-radius: 8px;
+        padding: 10px 12px; // Reduce padding
         
         h2 {
             font-size: 1.1rem;
         }
+    }
+
+    .actions-grid .action-card {
+        padding: 12px; // Reduce padding
     }
 }
