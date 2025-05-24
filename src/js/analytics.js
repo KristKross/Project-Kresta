@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', async function () {
     try {
-        const response = await fetch('/api/instagram/analytics/account');
+        const response = await fetch('/api/instagram/analytics');
         const data = await response.json();
 
         const ctx = {
