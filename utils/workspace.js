@@ -7,9 +7,7 @@ const getWorkspace = async (req) => {
 
   const workspace = await Workspace.findOne({ owner: req.session.userData.user._id });
   
-  if (!workspace) throw new Error("Workspace not found for this user");
-
-  return workspace;
+  return workspace || null;
 };
 
 module.exports = { getWorkspace };

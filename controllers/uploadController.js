@@ -6,57 +6,74 @@ const upload = multer({ storage });
 
 exports.uploadMiddleware = upload.single('imageFile');
 
-// @route POST /api/upload
-exports.uploadImageToCloudinary = async (req, res) => {
-  try {
-    if (!req.file) {
-      return res.status(400).json({ error: 'Image file is required' });
-    }
+// @route POST /api/upload-image
+exports.uploadMediaToCloudinary = async (req, res) => {
+    console.log('Received file:', req.file);
+    console.log('Resource type:', req.body.resourceType);
+    
+    try {
+        const { resourceType } = req.body;
 
-    const uploadResult = await new Promise((resolve, reject) => {
-      const uploadStream = cloudinary.uploader.upload_stream({ 
-        folder: "user_pictures",
-        type: "authenticated",
-        resource_type: 'image' 
-      },
-        (error, result) => {
-          if (error) return reject(error);
-          resolve(result);
+        if (!req.file || !resourceType) {
+            return res.status(400).json({ error: "File and resource type are required" });
         }
-      );
-      uploadStream.end(req.file.buffer);
-    });
 
-    res.status(201).json({
-      message: 'Image uploaded successfully',
-      imageUrl: uploadResult.secure_url,
-    });
+        const folder = resourceType === "video" ? "post_videos" : "post_images";
 
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Failed to upload image' });
-  }
+        const uploadResult = await new Promise((resolve, reject) => {
+            const uploadStream = cloudinary.uploader.upload_stream(
+              { folder, type: "authenticated", resource_type: resourceType },
+              (error, result) => (error ? reject(error) : resolve(result))
+            );
+            uploadStream.end(req.file.buffer);
+        });
+
+        if (!uploadResult?.public_id) {
+            return res.status(500).json({ error: "Cloudinary upload failed" });
+        }
+
+        res.status(201).json({
+            success: true,
+            message: "Media uploaded successfully",
+            publicId: uploadResult.public_id,
+            resourceType: resourceType,
+        });
+
+    } catch (error) {
+        console.error("Error uploading media:", error);
+        res.status(500).json({ error: "Failed to upload media" });
+    }
 };
 
-// @route DELETE /api/delete/:imageId
-exports.deleteImageFromCloudinary = async (req, res) => {
-  try {
-    const { imageId } = req.params;
-    if (!imageId) {
-      return res.status(400).json({ error: 'Image ID is required' });
+
+// @route GET /api/profile-picture/:publicId
+exports.getProfilePicture = async (req, res) => {
+    try {
+        const { publicId } = req.params;
+        if (!publicId) return res.status(400).json({ error: "Image ID required" });
+
+        const signedUrl = cloudinary.url(publicId, { sign_url: true, type: "authenticated" });
+
+        res.json({ success: true, imageUrl: signedUrl });
+
+    } catch (error) {
+        console.error("Error retrieving profile picture:", error);
+        res.status(500).json({ error: "Error retrieving profile picture" });
     }
+};
 
-    const result = await cloudinary.uploader.destroy(imageId);
+// @route GET /api/post-media/:publicId
+exports.getPostMedia = async (req, res) => {
+    try {
+        const { publicId, resourceType } = req.params;
+        if (!publicId || !resourceType) return res.status(400).json({ error: "Media ID and resource type required" });
 
-    if (result.result !== 'ok') {
-      return res.status(500).json({ error: 'Failed to delete image' });
+        const signedUrl = cloudinary.url(publicId, { sign_url: true, type: "authenticated", resource_type: resourceType });
+
+        res.json({ success: true, mediaUrl: signedUrl });
+
+    } catch (error) {
+        console.error("Error retrieving media:", error);
+        res.status(500).json({ error: "Error retrieving media" });
     }
-
-    res.status(200).json({ message: 'Image deleted successfully' });
-    console.log(`Image ${imageId} deleted successfully from Cloudinary.`);
-
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'An error occurred while deleting the image' });
-  }
 };

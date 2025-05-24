@@ -9,6 +9,10 @@ exports.createTask = async (req, res) => {
 
         const workspace = await getWorkspace(req);
 
+        if (!workspace) {
+            return res.status(404).json({ error: 'Workspace not found' });
+        }
+
         const user = await User.findOne({ username: assigneeName });
         if (!user) {
             return res.status(400).json({ error: 'Assignee not found' });
@@ -68,3 +72,4 @@ exports.deleteTask = async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 };
+
