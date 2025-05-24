@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const premiumSchema = new mongoose.Schema({
   userId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
-  tier: { type: String, enum: ["free", "pro", "business"], default: "free" },
+  tier: { type: String, enum: ["free", "pro", "business"], default: "pro" },
   expiresAt: { type: Date, default: null },
 });
 
