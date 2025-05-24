@@ -2,10 +2,34 @@ import '../scss/main.scss';
 import { initializeSidebar } from './sidebar.js';
 
 // Pages where we don't want any header/footer/sidebar
-const ignorePages = ['/login.html', '/register.html', '/404.html', '/500.html'];
+const ignorePages = [
+    '/login.html',
+    '/register.html',
+    '/404.html',
+    '/500.html',
+    '/login',
+    '/register',
+    '/404',
+    '/500',
+];
 
 // Pages where we want to show the sidebar
-const sidebarPages = ['/dashboard.html', '/planner.html', '/tasks.html', '/analytics.html', '/profile.html', '/settings.html', '/notification.html'];
+const sidebarPages = [
+    '/dashboard',
+    '/dashboard.html',
+    '/planner',
+    '/planner.html',
+    '/tasks',
+    '/tasks.html',
+    '/analytics',
+    '/analytics.html',
+    '/profile',
+    '/profile.html',
+    '/settings',
+    '/settings.html',
+    '/notification',
+    '/notification.html',
+];
 
 document.addEventListener('DOMContentLoaded', () => {
     // Get the full path and just the filename

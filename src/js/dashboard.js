@@ -243,7 +243,7 @@ async function updateWorkspaceSection() {
     workspaceContainer.innerHTML = `
         <h3>${workspace.name}</h3>
         <p>You're part of a workspace</p>
-        <a href="/workspace/view" class="upgrade-btn">View Workspace</a>
+        <a href="/profile?tab=workspace" class="upgrade-btn">View Workspace</a>
     `;
 }
 

@@ -75,7 +75,7 @@ app.get('/dashboard', (req, res) => {
     res.sendFile(path.join(__dirname, 'dist', 'dashboard.html'));
 });
 
-app.get('/tasks', (req, res) => {
+app.get('/tasks', checkPremiumTier, (req, res) => {
     if (!req.session.userData?.user) {
         return res.redirect('/login');
     }
@@ -101,6 +101,13 @@ app.get('/pricing', (req, res) => {
         return res.redirect('/login');
     }
     res.sendFile(path.join(__dirname, 'dist', 'pricing.html'));
+});
+
+app.get('/profile', (req, res) => {
+    if (!req.session.userData?.user) {
+        return res.redirect('/login');
+    }
+    res.sendFile(path.join(__dirname, 'dist', 'profile.html'));
 });
 
 

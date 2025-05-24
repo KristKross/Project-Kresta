@@ -105,14 +105,55 @@ exports.updateUser = async (req, res) => {
     }
 };
 
+// @route   PATCH /auth/update-password
+exports.updatePassword = async (req, res) => {
+    try {
+        const { currentPassword, newPassword } = req.body;
+        const sessionUser = req.session?.userData?.user;
+
+        if (!sessionUser) {
+            return res.status(401).json({ success: false, message: "User not logged in" });
+        }
+
+        const user = await User.findById(sessionUser._id);
+        if (!user) {
+            return res.status(404).json({ success: false, message: "User not found" });
+        }
+
+        if (!user.passwordHash) {
+            console.error('Error: Password hash is missing from user data');
+            return res.status(500).json({ success: false, message: "Internal server error: Missing password hash" });
+        }
+
+        const validPassword = await bcrypt.compare(currentPassword, user.passwordHash);
+        if (!validPassword) {
+            return res.status(400).json({ success: false, message: "Current password is incorrect" });
+        }
+
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
+        user.passwordHash = hashedPassword;
+        await user.save();
+
+        req.session.userData.user.passwordHash = hashedPassword;
+
+        res.json({ success: true, message: "Password updated successfully!" });
+
+    } catch (error) {
+        console.error("Error updating password:", error);
+        res.status(500).json({ success: false, message: "Error updating password" });
+    }
+};
+
 // @route   GET /auth/user
 exports.getUser = async (req, res) => {
     try {
-        const user = req.session?.userData?.user;
-        if (!user) {
+        const sessionUser = req.session?.userData?.user;
+
+        if (!sessionUser) {
             return res.status(401).json({ authenticated: false });
         }
 
+        const user = await User.findById(sessionUser._id).select('email username createdAt');
         const socialData = await Social.findOne({ userId: user._id });
         const premiumData = await Premium.findOne({ userId: user._id });
 
@@ -122,8 +163,51 @@ exports.getUser = async (req, res) => {
             social: socialData,
             premium: premiumData,
         });
+
     } catch (error) {
         console.error("Error fetching user data:", error);
         res.status(500).json({ message: "Error retrieving user details" });
     }
 };
+// @route   POST auth/logout
+exports.logout = (req, res) => {
+    req.session.destroy(err => {
+        if (err) {
+            return res.status(500).json({ success: false, message: "Error logging out" });
+        }
+        res.clearCookie("connect.sid");
+        res.json({ success: true, message: "Logged out successfully" });
+    });
+};
+
+// @route   DELETE /auth/delete
+exports.deleteAccount = async (req, res) => {
+    try {
+        const sessionUser = req.session?.userData?.user;
+
+        if (!sessionUser) {
+            return res.status(401).json({ success: false, message: "User not logged in" });
+        }
+
+        const user = await User.findByIdAndDelete(sessionUser._id);
+        if (!user) {
+            return res.status(404).json({ success: false, message: "User not found" });
+        }
+
+        await Social.findOneAndDelete({ userId: user._id });
+        await Premium.findOneAndDelete({ userId: user._id });
+
+        req.session.destroy(err => {
+            if (err) {
+                return res.status(500).json({ success: false, message: "Error deleting account" });
+            }
+            res.clearCookie("connect.sid");
+            res.json({ success: true, message: "Account deleted successfully" });
+        });
+
+    } catch (error) {
+        console.error("Error deleting user account:", error);
+        res.status(500).json({ success: false, message: "Error deleting user account" });
+    }
+};
+
