@@ -15,6 +15,6 @@ router.post("/reply/:comment_id", instagramContentController.replyToComment);
 router.get("/analytics", instagramAnalysisController.getInstagramAccountAnalytics);
 
 // Publish-related routes
-router.post("/publish", instagramPublishController.createScheduledPost);
+router.post("/publish", instagramPublishController.createPost);
 
 module.exports = router;

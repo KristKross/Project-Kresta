@@ -114,6 +114,9 @@ app.use('/api/workspace', checkPremiumTier, isAuthenticated, workspaceRoutes);
 const taskRoutes = require("./routes/taskRoute");
 app.use('/api/task', checkPremiumTier, isAuthenticated, taskRoutes);
 
+const uploadRoutes = require("./routes/uploadRoute");
+app.use('/api', uploadRoutes);
+
 // Start the server
 const PORT = process.env.PORT;
 app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
