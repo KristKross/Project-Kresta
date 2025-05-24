@@ -111,9 +111,9 @@ async function fetchWorkspace() {
     }
 }
 
-async function loadTasks(workspaceId) {
+async function fetchTasks() {
     try {
-        const response = await fetch(`/api/tasks/workspace/${workspaceId}`, {
+        const response = await fetch(`/api/task/get`, {
             method: 'GET',
             credentials: 'include'
         });
@@ -126,28 +126,18 @@ async function loadTasks(workspaceId) {
             throw new Error('Failed to fetch tasks');
         }
 
-        const data = await response.json();
-        return data;
+        const tasks = await response.json();
+
+        if (!tasks) {
+            return { tasks: [], hasTasks: false, error: 'Failed to load tasks' };
+        }
+
+        return { tasks, hasTasks: tasks.length > 0, error: null };
+        
     } catch (error) {
         console.error('Error fetching tasks:', error);
-        return null;
+        return { tasks: [], hasTasks: false, error: error.message };
     }
-}
-
-async function fetchTasks() {
-    const workspaceResult = await fetchWorkspace();
-
-    if (!workspaceResult.hasWorkspace) {
-        return { tasks: [], hasTasks: false, error: workspaceResult.error || null };
-    }
-
-    const tasks = await loadTasks(workspaceResult.workspace._id);
-
-    if (!tasks) {
-        return { tasks: [], hasTasks: false, error: 'Failed to load tasks' };
-    }
-
-    return { tasks, hasTasks: tasks.length > 0, error: null };
 }
 
 function initDashboard() {

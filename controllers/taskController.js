@@ -6,12 +6,12 @@ const User = require('../models/User'); // import User model
 
 exports.createTask = async (req, res) => {
     try {
-        const { title, priority, status, dueDate, details, assigneeName } = req.body;
+        const { title, priority, status, dueDate, assigneeName, details } = req.body;
 
         const workspace = await getWorkspace(req);
 
         // Find the user by email (assigneeName)
-        const user = await User.findOne({ email: assigneeName });
+        const user = await User.findOne({ username: assigneeName });
         if (!user) {
             return res.status(400).json({ error: 'Assignee not found' });
         }
@@ -22,7 +22,7 @@ exports.createTask = async (req, res) => {
             status,
             dueDate,
             details,
-            assignedTo: user._id,   // use ObjectId
+            assignedTo: user._id,
             owner: req.session.userData.user._id,
             workspace: workspace._id,
         });
