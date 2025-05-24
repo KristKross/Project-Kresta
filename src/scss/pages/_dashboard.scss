@@ -286,6 +286,7 @@ span, a{
         @extend .body-regular;
         .engagement-metrics{
             display: flex;
+            min-height: 400px;
             flex-direction: column;
             gap: 30px;
             .stat-container{

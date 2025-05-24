@@ -5,6 +5,7 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const sessionMiddleware = require("./config/session");
 const isAuthenticated = require("./middleware/sessionAuth");
+const checkPremiumTier = require("./middleware/checkPremiumTier");
 
 const app = express();
 
@@ -19,6 +20,34 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 app.use(sessionMiddleware);
 
+// List of protected HTML files
+const protectedHtml = ['/tasks.html', '/planner.html', '/analytics.html', 'dashboard.html'];
+
+app.use((req, res, next) => {
+    if (!req.session.userData?.user && protectedHtml.includes(req.path)) {
+        return res.redirect('/login');
+    }
+    next();
+});
+
+const Workspace = require("./models/Workspace");
+app.get("/create-workspace", async (req, res) => {
+    try {
+        const workspace = new Workspace({
+            name: "Test Workspace",
+            owner: req.session.userData?.user._id,
+            members: [req.session.userData?.user._id],
+        });
+        const doc = await workspace.save();
+        return res.send(doc);
+    } catch (err) {
+        if (err.name === "MongooseError" && err.message === "Model.prototype.save() no longer accepts a callback") {
+            throw new Error("Model.prototype.save() no longer accepts a callback");
+        }
+        console.log(err);
+        return res.status(500).send(err);
+    }
+});
 // Serve static files
 app.get('/', (req, res) => {
     if (req.session.userData?.user) {
@@ -40,11 +69,31 @@ app.get('/register', (req, res) => {
 });
 
 app.get('/dashboard', (req, res) => {
+    if (!req.session.userData?.user) {
+        return res.redirect('/login');
+    }
     res.sendFile(path.join(__dirname, 'dist', 'dashboard.html'));
 });
 
-app.get('/sidebar', (req, res) => {
-    res.sendFile(path.join(__dirname, 'dist', 'sidebar.html'));
+app.get('/tasks', (req, res) => {
+    if (!req.session.userData?.user) {
+        return res.redirect('/login');
+    }
+    res.sendFile(path.join(__dirname, 'dist', 'tasks.html'));
+});
+
+app.get('/planner', (req, res) => {
+    if (!req.session.userData?.user) {
+        return res.redirect('/login');
+    }
+    res.sendFile(path.join(__dirname, 'dist', 'planner.html'));
+});
+
+app.get('/analytics', (req, res) => {
+    if (!req.session.userData?.user) {
+        return res.redirect('/login');
+    }
+    res.sendFile(path.join(__dirname, 'dist', 'analytics.html'));
 });
 
 app.use(express.static(path.join(__dirname, 'dist')));
@@ -58,6 +107,12 @@ app.use('/api/social', isAuthenticated, socialRoutes);
 
 const instagramRoutes = require("./routes/instagramRoute");
 app.use('/api/instagram', isAuthenticated, instagramRoutes);
+
+const workspaceRoutes = require("./routes/workspaceRoute");
+app.use('/api/workspace', checkPremiumTier, isAuthenticated, workspaceRoutes);
+
+const taskRoutes = require("./routes/taskRoute");
+app.use('/api/task', checkPremiumTier, isAuthenticated, taskRoutes);
 
 // Start the server
 const PORT = process.env.PORT;

@@ -9,6 +9,7 @@
 @use 'components/buttons';
 @use 'components/post-creator';
 @use 'components/post-preview';
+@use 'components/loading-spinner';
 
 //PAGES
 @use 'pages/index';

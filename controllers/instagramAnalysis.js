@@ -1,21 +1,8 @@
 const axios = require("axios");
 const { getSocialCredentials } = require("../utils/social");
-const Premium = require("../models/Premium");
 
 exports.getInstagramAccountAnalytics = async (req, res) => {
     try {
-        const sessionUser = req.session?.userData;
-
-        const premiumInfo = await Premium.findOne({ userId: sessionUser.user._id });
-
-        const userTier = premiumInfo?.tier || "free";
-
-        if (userTier === "free") {
-            return res.status(403).json({
-                error: "Upgrade required to access Instagram analytics.",
-            });
-        }
-
         const { instagramAccountId, accessToken } = await getSocialCredentials(req);
 
         if (!instagramAccountId || !accessToken) {
@@ -25,10 +12,10 @@ exports.getInstagramAccountAnalytics = async (req, res) => {
         }
 
         const response = await axios.get(
-            `https://graph.facebook.com/v22.0/${instagramAccountId}/insights`,
-            {
+            `https://graph.facebook.com/v22.0/${instagramAccountId}/insights`, {
                 params: {
-                    metric: "accounts_engaged,follows_and_unfollows,comments,likes,reach,replies,shares,total_interactions,views",
+                    metric:
+                        "accounts_engaged,follows_and_unfollows,comments,likes,reach,replies,shares,total_interactions,views",
                     metric_type: "total_value",
                     period: "day",
                     access_token: accessToken,
@@ -37,9 +24,14 @@ exports.getInstagramAccountAnalytics = async (req, res) => {
         );
 
         res.json(response.data);
-
     } catch (error) {
-        console.error("Error fetching Instagram account analytics:", error.response?.data || error.message);
+        if (error.status === 403) {
+            return res.status(403).json({ error: error.message });
+        }
+        console.error(
+            "Error fetching Instagram account analytics:",
+            error.response?.data || error.message
+        );
         res.status(500).json({
             error: "Failed to retrieve Instagram account analytics.",
         });
