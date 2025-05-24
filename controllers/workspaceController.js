@@ -47,8 +47,8 @@ exports.getMyWorkspace = async (req, res) => {
                 { members: userId }
             ]
         })
-        .populate('owner', 'email')
-        .populate('members', 'email')
+        .populate('owner', 'email username')
+        .populate('members', 'email username')
 
         res.json({ 
             success: true,
@@ -57,32 +57,5 @@ exports.getMyWorkspace = async (req, res) => {
     } catch (error) {
         console.error("Error fetching user's workspace:", error);
         res.status(500).json({ success: false, message: "Error fetching workspace" });
-    }
-};
-
-// @route GET /api/workspace/:id
-exports.getWorkspaceInfo = async (req, res) => {
-    try {
-        const workspaceId = req.params.id;
-        const userId = req.session.userData.user._id;
-
-        const workspace = await Workspace.findOne({
-            _id: workspaceId,
-            $or: [
-                { owner: userId },
-                { members: userId }
-            ]
-        })
-        .populate('owner', 'email')
-        .populate('members', 'email')
-
-        if (!workspace) {
-            return res.status(404).json({ success: false, message: "Workspace not found or access denied" });
-        }
-
-        res.json({ success: true, workspace });
-    } catch (error) {
-        console.error("Error fetching workspace info:", error);
-        res.status(500).json({ success: false, message: "Error fetching workspace info" });
     }
 };

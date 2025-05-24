@@ -9,7 +9,4 @@ router.post('/', workspaceController.createWorkspace);
 // Read selected workspace via session
 router.get('/my', workspaceController.getMyWorkspace);
 
-// Read specific workspace
-router.get('/:id', workspaceController.getWorkspaceInfo);
-
 module.exports = router;
