@@ -3,7 +3,11 @@
 
 .tasks-page {
     @include mobile {
-        .task-creator-panel {            position: fixed !important;
+        margin-left: 0 !important; // Reset sidebar margin
+        width: 100% !important; // Full width on mobile
+        
+        .task-creator-panel {            
+            position: fixed !important;
             bottom: 0 !important;
             right: 0 !important;
             left: 0 !important;
@@ -15,6 +19,7 @@
             padding: 20px;
             overflow-y: auto;
             -webkit-overflow-scrolling: touch;
+            margin-left: 0;
 
             &.active {
                 transform: translateY(-100%);
@@ -31,7 +36,9 @@
                 grid-template-columns: 1fr;
             }
         }
-    }    @include tablet {
+    }
+    
+    @include tablet {
         .task-creator-panel {
             width: 80%;
             transform: translateX(100%);

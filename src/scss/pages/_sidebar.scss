@@ -13,36 +13,9 @@ $text-color: #818181;
 $text-hover: #f1f1f1;
 $transition-duration: 0.3s;
 
-// Toggle button
-.toggle-btn {
-    position: fixed;
-    top: 15px;
-    left: 15px;
-    z-index: 1001;
-    font-size: 24px;
-    cursor: pointer;
-    background: $primary-navy-blue;
-    color: $accent-white;
-    border: 1px solid rgba($accent-white, 0.3);
-    border-radius: 4px;
-    padding: 5px 10px;
-    transition: all 0.3s ease;
-    display: none; // Hidden by default on desktop
-    
-    &:hover {
-        background: color.adjust($primary-navy-blue, $lightness: 5%);
-        transform: translateY(-1px);
-    }
-    
-    &:active {
-        transform: translateY(1px);
-    }
-}
-
 .sidenav {
-    // Base styles
+    // Base styles - desktop default
     height: 100vh;
-    width: $collapsed-width;
     position: fixed;
     z-index: 1000;
     top: 0;
@@ -52,39 +25,13 @@ $transition-duration: 0.3s;
     overflow-y: auto;
     transition: all $transition-duration ease;
     padding: 20px 0;
-    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
     display: flex;
     flex-direction: column;
-    
-    // When expanded
+    width: $collapsed-width;
+
+    // When expanded on desktop
     &.expanded {
         width: $expanded-width;
-    }
-
-    // Toggle button
-    .toggle-btn {
-        position: fixed;
-        top: 15px;
-        left: 15px;
-        z-index: 1001;
-        font-size: 24px;
-        cursor: pointer;
-        background: $primary-navy-blue;
-        color: $accent-white;
-        border: 1px solid rgba($accent-white, 0.3);
-        border-radius: 4px;
-        padding: 5px 10px;
-        transition: all 0.3s ease;
-        display: none; // Hidden by default on desktop
-        
-        &:hover {
-            background: color.adjust($primary-navy-blue, $lightness: 5%);
-            transform: translateY(-1px);
-        }
-        
-        &:active {
-            transform: translateY(1px);
-        }
     }
 
     // Navigation header
@@ -109,7 +56,6 @@ $transition-duration: 0.3s;
         gap: 10px;
         padding: 10px;
         overflow-y: auto;
-        // border: 1px solid $accent-white;
         border-radius: 1px;
         margin: 0 5px;
         
@@ -128,9 +74,7 @@ $transition-duration: 0.3s;
             &:last-child {
                 margin-top: auto;
                 padding-top: 20px;
-                // border-top: 1px solid rgba(255, 255, 255, 0.1);
             }
-            
         }
         
         // Navigation links
@@ -203,7 +147,7 @@ $transition-duration: 0.3s;
         }
     }
 
-    // Hover state
+    // Desktop hover state
     &:hover {
         width: $expanded-width;
         overflow-y: auto;
@@ -217,7 +161,7 @@ $transition-duration: 0.3s;
         }
     }
     
-    // Expanded state (when toggled)
+    // Desktop expanded state (when toggled)
     &.expanded {
         width: $expanded-width;
         overflow-y: auto;
@@ -226,6 +170,16 @@ $transition-duration: 0.3s;
             opacity: 1;
         }
     }
+
+    // Sidebar button - hidden by default, shown on mobile
+    .sidebar-btn {
+        display: none !important; // Force hide by default
+    }
+}
+
+// Sidebar button - separate from .sidenav to ensure it's always accessible on mobile
+.sidebar-btn {
+    display: none !important; // Hide by default on all screen sizes
 }
 
 // Main content area
@@ -238,86 +192,5 @@ main {
     
     &.shifted {
         margin-left: $expanded-width;
-    }
-    
-    @include mobile {
-        margin-left: 0;
-        padding: 15px;
-        padding-top: 60px; // Make room for the toggle button
-        
-        &.shifted {
-            margin-left: $expanded-width;
-        }
-    }
-}
-
-// Mobile styles
-@include mobile {
-    .toggle-btn {
-        display: block;
-    }
-    
-    .sidenav {
-        width: 250px !important;
-        transform: translateX(-100%);
-        transition: transform $transition-duration ease;
-        
-        &.expanded {
-            transform: translateX(0);
-            box-shadow: 2px 0 15px rgba(0, 0, 0, 0.2);
-        }
-        
-        // Hide the sidebar by default on mobile
-        &:not(.expanded) {
-            display: none;
-        }
-    }
-    
-    main {
-        margin-left: 0 !important;
-        transition: margin-left $transition-duration ease;
-    }
-    
-    main.shifted {
-        margin-left: 0 !important;
-        transform: translateX(250px);
-    }
-}
-
-// Tablet adjustments
-@include tablet {
-    .sidenav {
-        width: $collapsed-width;
-        
-        &:hover {
-            width: $expanded-width;
-        }
-    }
-    
-    main {
-        margin-left: $collapsed-width;
-        
-        &.shifted {
-            margin-left: $expanded-width;
-        }
-    }
-}
-
-// Desktop adjustments
-@include desktop {
-    .sidenav {
-        width: $collapsed-width;
-        
-        &:hover {
-            width: $expanded-width;
-        }
-    }
-    
-    main {
-        margin-left: $collapsed-width;
-        
-        &.shifted {
-            margin-left: $expanded-width;
-        }
     }
 }

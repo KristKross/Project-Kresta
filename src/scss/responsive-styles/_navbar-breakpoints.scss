@@ -15,7 +15,7 @@ nav {
             z-index: 9999;
 
             &.active {
-                transform: translateX(-50%) rotate(180deg);
+                transform: translateX(-50%) rotate(90deg);
             }
         }
 

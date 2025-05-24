@@ -1,76 +1,199 @@
 @use '../base/breakpoints' as *;
 @use '../base/colors' as *;
 
-.sidenav {
-    @include mobile {
+// Variables for consistency
+$collapsed-width: 110px;
+$expanded-width: 250px;
+$transition-duration: 0.3s;
+
+// Mobile breakpoint styles - mirroring navbar behavior
+@include mobile {
+    .sidenav {
         position: fixed;
-        top: 0;
+        top: 80px; // Match header height
         left: 0;
-        height: 100vh;
+        right: 0;
+        height: calc(100vh - 80px);
         width: 100% !important;
         background-color: rgba($primary-navy-blue, 0.95);
-        transform: translateX(-100%);
-        transition: all 0.3s ease;
-        z-index: 997;
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        transform: translateY(100%); // Start from bottom
+        opacity: 0;
+        pointer-events: none;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        z-index: 998;
+        padding: 2rem;
         
         &.active {
-            transform: translateX(0);
-            
-            .nav-items {
-                opacity: 1;
-                visibility: visible;
-            }
+            transform: translateY(0); // Slide up to 0
+            opacity: 1;
+            pointer-events: all;
         }
 
         .nav-items {
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.3s ease;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             height: 100%;
-            padding-top: 80px; // Account for header
+            padding: 0;
+            margin: 0;
+
+            .container {
+                opacity: 0;
+                transform: translateY(20px);
+                transition: all 0.3s ease;
+                transition-delay: calc(var(--delay) * 0.1s);
+                width: 100%;
+                max-width: 300px;
+                margin-bottom: 20px; // Add consistent margin for all containers
+                
+                // Remove the special styling for last container on mobile
+                &:last-child {
+                    margin-top: 0; // Reset the margin-top: auto
+                    padding-top: 12px; // Match the regular padding
+                    margin-bottom: 20px; // Keep consistent with others
+                }
+            }
+
+            .nav-link {
+                padding: 1rem 2rem;
+                font-size: 1.2rem;
+                justify-content: center;
+                
+                span {
+                    opacity: 1 !important; // Always show text on mobile
+                }
+            }
         }
 
-        .sidebar-btn {
-            display: flex !important;
-            justify-content: center;
-            align-items: center;
-            position: fixed;
-            bottom: 2rem;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            background: $primary-navy-blue;
-            border: none;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-            z-index: 999;
-            cursor: pointer;
-            transition: transform 0.3s ease;
+        &.active .nav-items .container {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    // Show the sidebar button ONLY on mobile
+    .sidebar-btn {
+        display: flex !important;
+        justify-content: center;
+        align-items: center;
+        position: fixed;
+        bottom: 2rem;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 70px;
+        height: 70px;
+        border-radius: 12px;
+        background: $primary-navy-blue;
+        border: none;
+        z-index: 1001;
+        cursor: pointer;
+        transition: transform 0.3s ease;
+        padding: 12px;
 
-            &.active {
-                transform: translateX(-50%) rotate(180deg);
+        &.active {
+            transform: translateX(-50%) rotate(90deg);
+        }
+
+        .menu-icon {
+            width: 50px;
+            height: 50px;
+        }
+    }
+    
+    main {
+        margin-left: 0 !important;
+        padding: 15px;
+        transition: margin-left $transition-duration ease;
+        
+        &.shifted {
+            margin-left: 0 !important;
+        }
+    }
+}
+
+// Tablet breakpoint styles
+@include tablet {
+    .sidenav {
+        transform: none;
+        width: $collapsed-width;
+        top: 0;
+        height: 100vh;
+        background-color: $primary-navy-blue;
+        opacity: 1;
+        pointer-events: all;
+        padding: 20px 0;
+        
+        &:hover {
+            width: $expanded-width;
+        }
+        
+        .sidebar-btn {
+            display: none !important;
+        }
+
+        .nav-items {
+            padding: 10px;
+            margin: 0 5px;
+            
+            .container {
+                opacity: 1;
+                transform: none;
+                transition: none;
             }
         }
     }
+    
+    main {
+        margin-left: $collapsed-width;
+        padding: 20px;
+        
+        &.shifted {
+            margin-left: $expanded-width;
+        }
+    }
+}
 
-    @include tablet {
+// Desktop breakpoint styles
+@include desktop {
+    .sidenav {
         transform: none;
+        width: $collapsed-width;
+        top: 0;
+        height: 100vh;
+        background-color: $primary-navy-blue;
+        opacity: 1;
+        pointer-events: all;
+        padding: 20px 0;
+        
+        &:hover {
+            width: $expanded-width;
+        }
         
         .sidebar-btn {
             display: none !important;
         }
-    }
 
-    @include desktop {
-        transform: none;
+        .nav-items {
+            padding: 10px;
+            margin: 0 5px;
+            
+            .container {
+                opacity: 1;
+                transform: none;
+                transition: none;
+            }
+        }
+    }
+    
+    main {
+        margin-left: $collapsed-width;
+        padding: 20px;
         
-        .sidebar-btn {
-            display: none !important;
+        &.shifted {
+            margin-left: $expanded-width;
         }
     }
 }

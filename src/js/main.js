@@ -1,5 +1,5 @@
 import '../scss/main.scss';
-import { openNav, closeNav } from './sidebar';
+import { initializeSidebar } from './sidebar.js';
 
 // Pages where we don't want any header/footer/sidebar
 const ignorePages = ['/login.html', '/register.html', '/404.html', '/500.html'];
@@ -30,7 +30,6 @@ document.addEventListener('DOMContentLoaded', () => {
         addNavbar();
         addFooter();
     }
-
 });
 
 // Function to add navbar
@@ -41,7 +40,7 @@ function addNavbar() {
         .then(data => {
             header.innerHTML = data;
             document.body.insertBefore(header, document.body.firstChild);
-            initializeNavigation(); // Initialize navigation after navbar is added
+            initializeNavigation();
         })
         .catch(error => console.error('Error fetching navbar:', error));
 }
@@ -60,21 +59,18 @@ function initializeNavigation() {
         document.body.style.overflow = isMenuOpen ? 'hidden' : '';
     }
 
-    // Toggle menu on button click
     navBtn?.addEventListener('click', (e) => {
         e.preventDefault();
         e.stopPropagation();
         toggleMenu();
     });
 
-    // Close menu when clicking outside
     document.addEventListener('click', (e) => {
         if (isMenuOpen && !navLinks?.contains(e.target) && !navBtn?.contains(e.target)) {
             toggleMenu();
         }
     });
 
-    // Close menu when clicking a nav link
     navLinks?.querySelectorAll('.nav-link').forEach(link => {
         link.addEventListener('click', () => {
             if (isMenuOpen) toggleMenu();
@@ -94,56 +90,13 @@ function addFooter() {
         .catch(error => console.error('Error fetching footer:', error));
 }
 
-// Function to add sidebar
+// Function to add sidebar - now calls initializeSidebar after loading
 function addSidebar() {
     fetch('../templates/sidebar.html')   
         .then(response => response.text())
         .then(data => {
-            // Insert the sidebar as the first element in the body
             document.body.insertAdjacentHTML('afterbegin', data);
-            
-            // Add toggle button for mobile
-            const toggleBtn = document.createElement('button');
-            toggleBtn.id = 'openNav';
-            toggleBtn.className = 'toggle-btn';
-            toggleBtn.setAttribute('aria-label', 'Open navigation');
-            toggleBtn.innerHTML = '☰';
-            document.body.insertBefore(toggleBtn, document.body.firstChild);
-            
-            // Initialize the sidebar toggle functionality
-            toggleBtn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                const sidenav = document.getElementById('mySidenav');
-                if (sidenav && !sidenav.classList.contains('expanded')) {
-                    openNav();
-                }
-            });
-            
-            // Close sidebar when clicking on a nav link on mobile
-            const navLinks = document.querySelectorAll('.nav-link');
-            navLinks.forEach(link => {
-                link.addEventListener('click', () => {
-                    if (window.innerWidth <= 600) { // Mobile breakpoint
-                        closeNav();
-                    }
-                });
-            });
-            
-            // Close when clicking outside the sidebar
-            document.addEventListener('click', (e) => {
-                const sidenav = document.getElementById('mySidenav');
-                const toggleBtn = document.getElementById('openNav');
-                if (sidenav && !sidenav.contains(e.target) && e.target !== toggleBtn) {
-                    closeNav();
-                }
-            });
-            
-            // Add keyboard navigation
-            document.addEventListener('keydown', (e) => {
-                if (e.key === 'Escape') {
-                    closeNav();
-                }
-            });
+            initializeSidebar(); // Initialize sidebar functionality after HTML is loaded
         })
         .catch(error => console.error('Error fetching sidebar:', error));
 }

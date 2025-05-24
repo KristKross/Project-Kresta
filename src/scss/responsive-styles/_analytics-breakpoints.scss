@@ -1,0 +1,136 @@
+@use '../base/breakpoints' as *;
+@use '../base/colors' as *;
+
+.analytics-page {
+    @include mobile {
+        margin-left: 0 !important;
+        width: 100% !important;
+        height: auto;
+        overflow: visible;
+
+        .analytics-container {
+            height: auto;
+            grid-template-rows: auto auto;
+            padding: 15px;
+            gap: 20px;
+            overflow: visible;
+
+            .metrics-overview {
+                grid-template-columns: 1fr;
+                gap: 15px;
+
+                .metric-group {
+                    padding: 15px;
+
+                    h2 {
+                        font-size: 1.1rem;
+                        margin-bottom: 12px;
+                    }
+
+                    .metric-cards {
+                        gap: 12px;
+
+                        .metric-card {
+                            padding: 12px;
+                            gap: 12px;
+
+                            .metric-icon {
+                                width: 35px;
+                                height: 35px;
+
+                                img {
+                                    width: 20px;
+                                    height: 20px;
+                                }
+                            }
+
+                            .metric-data {
+                                .metric-value {
+                                    font-size: 1rem;
+                                }
+
+                                .metric-label {
+                                    font-size: 0.85rem;
+                                }
+
+                                .metric-trend {
+                                    font-size: 0.75rem;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            .charts-container {
+                grid-template-columns: 1fr;
+                grid-template-rows: repeat(3, 300px);
+                height: auto;
+                overflow: visible;
+
+                .chart-wrapper {
+                    height: 300px;
+                    padding: 15px;
+                    position: relative;
+
+                    h3 {
+                        font-size: 1rem;
+                        margin-bottom: 10px;
+                    }
+
+                    &.wide {
+                        grid-column: 1;
+                    }
+
+                    canvas {
+                        position: absolute;
+                        top: 35px;
+                        left: 15px;
+                        right: 15px;
+                        bottom: 15px;
+                        width: calc(100% - 30px) !important;
+                        height: calc(100% - 50px) !important;
+                    }
+                }
+            }
+        }
+    }
+
+    @include tablet {
+        margin-left: 0 !important;
+        width: 100% !important;
+
+        .analytics-container {
+            padding: 20px;
+            gap: 25px;
+
+            .metrics-overview {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 18px;
+
+                .metric-group:last-child {
+                    grid-column: 1 / -1;
+                }
+            }
+
+            .charts-container {
+                grid-template-columns: 1fr;
+                grid-template-rows: repeat(3, 350px);
+                gap: 18px;
+
+                .chart-wrapper {
+                    height: 350px;
+
+                    &.wide {
+                        grid-column: 1;
+                    }
+
+                    canvas {
+                        top: 45px;
+                        height: calc(100% - 65px) !important;
+                    }
+                }
+            }
+        }
+    }
+}

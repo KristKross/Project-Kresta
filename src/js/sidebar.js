@@ -59,9 +59,11 @@ function toggleNav() {
     }
 }
 
-document.addEventListener('DOMContentLoaded', () => {
+// Simple sidebar toggle functionality matching navbar pattern
+function initializeSidebar() {
     const sidenav = document.getElementById('mySidenav');
     const sidebarBtn = document.querySelector('.sidebar-btn');
+    const navItems = document.querySelector('.nav-items');
     let isMenuOpen = false;
 
     function toggleSidebar() {
@@ -71,7 +73,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.body.style.overflow = isMenuOpen ? 'hidden' : '';
     }
 
-    // Single event listener for the button
+    // Toggle sidebar on button click
     sidebarBtn?.addEventListener('click', (e) => {
         e.preventDefault();
         e.stopPropagation();
@@ -84,7 +86,40 @@ document.addEventListener('DOMContentLoaded', () => {
             toggleSidebar();
         }
     });
-});
 
-// Export the functions for use in other modules
-export { openNav, closeNav, toggleNav };
+    // Close sidebar when clicking a nav link on mobile
+    const navLinks = document.querySelectorAll('.nav-link');
+    navLinks.forEach(link => {
+        link.addEventListener('click', () => {
+            if (window.innerWidth <= 600 && isMenuOpen) {
+                toggleSidebar();
+            }
+        });
+    });
+
+    // Add escape key support
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && isMenuOpen) {
+            toggleSidebar();
+        }
+    });
+}
+
+// Export the initialization function
+export { initializeSidebar };
+
+// Export functions for compatibility
+// export function openNav() {
+//     const sidenav = document.getElementById("mySidenav");
+//     sidenav?.classList.add('active');
+// }
+
+// export function closeNav() {
+//     const sidenav = document.getElementById("mySidenav");
+//     sidenav?.classList.remove('active');
+// }
+
+// export function toggleNav() {
+//     const sidenav = document.getElementById("mySidenav");
+//     sidenav?.classList.toggle('active');
+// }
