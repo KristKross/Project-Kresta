@@ -2,11 +2,14 @@ const axios = require('axios');
 const Post = require('../models/Post');
 const Social = require('../models/Social');
 const { getSocialCredentials } = require('../utils/social');
+const { getWorkspace } = require('../utils/workspace');
 
-exports.createScheduledPost = async (req, res) => {
+exports.createPost = async (req, res) => {
   try {
-    const { workspaceId, caption, imageUrl, scheduledTime } = req.body;
-    const userId = req.user._id;
+    let { title, caption, scheduled, scheduledTime, status, imageUrl } = req.body;
+    
+    const workspace = await getWorkspace(req);
+    const userId = req.session.userData.user._id;
 
     // Find user's social info
     const social = await Social.findOne({ userId });
@@ -14,53 +17,68 @@ exports.createScheduledPost = async (req, res) => {
       return res.status(400).json({ error: 'Instagram account not connected' });
     }
 
-    const { instagramAccountId, accessToken } = await getSocialCredentials(req);
+    if (scheduled === false) {
+      scheduledTime = new Date();
+    }
 
-    // Step 1: Create media container
+    console.log('Using Cloudinary Image URL:', imageUrl);
+
+    const { instagramAccountId, accessToken } = await getSocialCredentials(req);
     const containerResponse = await axios.post(
       `https://graph.facebook.com/v19.0/${instagramAccountId}/media`,
       {
         image_url: imageUrl,
-        caption: caption,
+        caption,
         access_token: accessToken,
       }
     );
 
     const creationId = containerResponse.data.id;
+    let igPostId = null;
 
-    // Step 2: Schedule media publish
-    const publishAtUnix = Math.floor(new Date(scheduledTime).getTime() / 1000);
+    let publishAtUnix = scheduled === 'posted'
+      ? Math.floor(Date.now() / 1000)
+      : scheduledTime
+        ? Math.floor(new Date(scheduledTime).getTime() / 1000)
+        : null;
 
-    const scheduleResponse = await axios.post(
-      `https://graph.facebook.com/v19.0/${instagramAccountId}/media_publish`,
-      {
-        creation_id: creationId,
-        access_token: accessToken,
-        publish_at: publishAtUnix,
-      }
-    );
+    if (publishAtUnix) {
+      const publishResponse = await axios.post(
+        `https://graph.facebook.com/v19.0/${instagramAccountId}/media_publish`,
+        {
+          creation_id: creationId,
+          access_token: accessToken,
+          publish_at: publishAtUnix,
+        }
+      );
 
-    // Step 3: Save post to DB
+      igPostId = publishResponse.data.id;
+    }
+
     const post = new Post({
-      workspaceId: workspaceId || null,  // optional
+      title,
+      workspaceId: workspace._id,
       userId,
       socialId: social._id,
       caption,
-      imageUrl,
-      scheduledTime: new Date(scheduledTime),
-      igPostId: scheduleResponse.data.id,
-      status: 'scheduled',
+      imageUrl: imageUrl,
+      scheduledTime: scheduledTime instanceof Date ? scheduledTime : new Date(scheduledTime),
+      igPostId: null,
+      status,
     });
 
     await post.save();
 
     res.status(201).json({
-      message: 'Post scheduled successfully on Instagram',
+      message: scheduled === 'posted'
+        ? 'Post published immediately on Instagram'
+        : 'Post scheduled successfully on Instagram',
       post,
+      imageUrl: imageUrl,
     });
 
   } catch (err) {
     console.error(err?.response?.data || err);
-    res.status(500).json({ error: 'Failed to schedule Instagram post' });
+    res.status(500).json({ error: 'Failed to create Instagram post' });
   }
 };

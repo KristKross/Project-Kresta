@@ -8,9 +8,7 @@ const postSchema = new mongoose.Schema({
   caption: { type: String, required: true },
   imageUrl: { type: String, required: true },
   scheduledTime: { type: Date, required: true },
-  status: { type: String, enum: ['scheduled', 'posted', 'failed'], default: 'posted' },
-  postedAt: { type: Date, default: null },
-  error: { type: String, default: null }
+  status: { type: String, enum: ['scheduled', 'posted'], default: 'posted' },
 }, {
   timestamps: true
 });
