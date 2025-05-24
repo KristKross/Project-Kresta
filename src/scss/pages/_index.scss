@@ -58,6 +58,8 @@
                 @extend .button-cta;
                 display: inline-flex;
                 align-items: center;
+                justify-content: center;
+                justify-self: center;
                 padding: 10px 20px;
                 background-color: $accent-black;
                 border-radius: 15px;
@@ -199,6 +201,11 @@
             gap: 2em;
             height: auto;
             min-height: fit-content;
+            width: 100%;
+
+            p{
+                @extend .body-regular;
+            }
 
             .card{
                 display: flex;
@@ -206,13 +213,14 @@
                 justify-content: flex-start;
                 flex-direction: column;
                 gap: 1em;
-                min-height: 600px;
-                width: 400px;
+                min-height: 900px;
+                width: 33vw;
                 background-color: $tertiary-beige;
                 border: $accent-white 15px solid;
                 border-radius: 1rem;
                 padding: 2rem;
                 @include hover-lift;
+                // min-height: 600px;
 
                 img {
                     max-width: 100%;
@@ -233,6 +241,7 @@
         gap: 50px;
         height: auto;
         min-height: fit-content;
+        width: 100%;
 
         .display-1{
             color: $accent-white;
@@ -449,6 +458,12 @@
             height: 90%;
         }
 
+        .section-8-container-1{
+            img{
+                width: 100%;
+                height: 100%;
+            }
+        }
 
         .section-8-container-2{
             display: flex;

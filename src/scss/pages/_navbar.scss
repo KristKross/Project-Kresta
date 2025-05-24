@@ -20,25 +20,28 @@ nav {
         flex-direction: row;
         gap: 1rem;
         flex: 1;
-        transition: transform 0.3s ease-in-out;
         
         @include mobile {
             position: fixed;
-            top: 0;
+            top: 80px; // Match header height
             left: 0;
             right: 0;
-            background-color: $primary-navy-blue;
+            height: calc(100vh - 80px);
+            background-color: rgba($primary-navy-blue, 0.95);
             flex-direction: column;
             align-items: center;
-            padding: 2rem 0;
-            transform: translateY(-100%);
-            z-index: 9998; // Just below nav button
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            justify-content: center;
+            padding: 2rem;
+            transform: translateY(100%); // Slide from bottom
+            opacity: 0;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 998;
+            pointer-events: none;
             
             &.active {
                 transform: translateY(0);
-                top: 0; // Changed from 80px
-                height: 100vh; // Changed from calc
+                opacity: 1;
+                pointer-events: all;
             }
         }
         
@@ -101,39 +104,29 @@ nav {
     }
     
     .nav-btn {
-        display: none;
-        position: fixed; // Keep fixed to stay in viewport
-        bottom: 2rem;
-        left: 50%;
-        transform: translateX(-50%);
+        display: none; // Hide by default
+        position: fixed;
+        bottom: 2rem; // Position from bottom
+        left: 50%; // Center horizontally
+        transform: translateX(-50%); // Center perfectly
         width: 60px;
         height: 60px;
         border-radius: 50%;
         background: $primary-navy-blue;
         border: none;
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-        z-index: 9999; // Increased z-index to float above everything
+        z-index: 999;
         cursor: pointer;
         transition: all 0.3s ease;
-        padding: 15px; // Add padding for the image
+        padding: 15px;
 
-        .menu-icon {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-            filter: invert(1); // Make the icon white
-            transition: transform 0.3s ease;
+        @include mobile {
+            display: flex !important;
+            justify-content: center;
+            align-items: center;
         }
 
-        &.active {
-            background: $accent-white;
-            
-            .menu-icon {
-                filter: none; // Remove invert when active
-                transform: rotate(90deg); // Rotate icon when active
-            }
-        }
-
+        // Update hover and active states to use translateX for horizontal centering
         &:hover {
             transform: translateX(-50%) scale(1.1);
         }

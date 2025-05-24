@@ -8,22 +8,33 @@ nav {
             justify-content: center;
             align-items: center;
             position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            transition: transform 0.3s ease;
             z-index: 9999;
+
+            &.active {
+                transform: translateX(-50%) rotate(180deg);
+            }
         }
 
         .nav-links {
             display: flex !important;
             transform: translateY(-100%);
-            transition: transform 0.3s ease;
+            opacity: 0;
+            pointer-events: none; // Disable interactions when hidden
             
             &.active {
                 transform: translateY(0);
+                opacity: 1;
+                pointer-events: all; // Enable interactions when visible
             }
         }
 
         .nav-links {
             position: fixed;
-            top: 80px; // Match header height
+            top: 80px;
             left: 0;
             right: 0;
             height: calc(100vh - 80px);
@@ -31,13 +42,15 @@ nav {
             background-color: rgba($primary-navy-blue, 0.95);
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
-            transform: translateY(100%); // Change from -100% to 100% to slide from bottom
+            transform: translateY(100%); // Consistent transform value
             opacity: 0;
+            pointer-events: none;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             
             &.active {
                 transform: translateY(0);
                 opacity: 1;
+                pointer-events: all;
             }
 
             li {
@@ -79,6 +92,13 @@ nav {
 
         .nav-links {
             gap: 1.5rem;
+            transform: none;
+            opacity: 1;
+            pointer-events: all;
+            position: relative;
+            height: auto;
+            padding: 0;
+            flex-direction: row;
         }
 
         .logo {
@@ -88,6 +108,22 @@ nav {
 
         .nav-btn {
             display: none !important; // Force hide on tablet and above
+        }
+    }
+
+    @include desktop {
+        .nav-links {
+            transform: none;
+            opacity: 1;
+            pointer-events: all;
+            position: relative;
+            height: auto;
+            padding: 0;
+            flex-direction: row;
+        }
+
+        .nav-btn {
+            display: none !important;
         }
     }
 }

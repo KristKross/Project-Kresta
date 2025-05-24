@@ -16,7 +16,8 @@
 
             .hero-content {
                 width: 100%; // Change from percentage to viewport width
-                height:50%;
+                height:fit-content;
+
                 padding: 1rem; // Use consistent rem units
 
                 .hero-logo {
@@ -33,9 +34,11 @@
                 }
 
                 .sign-in-btn {
+                    display: flex;
                     width: 100%;
                     max-width: 300px;
                     padding: 1rem;
+                    justify-self: center;
                 }
             }
         }
@@ -50,6 +53,8 @@
             gap: 1.5rem; // Reduced gap for content sections
 
             .caption {
+                display: flex;
+                gap: 10px;
                 text-align: center;
                 width: 100%;
 

@@ -1,3 +1,7 @@
+import defaultAvatarPath from '../assets/images/dashboard/user-pfp.png';
+import creatorBusinessPath from '../assets/icons/workspace/creator-business.png';
+import emptyWorkspacePath from '../assets/icons/workspace/empty-workspace.png';
+
 document.addEventListener('DOMContentLoaded', () => {
     // Tab switching functionality
     const tabButtons = document.querySelectorAll('.tab-button');
@@ -89,7 +93,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const memberElement = document.createElement('div');
         memberElement.className = 'member';
         memberElement.innerHTML = `
-            <img src="./assets/images/dashboard/default-avatar.png" alt="" class="member-avatar">
+            <img src="${defaultAvatarPath}" alt="" class="member-avatar">
             <div class="member-info">
                 <p class="member-name">Pending</p>
                 <p class="member-email">${email}</p>
@@ -168,6 +172,13 @@ document.addEventListener('DOMContentLoaded', () => {
         // Show the selected template
         const activeTemplate = document.querySelector(`.workspace-template.${type}`);
         if (activeTemplate) {
+            if (type === 'no-premium') {
+                const premiumImage = document.getElementById('premium-feature-img');
+                premiumImage.src = creatorBusinessPath;
+            } else if (type === 'no-workspace') {
+                const emptyWorkspaceImage = document.getElementById('empty-workspace-img');
+                emptyWorkspaceImage.src = emptyWorkspacePath;
+            }
             activeTemplate.classList.add('active');
         }
     }

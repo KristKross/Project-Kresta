@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
         toggleMenu();
     });
 
-    // Close menu when clicking outside
+    // Close menu when clicking a link or outside
     document.addEventListener('click', (e) => {
         if (isMenuOpen && !navLinks.contains(e.target) && !navBtn.contains(e.target)) {
             toggleMenu();

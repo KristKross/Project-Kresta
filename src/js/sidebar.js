@@ -59,23 +59,29 @@ function toggleNav() {
     }
 }
 
-// Initialize event listeners
 document.addEventListener('DOMContentLoaded', () => {
-    const openNavBtn = document.getElementById("openNav");
-    if (openNavBtn) {
-        openNavBtn.addEventListener('click', openNav);
+    const sidenav = document.getElementById('mySidenav');
+    const sidebarBtn = document.querySelector('.sidebar-btn');
+    let isMenuOpen = false;
+
+    function toggleSidebar() {
+        isMenuOpen = !isMenuOpen;
+        sidenav?.classList.toggle('active', isMenuOpen);
+        sidebarBtn?.classList.toggle('active', isMenuOpen);
+        document.body.style.overflow = isMenuOpen ? 'hidden' : '';
     }
-    
-    // Close when clicking outside the sidebar
+
+    // Single event listener for the button
+    sidebarBtn?.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        toggleSidebar();
+    });
+
+    // Close when clicking outside
     document.addEventListener('click', (e) => {
-        const sidenav = document.getElementById("mySidenav");
-        const openNavBtn = document.getElementById("openNav");
-        
-        if (sidenav && 
-            !sidenav.contains(e.target) && 
-            e.target !== openNavBtn &&
-            sidenav.classList.contains("expanded")) {
-            closeNav();
+        if (isMenuOpen && !sidenav?.contains(e.target) && !sidebarBtn?.contains(e.target)) {
+            toggleSidebar();
         }
     });
 });
