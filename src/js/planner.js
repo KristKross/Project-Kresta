@@ -192,41 +192,57 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        let mediaUrl = null;
-        if (mediaInput.files[0]) {
-            mediaUrl = URL.createObjectURL(mediaInput.files[0]);
+        const mediaInputFile = mediaInput.files[0];
+        if (!mediaInputFile) {
+            alert('Please upload a media file');
+            return;
         }
 
-        const formData = {
-            id: postForm.dataset.editingPostId || Date.now().toString(),
-            title: postForm.querySelector('.post-title').value,
-            description: postForm.querySelector('.post-description').value,
-            platforms: selectedPlatforms,
-            mediaUrl: mediaUrl || (postForm.dataset.editingPostId ? JSON.parse(document.querySelector(`[data-post-id="${postForm.dataset.editingPostId}"]`)?.dataset.postData || '{}').mediaUrl : null),
-            scheduled: scheduleToggle.checked,
-            scheduledDate: scheduleToggle.checked ? 
-                `${postForm.querySelector('.schedule-date').value} ${postForm.querySelector('.schedule-time').value}` : 
-                null,
-            time: scheduleToggle.checked ? postForm.querySelector('.schedule-time').value : null,
-            status: scheduleToggle.checked ? 'scheduled' : 'draft'
-        };
+        // 🌟 Step 1: Upload Image to Cloudinary First
+        const imageFormData = new FormData();
+        imageFormData.append('imageFile', mediaInputFile);
 
-        if (postForm.dataset.editingPostId) {
-            // Update existing post
-            const existingPost = document.querySelector(`[data-post-id="${postForm.dataset.editingPostId}"]`);
-            if (existingPost) {
-                existingPost.dataset.postData = JSON.stringify(formData);
-                existingPost.innerHTML = createPostCardHtml(formData);
-                existingPost.className = `post-card ${formData.status}`;
+        try {
+            const uploadResponse = await fetch('/api/upload', {
+                method: 'POST',
+                body: imageFormData
+            });
+
+            const uploadResult = await uploadResponse.json();
+            if (!uploadResponse.ok) {
+                throw new Error(uploadResult.error || 'Image upload failed');
             }
-        } else {
-            // Create new post
-            createPostCard(formData);
-        }
 
-        // Reset form and close panel
-        postForm.dataset.editingPostId = '';
-        closePanel.click();
+            const cloudinaryUrl = uploadResult.imageUrl;
+            console.log('Uploaded Cloudinary URL:', cloudinaryUrl);
+
+            // 🌟 Step 2: Send Cloudinary URL Along with Post Data
+            const postFormData = {
+                title: postForm.querySelector('.post-title').value,
+                caption: postForm.querySelector('.post-description').value,
+                imageUrl: cloudinaryUrl,
+                scheduled: scheduleToggle.checked,
+                scheduledTime: scheduleToggle.checked ? postForm.querySelector('.schedule-time').value : null,
+                status: scheduleToggle.checked ? 'scheduled' : 'posted'
+            };
+
+            const postResponse = await fetch('/api/instagram/publish', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(postFormData)
+            });
+
+            const postResult = await postResponse.json();
+            if (!postResponse.ok) {
+                throw new Error(postResult.error || 'Failed to publish post');
+            }
+
+            postCreatorPanel.classList.remove('active');
+            
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Something went wrong. Please try again.');
+        }
     });
 
     // Planner Grid Functionality

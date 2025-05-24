@@ -1,8 +1,7 @@
 const Task = require('../models/Task');
 const { getWorkspace } = require('../utils/workspace');
 
-// Create Task
-const User = require('../models/User'); // import User model
+const User = require('../models/User');
 
 exports.createTask = async (req, res) => {
     try {
@@ -10,7 +9,6 @@ exports.createTask = async (req, res) => {
 
         const workspace = await getWorkspace(req);
 
-        // Find the user by email (assigneeName)
         const user = await User.findOne({ username: assigneeName });
         if (!user) {
             return res.status(400).json({ error: 'Assignee not found' });
