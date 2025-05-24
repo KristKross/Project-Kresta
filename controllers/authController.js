@@ -89,13 +89,18 @@ exports.login = async (req, res) => {
 // @route   PATCH /auth/update
 exports.updateUser = async (req, res) => {
     try {
-        const { email, username } = req.body;
+        const { email, username, profilePicture } = req.body;
         const user = req.session?.userData?.user;
         if (!user) {
             return res.status(401).json({ success: false, message: "User not logged in" });
         }
 
-        const updatedUser = await User.findByIdAndUpdate(user._id, { email, username }, { new: true });
+        const updateData = { email, username };
+        if (profilePicture) {
+            updateData.profilePicture = profilePicture;
+        }
+
+        const updatedUser = await User.findByIdAndUpdate(user._id, updateData, { new: true });
         req.session.userData.user = updatedUser;
 
         res.json({ success: true, message: "User details updated successfully!" });

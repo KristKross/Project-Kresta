@@ -4,25 +4,21 @@ const Social = require('../models/Social');
 const { getSocialCredentials } = require('../utils/social');
 const { getWorkspace } = require('../utils/workspace');
 
+
 exports.createPost = async (req, res) => {
+  const { title, caption, scheduled, scheduledTime, imageUrl } = req.body;
+
   try {
-    let { title, caption, scheduled, scheduledTime, status, imageUrl } = req.body;
-    
     const workspace = await getWorkspace(req);
     const userId = req.session.userData.user._id;
 
     // Find user's social info
     const social = await Social.findOne({ userId });
     if (!social || !social.instagramAccountId || !social.instagramAccessToken) {
-      return res.status(400).json({ error: 'Instagram account not connected' });
+      throw new Error('Instagram account not connected');
     }
 
-    if (scheduled === false) {
-      scheduledTime = new Date();
-    }
-
-    console.log('Using Cloudinary Image URL:', imageUrl);
-
+    // Create container first
     const { instagramAccountId, accessToken } = await getSocialCredentials(req);
     const containerResponse = await axios.post(
       `https://graph.facebook.com/v19.0/${instagramAccountId}/media`,
@@ -34,14 +30,16 @@ exports.createPost = async (req, res) => {
     );
 
     const creationId = containerResponse.data.id;
+
+    // Schedule or publish immediately
+    let publishAtUnix = null;
+    if (scheduled === 'posted') {
+      publishAtUnix = Math.floor(Date.now() / 1000);
+    } else if (scheduledTime) {
+      publishAtUnix = Math.floor(new Date(scheduledTime).getTime() / 1000);
+    }
+
     let igPostId = null;
-
-    let publishAtUnix = scheduled === 'posted'
-      ? Math.floor(Date.now() / 1000)
-      : scheduledTime
-        ? Math.floor(new Date(scheduledTime).getTime() / 1000)
-        : null;
-
     if (publishAtUnix) {
       const publishResponse = await axios.post(
         `https://graph.facebook.com/v19.0/${instagramAccountId}/media_publish`,
@@ -53,8 +51,15 @@ exports.createPost = async (req, res) => {
       );
 
       igPostId = publishResponse.data.id;
+
+      if (scheduled === 'posted') {
+        return res.status(201).json({
+          message: 'Post published immediately on Instagram',
+        });
+      }
     }
 
+    // Create post in database
     const post = new Post({
       title,
       workspaceId: workspace._id,
@@ -63,16 +68,13 @@ exports.createPost = async (req, res) => {
       caption,
       imageUrl: imageUrl,
       scheduledTime: scheduledTime instanceof Date ? scheduledTime : new Date(scheduledTime),
-      igPostId: null,
-      status,
+      igPostId: igPostId,
     });
 
     await post.save();
 
-    res.status(201).json({
-      message: scheduled === 'posted'
-        ? 'Post published immediately on Instagram'
-        : 'Post scheduled successfully on Instagram',
+    return res.status(201).json({
+      message: 'Post scheduled successfully on Instagram',
       post,
       imageUrl: imageUrl,
     });

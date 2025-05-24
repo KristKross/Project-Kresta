@@ -49,7 +49,6 @@ function addMember(email, membersList, deleteMemberPopup, setMemberToDelete) {
 }
 
 function showWorkspaceTemplate(type) {
-    console.log(`Showing workspace template: ${type}`);
     const templates = document.querySelectorAll('.workspace-template');
     templates.forEach(template => template.classList.remove('active'));
 
@@ -85,7 +84,13 @@ async function checkUserPlanAndWorkspace() {
         }
 
         const data = await response.json();
-        return data.success ? showWorkspaceTemplate('has-workspace') : showWorkspaceTemplate('no-workspace');
+
+        if (!data.workspace) {
+            return showWorkspaceTemplate('no-workspace');
+        }
+
+        showWorkspaceTemplate('has-workspace');
+
     } catch (error) {
         console.error('Error fetching workspace:', error);
         return showWorkspaceTemplate('no-workspace');
@@ -153,14 +158,43 @@ document.addEventListener('DOMContentLoaded', async () => {
     const profilePictures = document.querySelectorAll('.profile-picture');
 
     changePictureBtn?.addEventListener('click', () => profilePictureInput?.click());
-    profilePictureInput?.addEventListener('change', (e) => {
+
+    profilePictureInput?.addEventListener('change', async (e) => {
         const file = e.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                profilePictures.forEach(pic => (pic.src = e.target.result));
-            };
-            reader.readAsDataURL(file);
+        if (!file) return;
+
+        const profilePicture = new FormData();
+        profilePicture.append('imageFile', file);
+
+        try {
+            const uploadResponse = await fetch('/api/upload', {
+                method: 'POST',
+                body: profilePicture
+            });
+
+            const uploadResult = await uploadResponse.json();
+            if (!uploadResponse.ok) {
+                throw new Error(uploadResult.error || 'Image upload failed');
+            }
+
+            const cloudinaryUrl = uploadResult.imageUrl;
+            console.log('Uploaded Cloudinary URL:', cloudinaryUrl);
+
+            const updateResponse = await fetch('/auth/update', {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ profilePicture: cloudinaryUrl }),
+            });
+
+            const updateResult = await updateResponse.json();
+            if (!updateResponse.ok) {
+                throw new Error(updateResult.error || 'Profile picture update failed');
+            }
+
+            alert('Profile picture updated successfully!');
+        } catch (error) {
+            console.error('Error uploading profile picture:', error);
+            alert('Error uploading profile picture.');
         }
     });
 

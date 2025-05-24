@@ -86,11 +86,18 @@ async function fetchWorkspace() {
             credentials: 'include'
         });
 
+        if (response.status === 401) {
+            console.error('Error: Unauthorized');
+            return { error: 'Unauthorized', hasWorkspace: false };
+        }
+
         if (response.status === 403) {
+            console.error('Error: User does not have a workspace');
             return { error: 'Forbidden', hasWorkspace: false };
         }
 
         if (!response.ok) {
+            console.error(`Error fetching workspace: ${response.statusText}`);
             return { error: `Error fetching workspace: ${response.statusText}`, hasWorkspace: false };
         }
 
@@ -201,7 +208,7 @@ async function updateAnalyticsSection() {
                 <img src="${analyticsImagePath}" alt="No analytics">
                 <h3>Not Linked to Business Account</h3>
                 <p>Link your Business account and get insights</p>
-                <a href="/api/social/facebook" class="upgrade-btn">Link Now</a>
+                <a href="/api/social/facebook"><button class="upgrade-btn">Link Now</button></a>
             </div>
         `;
         return;
@@ -223,9 +230,9 @@ async function updateWorkspaceSection() {
 
     if (result.error === 'Forbidden') {
         workspaceContainer.innerHTML = `
-            <h3>No Team Members</h3>
-            <p>Upgrade to add team members and collaborate</p>
-            <a href="pricing.html" class="upgrade-btn">Upgrade Now</a>
+            <h3>No Premium Plan</h3>
+            <p>Upgrade to premium or join a workspace and collaborate</p>
+            <a href="/pricing"><button class="create-task-btn">Upgrade Now</button></a>
         `;
         return;
     }
@@ -234,7 +241,7 @@ async function updateWorkspaceSection() {
         workspaceContainer.innerHTML = `
             <h3>No Workspace Created</h3>
             <p>Create a workspace to start collaborating with your team</p>
-            <a href="/api/workspace" class="upgrade-btn">Create Workspace</a>
+            <a href="/profile?tab=workspace"><button class="upgrade-btn">Create Workspace</button></a>
         `;
         return;
     }
@@ -243,7 +250,7 @@ async function updateWorkspaceSection() {
     workspaceContainer.innerHTML = `
         <h3>${workspace.name}</h3>
         <p>You're part of a workspace</p>
-        <a href="/profile?tab=workspace" class="upgrade-btn">View Workspace</a>
+        <a href="/profile?tab=workspace"><button class="upgrade-btn">View Workspace</button></a>
     `;
 }
 
@@ -256,9 +263,9 @@ async function updateTaskSection() {
     if (result.error === 'Forbidden') {
         tasksContainer.innerHTML = `
             <img src="${taskImagePath}" alt="No tasks">
-            <h3>No Tasks Available</h3>
-            <p>Upgrade to add tasks and collaborate</p>
-            <a href="pricing.html" class="upgrade-btn">Upgrade Now</a>
+            <h3>No Premium Plan</h3>
+            <p>Upgrade to premium or join a workspace to add tasks</p>
+            <a href="/pricing"><button class="create-task-btn">Upgrade Now</button></a>
         `;
         return;
     }
@@ -268,7 +275,7 @@ async function updateTaskSection() {
             <img src="${taskImagePath}" alt="No tasks">
             <h3>No Tasks Yet</h3>
             <p>Create your first task to get started</p>
-            <button onclick="window.location.href='tasks.html'" class="create-task-btn">Create Task</button>
+            <a href="/tasks"><button class="create-task-btn">Create Task</button></a>
         `;
         return;
     }
@@ -277,7 +284,7 @@ async function updateTaskSection() {
         <img src="${taskImagePath}" alt="Tasks">
         <h3>${result.tasks.length} Tasks</h3>
         <p>View your tasks to get started</p>
-        <button onclick="window.location.href='tasks.html'" class="create-task-btn">View Tasks</button>
+        <a href="/tasks"><button class="create-task-btn">View Tasks</button></a>
     `;
 }
 

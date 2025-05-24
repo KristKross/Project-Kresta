@@ -7,7 +7,7 @@ module.exports = async function (req, res, next) {
     const tier = premiumInfo?.tier || "free";
 
     if (tier !== "pro" && tier !== "business") {
-        return res.redirect('/pricing');
+        return res.status(403).json({ success: false, message: "Pro or Business plan required" });
     }
 
     next();
