@@ -3,55 +3,161 @@
 @use '../base/colors' as *;
 @use '../base/breakpoints' as *;
 
-nav{
+nav {
     display: flex;
     flex-direction: row;
     background-color: $primary-navy-blue;
     justify-content: space-between;
     align-items: center;
-    padding: 2rem;
+    padding: 1.5rem 2rem;
     position: relative;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
+    z-index: 1000;
     
-    .nav-links{
+    .nav-links {
         @extend .nav-primary;
         display: flex;
         flex-direction: row;
         gap: 1rem;
         flex: 1;
+        transition: transform 0.3s ease-in-out;
         
-        .nav-link{
+        @include mobile {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background-color: $primary-navy-blue;
+            flex-direction: column;
+            align-items: center;
+            padding: 2rem 0;
+            transform: translateY(-100%);
+            z-index: 9998; // Just below nav button
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            
+            &.active {
+                transform: translateY(0);
+                top: 0; // Changed from 80px
+                height: 100vh; // Changed from calc
+            }
+        }
+        
+        .nav-link {
             color: $accent-white;
             text-decoration: none;
             position: relative;
+            padding: 0.5rem 1rem;
+            
+            @include mobile {
+                padding: 1rem 2rem;
+                font-size: 1.2rem;
+            }
         }
 
         .nav-separator {
             width: 2px;
-            // height: ;
             background-color: rgba($accent-white, 0.4);
             margin: 0 15px;
             justify-self: center;
+            
+            @include mobile {
+                display: none;
+            }
         }
     }
     
-    .logo{
-        width: 100px;
-        height: 100px;
+    .logo {
+        width: 80px;
+        height: 80px;
         position: absolute;
         left: 50%;
         transform: translateX(-50%);
+        z-index: 1001;
+        
+        @include mobile {
+            width: 60px;
+            height: 60px;
+        }
     }
     
-    .login-btn{
+    .login-btn {
         @extend .nav-primary;
-        background-color: $tertiary-beige   ;
+        background-color: $tertiary-beige;
         color: $primary-navy-blue;
         border: none;
         border-radius: 10px;
-        padding: 0.5rem 1rem;
+        padding: 0.5rem 1.5rem;
+        transition: all 0.3s ease;
+        z-index: 1001;
         margin-left: auto;
         @include hover-lift;
         @include button-border-animation($primary-navy-blue);
+        
+        @include mobile {
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+            margin-right: 50px;
+        }
+    }
+    
+    .nav-btn {
+        display: none;
+        position: fixed; // Keep fixed to stay in viewport
+        bottom: 2rem;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background: $primary-navy-blue;
+        border: none;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        z-index: 9999; // Increased z-index to float above everything
+        cursor: pointer;
+        transition: all 0.3s ease;
+        padding: 15px; // Add padding for the image
+
+        .menu-icon {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            filter: invert(1); // Make the icon white
+            transition: transform 0.3s ease;
+        }
+
+        &.active {
+            background: $accent-white;
+            
+            .menu-icon {
+                filter: none; // Remove invert when active
+                transform: rotate(90deg); // Rotate icon when active
+            }
+        }
+
+        &:hover {
+            transform: translateX(-50%) scale(1.1);
+        }
+
+        &:active {
+            transform: translateX(-50%) scale(0.95);
+        }
+    }
+    
+    .overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 998;
+        opacity: 0;
+        transition: opacity 0.3s ease-in-out;
+        
+        &.active {
+            display: block;
+            opacity: 1;
+        }
     }
 }

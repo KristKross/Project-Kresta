@@ -1,67 +1,93 @@
 @use '../base/breakpoints' as *;
-@use '../base/typography' as *;
 @use '../base/colors' as *;
 
-// Mobile styles
-@media screen and (max-width: $mobile) {
-    nav {
-        flex-direction: column;
-        align-items: flex-start;
-        padding: 1rem;
-
-        .logo {
-            position: static;
-            transform: none;
-            margin: 0 auto 1rem auto;
+nav {
+    @include mobile {
+        .nav-btn {
+            display: flex !important;
+            justify-content: center;
+            align-items: center;
+            position: fixed;
+            z-index: 9999;
         }
 
         .nav-links {
-            flex-direction: column;
-            align-items: center;
-            gap: 20px;
-            width: 100%;
-            background-color: rgba($primary-navy-blue, 0.9);
+            display: flex !important;
+            transform: translateY(-100%);
+            transition: transform 0.3s ease;
+            
+            &.active {
+                transform: translateY(0);
+            }
+        }
+
+        .nav-links {
+            position: fixed;
+            top: 80px; // Match header height
+            left: 0;
+            right: 0;
+            height: calc(100vh - 80px);
+            padding: 2rem;
+            background-color: rgba($primary-navy-blue, 0.95);
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            padding-bottom: 2rem;
-            transition: transform 0.3s ease-in-out;
-        }
+            transform: translateY(100%); // Change from -100% to 100% to slide from bottom
+            opacity: 0;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            
+            &.active {
+                transform: translateY(0);
+                opacity: 1;
+            }
 
-        .login-btn {
-            width: 100%;
-            margin: 1rem 0 0 0;
-        }
-    }
-}
+            li {
+                opacity: 0;
+                transform: translateY(20px);
+                transition: all 0.3s ease;
+                transition-delay: calc(var(--delay) * 0.1s);
+            }
 
-// Desktop styles
-@media screen and (min-width: #{$mobile + 1}) {
-    nav {
-        flex-direction: row;
-        align-items: center;
-        padding: 2rem;
+            &.active li {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
 
         .logo {
-            position: absolute;
-            left: 50%;
-            transform: translateX(-50%);
-            margin: 0;
-        }
-
-        .nav-links {
-            flex-direction: row;
-            gap: 1rem;
-            background: none;
-            box-shadow: none;
-            border: none;
-            padding: 0;
+            width: 60px;
+            height: 60px;
+            position: relative;
+            left: 0;
+            transform: none;
+            margin-right: auto;
         }
 
         .login-btn {
-            width: auto;
-            margin: 0 0 0 auto;
+            margin: 0;
+            padding: 0.75rem 1.25rem;
+        }
+
+        .nav-btn {
+            display: flex !important; // Force display on mobile
+            justify-content: center;
+            align-items: center;
+        }
+    }
+
+    @include tablet {
+        padding: 1rem 2rem;
+
+        .nav-links {
+            gap: 1.5rem;
+        }
+
+        .logo {
+            width: 70px;
+            height: 70px;
+        }
+
+        .nav-btn {
+            display: none !important; // Force hide on tablet and above
         }
     }
 }

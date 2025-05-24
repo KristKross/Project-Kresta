@@ -24,6 +24,7 @@ module.exports = {
         about: "./src/js/about.js",
         contact: "./src/js/contact.js",
         pricing: "./src/js/pricing.js",
+        sidebar: "./src/js/sidebar.js",
     },
     optimization: {
         splitChunks: {

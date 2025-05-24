@@ -174,8 +174,25 @@
                         @extend .body-large;
                         display: flex;
                         align-items: center;
-                        gap: 0.5em;
+                        gap: 0.8em;
                         margin: 1.2em 0; // Increased spacing between list items
+
+                        .material-icons {
+                            font-size: 24px;
+                            width: 24px;
+                            height: 24px;
+                            display: inline-flex;
+                            align-items: center;
+                            justify-content: center;
+
+                            &.check {
+                                color: #4CAF50; // Green for checkmarks
+                            }
+
+                            &.cross {
+                                color: #F44336; // Red for crosses
+                            }
+                        }
 
                         img {
                             width: 20px;

@@ -1,79 +1,323 @@
-$collapsed-width: 60px;
+@use 'sass:color';
+@use '../base/animations' as *;
+@use '../base/typography' as *;
+@use '../base/colors' as *;
+@use '../base/breakpoints' as *;
+@use '../components/buttons' as *;
+
+// Variables
+$collapsed-width: 110px;
 $expanded-width: 250px;
-$dark-bg: #111;
+$nav-bg: $primary-navy-blue;
 $text-color: #818181;
 $text-hover: #f1f1f1;
+$transition-duration: 0.3s;
+
+// Toggle button
+.toggle-btn {
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    z-index: 1001;
+    font-size: 24px;
+    cursor: pointer;
+    background: $primary-navy-blue;
+    color: $accent-white;
+    border: 1px solid rgba($accent-white, 0.3);
+    border-radius: 4px;
+    padding: 5px 10px;
+    transition: all 0.3s ease;
+    display: none; // Hidden by default on desktop
+    
+    &:hover {
+        background: color.adjust($primary-navy-blue, $lightness: 5%);
+        transform: translateY(-1px);
+    }
+    
+    &:active {
+        transform: translateY(1px);
+    }
+}
 
 .sidenav {
-    height: 100%;
+    // Base styles
+    height: 100vh;
     width: $collapsed-width;
     position: fixed;
-    z-index: 1;
+    z-index: 1000;
     top: 0;
     left: 0;
-    background-color: $dark-bg;
+    background-color: $nav-bg;
     overflow-x: hidden;
-    transition: 0.3s;
-    padding-top: 60px;
+    overflow-y: auto;
+    transition: all $transition-duration ease;
+    padding: 20px 0;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    
+    // When expanded
+    &.expanded {
+        width: $expanded-width;
+    }
 
+    // Toggle button
+    .toggle-btn {
+        position: fixed;
+        top: 15px;
+        left: 15px;
+        z-index: 1001;
+        font-size: 24px;
+        cursor: pointer;
+        background: $primary-navy-blue;
+        color: $accent-white;
+        border: 1px solid rgba($accent-white, 0.3);
+        border-radius: 4px;
+        padding: 5px 10px;
+        transition: all 0.3s ease;
+        display: none; // Hidden by default on desktop
+        
+        &:hover {
+            background: color.adjust($primary-navy-blue, $lightness: 5%);
+            transform: translateY(-1px);
+        }
+        
+        &:active {
+            transform: translateY(1px);
+        }
+    }
+
+    // Navigation header
+    .nav-header {
+        padding: 0 10px 20px;
+        margin-bottom: 20px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        
+        .logo {
+            width: 40px;
+            height: auto;
+            display: block;
+            margin: 0 auto;
+        }
+    }
+
+    // Navigation items container
+    .nav-items {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        padding: 10px;
+        overflow-y: auto;
+        // border: 1px solid $accent-white;
+        border-radius: 1px;
+        margin: 0 5px;
+        
+        // Container for grouping navigation items
+        .container {
+            @extend .nav-primary;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 20px;
+            padding: 12px;
+            border: 1px solid $accent-white;
+            border-radius: 8px;
+            color: $accent-white;
+            
+            &:last-child {
+                margin-top: auto;
+                padding-top: 20px;
+                // border-top: 1px solid rgba(255, 255, 255, 0.1);
+            }
+            
+        }
+        
+        // Navigation links
+        .nav-link {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            color: $text-color;
+            text-decoration: none;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+            
+            // Hover and active states
+            &:hover,
+            &.active {
+                background-color: $accent-white;
+                color: $primary-navy-blue;
+
+                span {
+                    color: $primary-navy-blue;
+                }
+                
+                img {
+                    filter: brightness(0) saturate(100%) invert(18%) sepia(41%) saturate(1106%) hue-rotate(172deg) brightness(92%) contrast(90%);
+                }
+            }
+            
+            // Active state only
+            &.active {
+                position: relative;
+                
+                &::after {
+                    content: '';
+                    position: absolute;
+                    right: 0;
+                    top: 50%;
+                    transform: translateY(-50%);
+                    width: 4px;
+                    height: 70%;
+                    background-color: $primary-navy-blue;
+                    border-radius: 2px 0 0 2px;
+                }
+            }
+            
+            img {
+                width: 24px;
+                height: 24px;
+                min-width: 24px;
+                min-height: 24px;
+                object-fit: contain;
+                margin-right: 15px;
+                flex-shrink: 0;
+                filter: brightness(0) saturate(100%) invert(100%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(100%) contrast(100%);
+                opacity: 0.8;
+                transition: all 0.2s ease;
+            }
+            
+            span {
+                color: $accent-white;
+                opacity: 0;
+                transition: opacity 0.2s ease;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                &:hover {
+                    color: $primary-navy-blue;
+                }
+            }
+        }
+    }
+
+    // Hover state
     &:hover {
         width: $expanded-width;
-
-        span {
+        overflow-y: auto;
+        
+        .nav-link span {
             opacity: 1;
         }
-
-        & + #main {
+        
+        & + main {
             margin-left: $expanded-width;
         }
     }
-
-    a {
-        padding: 12px 15px;
-        text-decoration: none;
-        color: $text-color;
-        display: flex;
-        align-items: center;
-        white-space: nowrap;
-
-        &:hover {
-            color: $text-hover;
-        }
-    }
-
-    img {
-        width: 24px;
-        height: 24px;
-        margin-right: 15px;
-    }
-
-    span {
-        opacity: 0;
-        transition: 0.2s;
-    }
-
+    
+    // Expanded state (when toggled)
     &.expanded {
         width: $expanded-width;
-
-        span {
+        overflow-y: auto;
+        
+        .nav-link span {
             opacity: 1;
         }
     }
 }
 
-#main {
+// Main content area
+main {
     margin-left: $collapsed-width;
     padding: 20px;
-    transition: 0.3s;
-
+    min-height: 100vh;
+    transition: all $transition-duration ease;
+    background-color: #f5f7fa;
+    
     &.shifted {
         margin-left: $expanded-width;
     }
+    
+    @include mobile {
+        margin-left: 0;
+        padding: 15px;
+        padding-top: 60px; // Make room for the toggle button
+        
+        &.shifted {
+            margin-left: $expanded-width;
+        }
+    }
 }
 
-.toggle-btn {
-    font-size: 24px;
-    cursor: pointer;
-    background: none;
-    border: none;
+// Mobile styles
+@include mobile {
+    .toggle-btn {
+        display: block;
+    }
+    
+    .sidenav {
+        width: 250px !important;
+        transform: translateX(-100%);
+        transition: transform $transition-duration ease;
+        
+        &.expanded {
+            transform: translateX(0);
+            box-shadow: 2px 0 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        // Hide the sidebar by default on mobile
+        &:not(.expanded) {
+            display: none;
+        }
+    }
+    
+    main {
+        margin-left: 0 !important;
+        transition: margin-left $transition-duration ease;
+    }
+    
+    main.shifted {
+        margin-left: 0 !important;
+        transform: translateX(250px);
+    }
+}
+
+// Tablet adjustments
+@include tablet {
+    .sidenav {
+        width: $collapsed-width;
+        
+        &:hover {
+            width: $expanded-width;
+        }
+    }
+    
+    main {
+        margin-left: $collapsed-width;
+        
+        &.shifted {
+            margin-left: $expanded-width;
+        }
+    }
+}
+
+// Desktop adjustments
+@include desktop {
+    .sidenav {
+        width: $collapsed-width;
+        
+        &:hover {
+            width: $expanded-width;
+        }
+    }
+    
+    main {
+        margin-left: $collapsed-width;
+        
+        &.shifted {
+            margin-left: $expanded-width;
+        }
+    }
 }
