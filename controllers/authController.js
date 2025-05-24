@@ -86,6 +86,24 @@ exports.login = async (req, res) => {
     }
 };
 
+// @route   PATCH /auth/update
+exports.updateUser = async (req, res) => {
+    try {
+        const { email, username } = req.body;
+        const user = req.session?.userData?.user;
+        if (!user) {
+            return res.status(401).json({ success: false, message: "User not logged in" });
+        }
+
+        const updatedUser = await User.findByIdAndUpdate(user._id, { email, username }, { new: true });
+        req.session.userData.user = updatedUser;
+
+        res.json({ success: true, message: "User details updated successfully!" });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Error updating user details" });
+    }
+};
 
 // @route   GET /auth/user
 exports.getUser = async (req, res) => {

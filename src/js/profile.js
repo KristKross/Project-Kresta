@@ -2,8 +2,25 @@ import defaultAvatarPath from '../assets/images/dashboard/user-pfp.png';
 import creatorBusinessPath from '../assets/icons/workspace/creator-business.png';
 import emptyWorkspacePath from '../assets/icons/workspace/empty-workspace.png';
 
-document.addEventListener('DOMContentLoaded', () => {
-    
+document.addEventListener('DOMContentLoaded', async () => {
+    const userData = await fetchAndSetProfileData();
+
+    console.log(userData);
+
+    const profileName = document.getElementById('profile-name');
+    const profileUsername = document.getElementById('profile-username');
+
+    // 🌟 Get input fields
+    const usernameInput = document.querySelector('input[type="text"].form-input');
+    const emailInput = document.querySelector('input[type="email"].form-input');
+
+    if (profileName) profileName.textContent = userData.user.username || 'User';
+    if (profileUsername) profileUsername.textContent = userData.user.email || '@username';
+
+    // 🌟 Set values in form fields
+    if (usernameInput) usernameInput.value = userData.user.username || '';
+    if (emailInput) emailInput.value = userData.user.email || '';
+
     // Tab switching functionality
     const tabButtons = document.querySelectorAll('.tab-button');
     const tabContents = document.querySelectorAll('.tab-content');
@@ -48,8 +65,33 @@ document.addEventListener('DOMContentLoaded', () => {
 
     profileForm?.addEventListener('submit', (e) => {
         e.preventDefault();
-        // Add your profile update logic here
-        alert('Profile updated successfully!');
+        
+        fetch('/auth/update', {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                email: emailInput.value,
+                username: usernameInput.value,
+            }),
+        })
+        .then(res => res.json())
+        .then(data => {
+            console.log('API Response:', data);
+            
+            if (!data.success) {
+                console.error('User data is missing in response:', data);
+                alert('Failed to update profile!');
+                return;
+            }
+
+            window.location.reload();
+        })
+        .catch(error => {
+            console.error('Error updating user details:', error);
+            alert('Error updating user details');
+        });
     });
 
     securityForm?.addEventListener('submit', (e) => {
@@ -243,3 +285,22 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 });
+
+async function fetchAndSetProfileData() {
+    try {
+        const response = await fetch('/auth/user');
+        if (!response.ok) throw new Error('Failed to fetch user data');
+
+        const userData = await response.json();
+
+        if (!userData) {
+            console.error('User data not available:', userData);
+            return null;
+        }
+
+        return userData;
+    } catch (error) {
+        console.error('Error fetching user data:', error);
+        return null;
+    }
+}
