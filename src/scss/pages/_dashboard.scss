@@ -22,6 +22,8 @@ span, a{
     justify-content: center;
     align-items: center;
     gap: 50px;
+    margin-left: 110px; // Add sidebar offset
+    width: calc(100% - 110px); // Adjust width for sidebar
 }
 
 .h1{
@@ -50,13 +52,9 @@ span, a{
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
     border-radius: 20px;
     margin: 20px;
+    margin-left: 130px; // Add sidebar offset with some padding
+    width: calc(100% - 150px); // Adjust width for sidebar with padding
     min-width: 1200px; // Base minimum width for the entire dashboard
-
-    @include mobile {
-        min-width: 320px; // Minimum width for mobile
-        display: flex;
-        flex-direction: column;
-    }
 
     // Modify container widths
     .dashboard-left-container {

@@ -10,23 +10,25 @@
         margin: 10px;
         padding: 15px;
         gap: 20px;
+        min-width: 768px;
+
+        .dashboard-left-container,
+        .dashboard-middle-container,
+        .dashboard-workspace {
+            min-width: 100%;
+            max-width: 100%;
+        }
 
         .dashboard-middle-container {
             order: -1; // Moves it to the top
-            min-width: 100%;
-            max-width: 100%;
         }
 
         .dashboard-left-container {
             order: 1;
-            min-width: 100%;
-            max-width: 100%;
         }
 
         .dashboard-workspace {
             order: 2;
-            min-width: 100%;
-            max-width: 100%;
         }
     }
 
@@ -52,6 +54,8 @@
 // Mobile Styles
 @include mobile {
     .title-h1 {
+        margin-left: 0;
+        width: 100%;
         height: auto;
         padding: 15px;
         gap: 15px;
@@ -64,9 +68,27 @@
     }
 
     .dashboard-container {
+        margin-left: 20px;
+        width: calc(100% - 40px);
+        min-width: 320px; // Minimum width for mobile
+        display: flex;
+        flex-direction: column;
         margin: 5px;
         padding: 10px;
         gap: 15px;
+
+        .dashboard-left-container,
+        .dashboard-middle-container,
+        .dashboard-workspace,
+        .section-header,
+        .empty-state,
+        .user-welcome,
+        .content-planner,
+        .actions-grid .action-card,
+        .people-card,
+        .task-bullet {
+            min-width: 280px; // Set minimum width for mobile
+        }
 
         .section-header {
             padding: 12px 15px;
