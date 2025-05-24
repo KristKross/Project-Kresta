@@ -308,12 +308,223 @@
     }
 }
 
+.workspace-section {
+    .team-members {
+        margin-bottom: 40px;
+
+        .members-list {
+            margin-top: 20px;
+        }
+
+        .member {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            border: 1px solid $ui-border;
+            border-radius: 8px;
+            margin-bottom: 10px;
+
+            .member-avatar {
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+            }
+
+            .member-info {
+                flex: 1;
+
+                .member-name {
+                    @extend .body-large;
+                    margin-bottom: 2px;
+                }
+
+                .member-email {
+                    @extend .body-regular;
+                    color: $accent-black;
+                    opacity: 0.6;
+                }
+            }
+
+            .member-role {
+                background: rgba($primary-navy-blue, 0.1);
+                color: $primary-navy-blue;
+                padding: 4px 12px;
+                border-radius: 20px;
+                font-size: 0.9em;
+            }
+
+            .remove-member {
+                background: none;
+                border: none;
+                color: $status-error;
+                cursor: pointer;
+                padding: 5px;
+                border-radius: 4px;
+                display: flex;
+                align-items: center;
+
+                &:hover {
+                    background: rgba($status-error, 0.1);
+                }
+            }
+        }
+    }
+
+    .invite-section {
+        .form-group {
+            max-width: 600px; // Limit the width of the form group
+        }
+
+        .input-group {
+            display: flex;
+            gap: 10px;
+            align-items: center; // Change to center alignment
+
+            .form-input {
+                flex: 1; // This will make it take up remaining space
+                height: 44px;
+                padding: 10px 15px;
+                font-size: 1rem;
+                border: 1px solid $ui-border;
+                border-radius: 8px;
+
+                &:focus {
+                    outline: none;
+                    border-color: $primary-navy-blue;
+                }
+            }
+
+            .invite-btn {
+                @extend .button-cta;
+                @include action-button;
+                display: flex;
+                align-items: center;
+                gap: 5px;
+                padding: 10px 20px;
+                height: 44px;
+                min-width: 140px; // Set minimum width
+                font-size: 1rem;
+                width: fit-content;
+
+                i {
+                    font-size: 18px;
+                }
+            }
+        }
+    }
+}
+
+.workspace-popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba($accent-black, 0.5);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+
+    &.active {
+        display: flex;
+        opacity: 1;
+        visibility: visible;
+    }
+
+    .popup-content {
+        background: white;
+        padding: 30px;
+        border-radius: 12px;
+        width: 90%;
+        max-width: 400px;
+        text-align: center;
+        transform: translateY(20px);
+        transition: transform 0.3s ease;
+
+        h3 {
+            margin-bottom: 15px;
+        }
+
+        p {
+            margin-bottom: 20px;
+            color: $accent-black;
+            opacity: 0.8;
+        }
+
+        .success-icon {
+            font-size: 48px;
+            color: #4CAF50;
+            margin-bottom: 15px;
+        }
+
+        .popup-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+
+            button {
+                padding: 10px 20px;
+                border-radius: 6px;
+                border: none;
+                cursor: pointer;
+                transition: all 0.2s ease;
+
+                &.cancel-btn {
+                    background: $ui-background;
+                    color: $accent-black;
+
+                    &:hover {
+                        background: color.adjust($ui-background, $lightness: -5%);
+                    }
+                }
+
+                &.confirm-btn {
+                    background: $status-error;
+                    color: white;
+
+                    &:hover {
+                        background: color.adjust($status-error, $lightness: -10%);
+                    }
+                }
+            }
+        }
+
+        .close-btn {
+            @extend .button-cta;
+            @include action-button;
+            min-width: 120px;
+        }
+    }
+
+    &.active .popup-content {
+        transform: translateY(0);
+    }
+}
+
 @include mobile {
     .profile-container {
         flex-direction: column;
 
         .profile-sidebar {
             width: 100%;
+        }
+    }
+
+    .workspace-section {
+        .input-group {
+            flex-direction: column;
+            gap: 15px;
+
+            .form-input,
+            .invite-btn {
+                width: 100%;
+                margin: 0;
+            }
         }
     }
 }

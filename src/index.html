@@ -2,10 +2,33 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">  
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cardo:ital,wght@0,400;0,700;1,400&family=Red+Hat+Display:wght@400;500&family=Staatliches&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        .material-icons {
+            font-size: 24px;
+            width: 24px;
+            height: 24px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .material-icons.check {
+            color: #4CAF50; /* Green for checkmarks */
+        }
+        .material-icons.cross {
+            color: #F44336; /* Red for crosses */
+        }
+        .card-plans li {
+            display: flex;
+            align-items: center;
+            gap: 0.8em;
+            margin: 1em 0;
+        }
+    </style>
 
     <title>Project Kresta | Home</title>
 </head>
@@ -92,10 +115,11 @@
                 <div class="card-seperator"></div>
                 <p class="plan">Free Plan</p>
                 <ul>
-                    <li>1 account</li>
-                    <li>100 AI suggestions/month</li>
-                    <li>5 Templates (Caption)</li>
-                    <li>Basic Analytics</li>
+                    <li><i class="material-icons check">check</i>Task creation</li>
+                    <li><i class="material-icons check">check</i>Post creation</li>
+                    <li><i class="material-icons check">check</i>Basic analytics</li>
+                    <li><i class="material-icons check">check</i>No workspace access</li>
+                    <li><i class="material-icons cross">close</i>No priority support</li>
                 </ul>
             </div>
             <div class="card-plans card-2">
@@ -103,10 +127,11 @@
                 <div class="card-seperator"></div>
                 <p class="plan">Creator Plan</p>
                 <ul>
-                    <li>3 accounts</li>
-                    <li>500 AI suggestions/month</li>
-                    <li>10 Templates (Caption)</li>
-                    <li>Advanced Analytics</li>
+                    <li><i class="material-icons check">check</i>Task creation</li>
+                    <li><i class="material-icons check">check</i>Post creation</li>
+                    <li><i class="material-icons check">check</i>Workspace access (max 3 people)</li>
+                    <li><i class="material-icons check">check</i>Basic analytics</li>
+                    <li><i class="material-icons cross">close</i>No priority support</li>
                 </ul>
             </div>
             <div class="card-plans card-3">
@@ -114,11 +139,11 @@
                 <div class="card-seperator"></div>
                 <p class="plan">Business Plan</p>
                 <ul>
-                    <li>10 accounts</li>
-                    <li>Unlimited AI suggestions/month</li>
-                    <li>15 Templates (Caption)</li>
-                    <li>Competitor benchmarking</li>
-                    <li>Priority Support</li>
+                    <li><i class="material-icons check">check</i>Task creation</li>
+                    <li><i class="material-icons check">check</i>Post creation</li>
+                    <li><i class="material-icons check">check</i>Workspace access (max 10 people)</li>
+                    <li><i class="material-icons check">check</i>Advanced analytics</li>
+                    <li><i class="material-icons check">check</i>Priority support</li>
                 </ul>
             </div>
         </div>

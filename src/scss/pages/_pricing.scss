@@ -45,34 +45,59 @@
         background-color: $accent-white;
 
         .plan-container {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
             display: flex;
             justify-content: center;
             gap: 2em;
-            flex-wrap: wrap;
+                flex-wrap: nowrap; // Changed from wrap to nowrap
+            align-items: stretch;
         }
 
         .pricing-card {
-            width: 350px;
-            padding: 2em;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            width: calc((100% - 4em) / 3); // Divide available space by 3, accounting for gaps
+            min-width: 350px; // Reduced from 450px for better fit
+            max-width: 450px; // Added max-width to ensure consistency
+            padding: 3em; // Increased padding for better proportions
             border-radius: 20px;
             position: relative;
             @include hover-lift;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08); // Base shadow for all cards
+            transition: all 0.3s ease;
+            height: fit-content;
+            min-height: 900px; // Ensures all cards have a minimum height
 
             &.free {
                 background-color: $tertiary-beige;
                 border: $primary-navy-blue 10px solid;
                 color: $accent-black;
+
+                &:hover {
+                    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+                }
+
+                .check-icon {
+                    fill: $accent-black;
+                }
             }
 
             &.creator {
                 background-color: $primary-navy-blue;
                 border: $tertiary-beige 10px solid;
                 color: $tertiary-beige;
-                transform: translateY(-20px);
+                transform: none;
+                margin-top: -20px;
+                box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15); // Stronger shadow for featured card
+
+                &:hover {
+                    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.2);
+                }
 
                 .popular-tag {
+                    @extend .body-large;
                     position: absolute;
                     top: -15px;
                     left: 50%;
@@ -83,12 +108,25 @@
                     border-radius: 20px;
                     font-size: 0.9em;
                 }
+
+                .check-icon {
+                    fill: $tertiary-beige;
+                }
             }
 
             &.business {
                 background-color: $accent-black;
                 border: $accent-white 10px solid;
                 color: $accent-white;
+                box-shadow: 0 12px 35px rgba(0, 0, 0, 0.2); // Darker shadow for dark card
+
+                &:hover {
+                    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.25);
+                }
+
+                .check-icon {
+                    fill: $accent-white;
+                }
             }
 
             .card-header {
@@ -124,21 +162,47 @@
             }
 
             .card-content {
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
                 ul {
                     list-style: none;
                     padding: 0;
-                    margin-bottom: 2em;
+                    margin-bottom: 2.5em; // Add consistent margin
 
                     li {
                         @extend .body-large;
                         display: flex;
                         align-items: center;
-                        gap: 0.5em;
-                        margin: 1em 0;
+                        gap: 0.8em;
+                        margin: 1.2em 0; // Increased spacing between list items
+
+                        .material-icons {
+                            font-size: 24px;
+                            width: 24px;
+                            height: 24px;
+                            display: inline-flex;
+                            align-items: center;
+                            justify-content: center;
+
+                            &.check {
+                                color: #4CAF50; // Green for checkmarks
+                            }
+
+                            &.cross {
+                                color: #F44336; // Red for crosses
+                            }
+                        }
 
                         img {
                             width: 20px;
                             height: 20px;
+                        }
+
+                        img.check-icon {
+                            width: 20px;
+                            height: 20px;
+                            fill: currentColor; // This will match the parent text color
                         }
                     }
                 }
@@ -147,7 +211,7 @@
                     @extend .button-cta;
                     display: block;
                     text-align: center;
-                    padding: 1em;
+                    padding: 1.2em; // Slightly bigger button
                     border-radius: 10px;
                     background: $accent-white;
                     color: $primary-navy-blue;
@@ -156,7 +220,7 @@
 
                     &:hover {
                         transform: translateY(-3px);
-                        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+                        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15); // Enhanced button hover shadow
                     }
                 }
             }
@@ -218,12 +282,18 @@
         .pricing-plans {
             padding: 3em 1em;
 
+            .plan-container {
+                flex-wrap: wrap; // Allow wrapping on mobile
+            }
+
             .pricing-card {
                 width: 100%;
-                max-width: 350px;
-
+                min-width: 320px;
+                max-width: 450px;
+                padding: 2.5em;
+                
                 &.creator {
-                    transform: translateY(0);
+                    margin-top: 0; // Remove floating effect on mobile
                 }
             }
         }

@@ -42,6 +42,10 @@
                     <i class="material-icons">lock</i>
                     Security
                 </button>
+                <button class="tab-button" data-tab="workspace">
+                    <i class="material-icons">groups</i>
+                    Workspace
+                </button>
             </div>
         </div>
 
@@ -162,6 +166,66 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Workspace Tab -->
+            <div class="tab-content" id="workspace">
+                <h2 class="h2">Workspace Management</h2>
+                
+                <div class="workspace-section">
+                    <div class="team-members">
+                        <h3 class="h3">Team Members</h3>
+                        <div class="members-list">
+                            <div class="member">
+                                <img src="./assets/images/dashboard/user-pfp.png" alt="John Doe" class="member-avatar">
+                                <div class="member-info">
+                                    <p class="member-name">John Doe</p>
+                                    <p class="member-email">john@example.com</p>
+                                </div>
+                                <span class="member-role">Owner</span>
+                            </div>
+                            <!-- Members added dynamically will appear here -->
+                        </div>
+                    </div>
+
+                    <div class="invite-section">
+                        <h3 class="h3">Invite Team Members</h3>
+                        <form class="invite-form">
+                            <div class="form-group">
+                                <label>Email Address</label>
+                                <div class="input-group">
+                                    <input type="email" class="form-input" placeholder="Enter email address" required>
+                                    <button type="submit" class="invite-btn">
+                                        <i class="material-icons">send</i>
+                                        Send Invite
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Popup for removing team member -->
+    <div class="workspace-popup delete-member-popup">
+        <div class="popup-content">
+            <h3 class="h3">Remove Team Member</h3>
+            <p>Are you sure you want to remove this team member?</p>
+            <div class="popup-actions">
+                <button class="cancel-btn">Cancel</button>
+                <button class="confirm-btn">Remove</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Popup for invite success -->
+    <div class="workspace-popup invite-success-popup">
+        <div class="popup-content">
+            <i class="material-icons success-icon">check_circle</i>
+            <h3 class="h3">Invitation Sent</h3>
+            <p>Team member has been invited successfully!</p>
+            <button class="close-btn">Close</button>
         </div>
     </div>
 </body>

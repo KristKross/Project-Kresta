@@ -1,0 +1,88 @@
+@use '../base/breakpoints' as *;
+
+.pricing-page {
+    .pricing-plans {
+        @include mobile {
+            padding: 3em 1em;
+
+            .plan-container {
+                flex-direction: column;
+                gap: 3em;
+            }
+
+            .pricing-card {
+                width: 100%;
+                min-width: unset;
+                max-width: 100%;
+                min-height: auto;
+                padding: 2em;
+
+                &.creator {
+                    margin-top: 0;
+                    order: -1; // Moves the creator plan to the top on mobile
+                }
+            }
+        }
+
+        @include tablet {
+            padding: 4em 2em;
+
+            .plan-container {
+                flex-wrap: wrap;
+                gap: 2em;
+            }
+
+            .pricing-card {
+                width: calc(50% - 1em);
+                min-width: unset;
+                
+                &.creator {
+                    margin-top: 0;
+                }
+
+                &.business {
+                    margin: 0 auto; // Centers the business card when it wraps to next line
+                    width: 70%;
+                }
+            }
+        }
+
+        @include desktop {
+            .plan-container {
+                flex-wrap: nowrap;
+                gap: 2em;
+            }
+
+            .pricing-card {
+                width: calc((100% - 4em) / 3);
+                min-width: 350px;
+                max-width: 450px;
+                
+                &.creator {
+                    margin-top: -20px; // Restore the floating effect on desktop
+                }
+            }
+        }
+    }
+
+    // Make FAQ section responsive too
+    .faq-section {
+        @include mobile {
+            padding: 3em 1em;
+
+            .faq-grid {
+                grid-template-columns: 1fr;
+                gap: 2em;
+            }
+        }
+
+        @include tablet {
+            padding: 4em 2em;
+
+            .faq-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 2em;
+            }
+        }
+    }
+}

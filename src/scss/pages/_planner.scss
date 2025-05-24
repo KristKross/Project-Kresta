@@ -59,7 +59,10 @@ body.dragging-post {
         padding: 20px;
         z-index: 1000;
         transform: translateX(100%);
-        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+        will-change: transform, opacity, visibility;
 
         @include mobile {
             width: 100%;
@@ -72,6 +75,12 @@ body.dragging-post {
 
         &.active {
             transform: translateX(0);
+            opacity: 1;
+            visibility: visible;
+            pointer-events: all;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                        opacity 0.3s ease,
+                        visibility 0.3s ease;
 
             @include mobile {
                 transform: translateY(0);

@@ -77,26 +77,31 @@
         .section-header {
             text-align: center;
             margin-bottom: 4em;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
 
             .display-1 {
                 color: $accent-white;
+                margin-bottom: 0.5em;
             }
 
             .seperator {
                 width: 200px;
                 height: 5px;
                 background-color: $tertiary-beige;
-                margin: 2em auto;
                 border-radius: 10px;
             }
         }
 
         .team-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(3, 1fr);
             gap: 3em;
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
+            padding: 0 2em;
 
             .team-member {
                 background-color: $accent-white;

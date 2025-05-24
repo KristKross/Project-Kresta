@@ -18,7 +18,7 @@
         background-position: center;
         background-repeat: no-repeat;
         height: 80vh;
-        min-height: fit-content;
+        min-height: 100vh;
 
         .hero-content {
             padding: 20px;
@@ -197,8 +197,7 @@
             margin: 0 auto;
             padding: 5em 2em;
             gap: 2em;
-            height: 90vh;
-            width: 100%;
+            height: auto;
             min-height: fit-content;
 
             .card{
@@ -207,28 +206,18 @@
                 justify-content: flex-start;
                 flex-direction: column;
                 gap: 1em;
-                height: 650px;
-                min-width: 400px;
-                width: 500px;
+                min-height: 600px;
+                width: 400px;
                 background-color: $tertiary-beige;
                 border: $accent-white 15px solid;
-                border-radius: 20px;
-                padding: 50px 25px;
+                border-radius: 1rem;
+                padding: 2rem;
                 @include hover-lift;
+
                 img {
+                    max-width: 100%;
+                    height: auto;
                     @include hover-fade;
-                }
-
-                .card-title{
-                    @extend .h2;
-                    color: $accent-black;
-                    text-align: left
-                }
-
-                p{
-                    @extend .body-regular;
-                    color: $accent-black;
-                    text-align: center;
                 }
             }
         }
@@ -242,8 +231,7 @@
         margin: 0 auto;
         padding: 5em 2em;
         gap: 50px;
-        height: 90vh;
-        width: 100%;
+        height: auto;
         min-height: fit-content;
 
         .display-1{
@@ -257,15 +245,16 @@
             gap: 80px;
 
             .card-plans {
-                width: 450px;
-                height: 550px;
+                width: 400px;
+                min-height: 550px;
+                height: auto;
                 display: flex;
                 flex-direction: column;
                 justify-content: flex-start;
                 align-items: center;
                 gap: 20px;
-                padding: 40px 20px;
-                border-radius: 40px;
+                padding: 2rem;
+                border-radius: 1rem;
                 @include hover-lift;
 
                 &.card-1 {
@@ -401,8 +390,8 @@
                 @extend .body-regular;
                 width: 400px;
                 height: 50px;
-                border-radius: 10px;
-                padding-left: 20px;
+                border-radius: 0.5rem;
+                padding: 1rem 1.5rem;
                 border: $accent-black 2px solid;
                 outline: none;
             }
