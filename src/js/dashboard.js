@@ -197,11 +197,11 @@ async function updateAnalyticsSection() {
 
     if (!analysis) {
         analyticsContainer.innerHTML = `
-            <div class="empty-state analytics-empty">
+            <div class="empty-state">
                 <img src="${analyticsImagePath}" alt="No analytics">
-                <h3>No Analytics Available</h3>
-                <p>Upgrade to Creator or Business plan to access detailed analytics</p>
-                <a href="pricing.html" class="upgrade-btn">Upgrade Now</a>
+                <h3>Not Linked to Business Account</h3>
+                <p>Link your Business account and get insights</p>
+                <a href="/api/social/facebook" class="upgrade-btn">Link Now</a>
             </div>
         `;
         return;
@@ -252,7 +252,6 @@ async function updateTaskSection() {
     if (!tasksContainer) return;
 
     const result = await fetchTasks();
-    console.log(result);
 
     if (result.error === 'Forbidden') {
         tasksContainer.innerHTML = `

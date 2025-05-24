@@ -110,8 +110,8 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
             <div class="assignees">
                 <div class="assignee-wrapper">
-                    <img src="${data.assigneeImage}" alt="${data.assigneeName}">
-                    <div class="assignee-tooltip">Assigned to: ${data.assigneeName}</div>
+                    <img src="${data.assigneeImage}" alt="${data.assignedTo?.username}">
+                    <div class="assignee-tooltip">Assigned to: ${data.assignedTo?.username}</div>
                 </div>
             </div>
             <button class="delete-task">
@@ -203,7 +203,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             const createdTask = await res.json();
-            console.log('Task created:', createdTask);
+
             const newTask = createTaskCard(createdTask);
             tasksList.insertBefore(newTask, tasksList.querySelector('.task-card'));
 
