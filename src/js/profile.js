@@ -3,6 +3,7 @@ import creatorBusinessPath from '../assets/icons/workspace/creator-business.png'
 import emptyWorkspacePath from '../assets/icons/workspace/empty-workspace.png';
 
 document.addEventListener('DOMContentLoaded', () => {
+    
     // Tab switching functionality
     const tabButtons = document.querySelectorAll('.tab-button');
     const tabContents = document.querySelectorAll('.tab-content');
@@ -165,36 +166,69 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Function to show specific workspace template
     function showWorkspaceTemplate(type) {
+        console.log(`Showing workspace template: ${type}`); // ✅ Debugging check
+
         // Hide all templates first
         const templates = document.querySelectorAll('.workspace-template');
         templates.forEach(template => template.classList.remove('active'));
-        
-        // Show the selected template
+
+        // Find the selected template
         const activeTemplate = document.querySelector(`.workspace-template.${type}`);
-        if (activeTemplate) {
-            if (type === 'no-premium') {
-                const premiumImage = document.getElementById('premium-feature-img');
-                premiumImage.src = creatorBusinessPath;
-            } else if (type === 'no-workspace') {
-                const emptyWorkspaceImage = document.getElementById('empty-workspace-img');
-                emptyWorkspaceImage.src = emptyWorkspacePath;
-            }
-            activeTemplate.classList.add('active');
+        
+        if (!activeTemplate) {
+            console.warn(`Template not found for type: ${type}`); // ✅ Debugging check
+            return;
         }
+
+        // Handle specific types
+        if (type === 'no-premium') {
+            const premiumImage = document.getElementById('premium-feature-img');
+            if (premiumImage) {
+                premiumImage.src = creatorBusinessPath;
+            } else {
+                console.warn("Premium feature image not found");
+            }
+        } else if (type === 'no-workspace') {
+            const emptyWorkspaceImage = document.getElementById('empty-workspace-img');
+            if (emptyWorkspaceImage) {
+                emptyWorkspaceImage.src = emptyWorkspacePath;
+            } else {
+                console.warn("Empty workspace image not found");
+            }
+        }
+
+        activeTemplate.classList.add('active');
     }
 
     // Example usage based on user's plan/status
-    function checkUserPlanAndWorkspace() {
-        // This is where you'd typically check the user's plan from your backend
-        const userHasPremium = true; // Example: set to false to show premium upgrade template
-        const hasWorkspace = true;   // Example: set to false to show empty workspace template
+    async function checkUserPlanAndWorkspace() {
+        try {
+            const response = await fetch('/api/workspace/my', {
+                method: 'GET',
+                credentials: 'include'
+            });
 
-        if (!userHasPremium) {
-            showWorkspaceTemplate('no-premium');
-        } else if (!hasWorkspace) {
+            if (response.status === 403) {
+                showWorkspaceTemplate('no-premium');
+                return;
+            }
+
+            if (!response.ok) {
+                console.error(`Error fetching workspace: ${response.statusText}`);
+                showWorkspaceTemplate('no-workspace');
+                return;
+            }
+
+            const data = await response.json();
+            if (data.success) {
+                showWorkspaceTemplate('has-workspace');
+            } else {
+                console.error('Failed to fetch workspace:', data.error);
+                showWorkspaceTemplate('no-workspace');
+            }
+        } catch (error) {
+            console.error('Error fetching workspace:', error);
             showWorkspaceTemplate('no-workspace');
-        } else {
-            showWorkspaceTemplate('has-workspace');
         }
     }
 

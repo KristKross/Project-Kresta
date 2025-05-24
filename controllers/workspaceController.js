@@ -55,7 +55,7 @@ exports.getMyWorkspace = async (req, res) => {
             workspace,
         });
     } catch (error) {
-        console.error("Error fetching user's workspace:", error);
-        res.status(500).json({ success: false, message: "Error fetching workspace" });
+      console.error("Error fetching workspace:", error);
+      res.status(500).json({ success: false, message: "Error fetching workspace" });
     }
 };

@@ -96,6 +96,14 @@ app.get('/analytics', (req, res) => {
     res.sendFile(path.join(__dirname, 'dist', 'analytics.html'));
 });
 
+app.get('/pricing', (req, res) => {
+    if (!req.session.userData?.user) {
+        return res.redirect('/login');
+    }
+    res.sendFile(path.join(__dirname, 'dist', 'pricing.html'));
+});
+
+
 app.use(express.static(path.join(__dirname, 'dist')));
 
 // API Routes
