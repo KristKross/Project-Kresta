@@ -1,4 +1,31 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // Get reference to panel elements - fix duplicate declaration
+    const postCreatorPanel = document.querySelector('.post-creator-panel');
+    const createPostBtn = document.querySelector('.action-btn');
+    const schedulePostBtn = document.querySelectorAll('.action-btn')[1];
+    const closePanel = document.querySelector('.close-panel');
+    const platformOptions = document.querySelectorAll('.platform-option');
+    const mediaUpload = document.querySelector('.media-upload');
+    const mediaInput = document.querySelector('#media-input');
+    const scheduleToggle = document.querySelector('#schedule-toggle');
+    const scheduleInputs = document.querySelector('.schedule-inputs');
+    const postForm = document.querySelector('.panel-content');
+
+    // Explicitly ensure post creator panel is fully hidden on page load
+    if (postCreatorPanel) {
+        postCreatorPanel.style.transform = 'translateX(100%)';
+        postCreatorPanel.style.opacity = '0';
+        postCreatorPanel.style.visibility = 'hidden';
+        postCreatorPanel.classList.remove('active');
+        
+        // Give the browser a moment to apply these styles before any other operations
+        setTimeout(() => {
+            // Remove the inline styles after a brief delay so the CSS transitions will work normally
+            postCreatorPanel.style.transform = '';
+            postCreatorPanel.style.opacity = '';
+            postCreatorPanel.style.visibility = '';
+        }, 300);
+    }
 
     // Date helper functions
     function isDateToday(date) {
@@ -34,19 +61,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    // Post Creator Panel Functionality
-    const postCreatorPanel = document.querySelector('.post-creator-panel');
-    const createPostBtn = document.querySelector('.action-btn');
-    const schedulePostBtn = document.querySelectorAll('.action-btn')[1]; // Get the second action button
-    const closePanel = document.querySelector('.close-panel');
-    const platformOptions = document.querySelectorAll('.platform-option');
-    const mediaUpload = document.querySelector('.media-upload');
-    const mediaInput = document.querySelector('#media-input');
-    const scheduleToggle = document.querySelector('#schedule-toggle');
-    const scheduleInputs = document.querySelector('.schedule-inputs');
-    const postForm = document.querySelector('.panel-content');
-
-    // Post Preview Functionality
+    // Post Preview Functionality - keep only one instance of this
     const previewModal = {
         overlay: document.querySelector('.post-preview-overlay'),
         container: document.querySelector('.post-preview-overlay .preview-container'),
@@ -121,19 +136,33 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initialize preview functionality
     previewModal.init();
 
-    // Panel event handlers
-    createPostBtn.addEventListener('click', () => {
+    // Panel event handlers - Fix the click handlers
+    createPostBtn?.addEventListener('click', () => {
+        console.log('Create post button clicked');
         postCreatorPanel.classList.add('active');
+        // Force the panel to be visible with inline styles that override the !important CSS
+        postCreatorPanel.style.transform = 'translateX(0) !important';
+        postCreatorPanel.style.opacity = '1';
+        postCreatorPanel.style.visibility = 'visible';
         // Ensure scheduling is unchecked
-        scheduleToggle.checked = false;
-        scheduleInputs.style.display = 'none';
+        if (scheduleToggle) {
+            scheduleToggle.checked = false;
+            if (scheduleInputs) scheduleInputs.style.display = 'none';
+        }
     });
 
-    schedulePostBtn.addEventListener('click', () => {
+    schedulePostBtn?.addEventListener('click', () => {
+        console.log('Schedule post button clicked');
         postCreatorPanel.classList.add('active');
+        // Force the panel to be visible with inline styles
+        postCreatorPanel.style.transform = 'translateX(0) !important';
+        postCreatorPanel.style.opacity = '1';
+        postCreatorPanel.style.visibility = 'visible';
         // Pre-check scheduling
-        scheduleToggle.checked = true;
-        scheduleInputs.style.display = 'flex';
+        if (scheduleToggle) {
+            scheduleToggle.checked = true;
+            if (scheduleInputs) scheduleInputs.style.display = 'flex';
+        }
         
         // Set default date and time
         const tomorrow = new Date();
@@ -141,19 +170,31 @@ document.addEventListener('DOMContentLoaded', () => {
         const dateInput = document.querySelector('.schedule-date');
         const timeInput = document.querySelector('.schedule-time');
         
-        dateInput.value = tomorrow.toISOString().split('T')[0];
-        timeInput.value = '09:00';
+        if (dateInput) dateInput.value = tomorrow.toISOString().split('T')[0];
+        if (timeInput) timeInput.value = '09:00';
     });
 
-    closePanel.addEventListener('click', () => {
+    closePanel?.addEventListener('click', () => {
         postCreatorPanel.classList.remove('active');
-        postForm.reset();
-        mediaUpload.classList.remove('has-media');
-        mediaUpload.querySelector('img').src = './assets/icons/dashboard/create-post.png';
-        mediaUpload.querySelector('img').classList.remove('preview');
-        mediaUpload.querySelector('p').textContent = 'Click to upload media (optional)';
+        // Reset inline styles
+        postCreatorPanel.style.transform = '';
+        postCreatorPanel.style.opacity = '';
+        postCreatorPanel.style.visibility = '';
+        // Reset form
+        if (postForm) postForm.reset();
+        if (mediaUpload) {
+            mediaUpload.classList.remove('has-media');
+            const img = mediaUpload.querySelector('img');
+            if (img) {
+                img.src = './assets/icons/dashboard/create-post.png';
+                img.classList.remove('preview');
+            }
+            const p = mediaUpload.querySelector('p');
+            if (p) p.textContent = 'Click to upload media (optional)';
+        }
     });
 
+    // Platform options click handler
     platformOptions.forEach(option => {
         option.addEventListener('click', () => option.classList.toggle('selected'));
     });

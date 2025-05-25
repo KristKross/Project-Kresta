@@ -1,6 +1,72 @@
 import trashIconPath from '../assets/icons/tasks/trash.png';
 
 document.addEventListener('DOMContentLoaded', () => {
+    // Function declarations first to prevent reference errors
+    function isMobileView() {
+        return window.matchMedia('(max-width: 600px)').matches;
+    }
+
+    function toggleBodyScroll(lock) {
+        if (lock) {
+            const scrollY = window.scrollY;
+            document.body.style.position = 'fixed';
+            document.body.style.width = '100%';
+            document.body.style.top = `-${scrollY}px`;
+            document.body.style.overflow = 'hidden';
+        } else {
+            const scrollY = document.body.style.top;
+            document.body.style.position = '';
+            document.body.style.width = '';
+            document.body.style.top = '';
+            document.body.style.overflow = '';
+            window.scrollTo(0, parseInt(scrollY || '0') * -1);
+        }
+    }
+
+    function cleanupPanelStyles(panel) {
+        // Reset any inline styles
+        panel.style.cssText = '';
+        
+        // Apply the required styles based on view
+        if (isMobileView()) {
+            panel.style.position = 'fixed';
+            panel.style.bottom = '0';
+            panel.style.right = '0';
+            panel.style.left = '0';
+            panel.style.top = 'auto'; // Override the top property
+            panel.style.width = '100%';
+            panel.style.height = '90vh';
+            panel.style.transform = panel.classList.contains('active') ? 'translateY(0)' : 'translateY(100%)';
+            // Only apply transition styles if transitions are enabled
+            if (panel.classList.contains('transitions-enabled')) {
+                panel.style.transition = 'transform 0.3s ease-in-out, opacity 0.3s ease';
+            }
+        } else {
+            panel.style.position = 'fixed';
+            panel.style.top = '0';
+            panel.style.right = '0';
+            panel.style.width = '40vw';
+            panel.style.height = '100vh';
+            panel.style.transform = panel.classList.contains('active') ? 'translateX(0)' : 'translateX(100%)';
+            // Only apply transition styles if transitions are enabled
+            if (panel.classList.contains('transitions-enabled')) {
+                panel.style.transition = 'transform 0.3s ease-in-out, opacity 0.3s ease';
+            }
+        }
+    }
+
+    // Initialize panel once - moved to the top
+    const panel = document.querySelector('.task-creator-panel');
+    
+    // Apply initial styles immediately to ensure no flash
+    if (isMobileView()) {
+        panel.style.transform = 'translateY(100%)';
+    } else {
+        panel.style.transform = 'translateX(100%)';
+    }
+    panel.style.opacity = '0';
+    panel.style.visibility = 'hidden';
+    
     const customSelect = document.querySelector('.custom-select');
     const selectHeader = customSelect.querySelector('.select-header');
     const selectOptions = customSelect.querySelector('.select-options');
@@ -208,20 +274,26 @@ document.addEventListener('DOMContentLoaded', () => {
             tasksList.insertBefore(newTask, tasksList.querySelector('.task-card'));
 
             taskForm.reset();
-            const panel = document.querySelector('.task-creator-panel');
+            
             if (isMobileView()) {
                 panel.style.transform = 'translateY(100%)';
-                panel.addEventListener('transitionend', () => {
+                panel.style.opacity = '0';
+                
+                panel.addEventListener('transitionend', function handler() {
                     panel.classList.remove('active');
-                    panel.style.position = 'fixed';
-                    panel.style.bottom = '0';
-                    panel.style.right = '0';
-                    panel.style.left = '0';
-                    panel.style.width = '100%';
-                }, { once: true });
+                    panel.style.visibility = 'hidden';
+                    toggleBodyScroll(false);
+                    panel.removeEventListener('transitionend', handler);
+                });
             } else {
-                panel.classList.remove('active');
-                cleanupPanelStyles(panel);
+                panel.style.transform = 'translateX(100%)';
+                panel.style.opacity = '0';
+                
+                panel.addEventListener('transitionend', function handler() {
+                    panel.classList.remove('active');
+                    panel.style.visibility = 'hidden';
+                    panel.removeEventListener('transitionend', handler);
+                });
             }
         } catch (error) {
             console.error(error);
@@ -240,79 +312,33 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    function isMobileView() {
-        return window.matchMedia('(max-width: 600px)').matches;
-    }
-
-    function toggleBodyScroll(lock) {
-        if (lock) {
-            const scrollY = window.scrollY;
-            document.body.style.position = 'fixed';
-            document.body.style.width = '100%';
-            document.body.style.top = `-${scrollY}px`;
-            document.body.style.overflow = 'hidden';
-        } else {
-            const scrollY = document.body.style.top;
-            document.body.style.position = '';
-            document.body.style.width = '';
-            document.body.style.top = '';
-            document.body.style.overflow = '';
-            window.scrollTo(0, parseInt(scrollY || '0') * -1);
-        }
-    }
-
-    function cleanupPanelStyles(panel) {
-        if (isMobileView()) {
-            const requiredStyles = {
-                position: 'fixed',
-                bottom: '0',
-                right: '0',
-                left: '0',
-                width: '100%',
-                height: '90vh',
-                transform: 'translateY(100%)',
-                transition: 'transform 0.3s ease-in-out'
-            };
-            Object.assign(panel.style, requiredStyles);
-        } else {
-            panel.style.cssText = '';
-        }
-    }
-
-    function initializePanelPosition(panel) {
-        cleanupPanelStyles(panel);
-        panel.style.transition = 'transform 0.3s ease-in-out';
-        if (isMobileView()) {
-            panel.style.transform = 'translateY(100%)';
-        }
-    }
-
-    const panel = document.querySelector('.task-creator-panel');
-
     let resizeTimer;
     window.addEventListener('resize', () => {
         clearTimeout(resizeTimer);
         resizeTimer = setTimeout(() => {
-            if (panel.classList.contains('active')) {
-                cleanupPanelStyles(panel);
-                initializePanelPosition(panel);
-                if (isMobileView()) {
-                    panel.style.transform = 'translateY(0)';
-                }
-            } else {
-                cleanupPanelStyles(panel);
-                initializePanelPosition(panel);
-            }
+            cleanupPanelStyles(panel);
         }, 250);
     });
 
     document.querySelector('.create-task-btn').addEventListener('click', () => {
-        initializePanelPosition(panel);
+        cleanupPanelStyles(panel);
+        
+        // Add class first to ensure transitions work properly
         panel.classList.add('active');
+        
+        // Apply appropriate transform immediately after class is added
         if (isMobileView()) {
             toggleBodyScroll(true);
             requestAnimationFrame(() => {
                 panel.style.transform = 'translateY(0)';
+                panel.style.opacity = '1';
+                panel.style.visibility = 'visible';
+            });
+        } else {
+            requestAnimationFrame(() => {
+                panel.style.transform = 'translateX(0)';
+                panel.style.opacity = '1';
+                panel.style.visibility = 'visible';
             });
         }
     });
@@ -320,14 +346,33 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelector('.close-panel').addEventListener('click', () => {
         if (isMobileView()) {
             panel.style.transform = 'translateY(100%)';
-            panel.addEventListener('transitionend', () => {
+            panel.style.opacity = '0';
+            
+            // Wait for transition to complete before removing active class
+            panel.addEventListener('transitionend', function handler() {
                 panel.classList.remove('active');
-                cleanupPanelStyles(panel);
+                panel.style.visibility = 'hidden';
                 toggleBodyScroll(false);
-            }, { once: true });
+                panel.removeEventListener('transitionend', handler);
+            });
         } else {
-            panel.classList.remove('active');
-            cleanupPanelStyles(panel);
+            panel.style.transform = 'translateX(100%)';
+            panel.style.opacity = '0';
+            
+            // Wait for transition to complete before removing active class
+            panel.addEventListener('transitionend', function handler() {
+                panel.classList.remove('active');
+                panel.style.visibility = 'hidden';
+                panel.removeEventListener('transitionend', handler);
+            });
         }
+    });
+
+    // Initialize panel styles and enable transitions after a delay
+    window.addEventListener('load', () => {
+        // Enable transitions only after page load is complete
+        setTimeout(() => {
+            panel.classList.add('transitions-enabled');
+        }, 300); // Small delay to ensure everything is rendered
     });
 });

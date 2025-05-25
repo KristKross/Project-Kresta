@@ -46,9 +46,18 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function renderNotifications() {
-        notificationsList.innerHTML = notifications
-            .map(notification => createNotificationItem(notification))
-            .join('');
+        // Create a separator between static and dynamic content
+        const dynamicSection = document.createElement('div');
+        dynamicSection.classList.add('dynamic-notifications');
+        dynamicSection.innerHTML = `
+            <div class="notifications-section-header">
+                <h3>Dynamic Notifications</h3>
+            </div>
+            ${notifications.map(notification => createNotificationItem(notification)).join('')}
+        `;
+        
+        // Append dynamic content after static content
+        notificationsList.appendChild(dynamicSection);
     }
 
     // Mark individual notification as read
@@ -65,6 +74,13 @@ document.addEventListener('DOMContentLoaded', () => {
             item.classList.remove('unread');
         });
     });
+
+    // Show badge with count
+    document.getElementById('sidebarNotifBadge').textContent = '5';
+    document.getElementById('sidebarNotifBadge').style.display = 'inline-block';
+
+    // Hide badge when count is 0
+    document.getElementById('sidebarNotifBadge').style.display = 'none';
 
     // Initial render
     renderNotifications();

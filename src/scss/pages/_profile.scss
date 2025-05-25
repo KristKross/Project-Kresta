@@ -9,12 +9,6 @@
     margin-left: 110px; // Add margin equal to sidebar width
     width: calc(100% - 110px); // Adjust width to account for sidebar
     background-color: $accent-white;
-
-    @include mobile {
-        margin-left: 0;
-        width: 100%;
-        margin-bottom: 100px; // Add bottom margin for sidebar button
-    }
 }
 
 .profile-container {
@@ -22,11 +16,6 @@
     gap: 30px;
     padding: 20px;
     min-height: calc(100vh - 80px);
-
-    @include mobile {
-        margin-bottom: 100px; // Add bottom margin for sidebar button
-        min-height: calc(100vh - 180px); // Adjust height to account for bottom margin
-    }
 
     .profile-sidebar {
         width: 300px;
@@ -623,29 +612,6 @@
             font-size: 60px; // Increase icon size
             margin-right: 12px; // Add some spacing between icon and text
             vertical-align: middle; // Align icon with text
-        }
-    }
-}
-
-@include mobile {
-    .profile-container {
-        flex-direction: column;
-
-        .profile-sidebar {
-            width: 100%;
-        }
-    }
-
-    .workspace-section {
-        .input-group {
-            flex-direction: column;
-            gap: 15px;
-
-            .form-input,
-            .invite-btn {
-                width: 100%;
-                margin: 0;
-            }
         }
     }
 }
