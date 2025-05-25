@@ -11,6 +11,7 @@ const ignorePages = [
     '/register',
     '/404',
     '/500',
+    '/creators',
 ];
 
 // Pages where we want to show the sidebar
@@ -29,6 +30,8 @@ const sidebarPages = [
     '/settings.html',
     '/notification',
     '/notification.html',
+    '/creators',
+    '/creators.html',
 ];
 
 document.addEventListener('DOMContentLoaded', () => {

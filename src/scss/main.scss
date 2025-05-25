@@ -1,6 +1,7 @@
 // BASE
 @use 'base/breakpoints';
 @use 'base/colors';
+@use 'base/animations';
 @use 'base/global';
 @use 'base/reset';
 @use 'base/typography';
@@ -28,6 +29,7 @@
 @use 'pages/settings';
 @use 'pages/sidebar';
 @use 'pages/creators';
+@use 'pages/errors';
 
 //RESPONSIVE STYLES
 @use 'responsive-styles/navbar-breakpoints';

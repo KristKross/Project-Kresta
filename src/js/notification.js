@@ -2,229 +2,165 @@ document.addEventListener('DOMContentLoaded', () => {
     const notificationsList = document.querySelector('.notifications-list');
     const markAllReadBtn = document.querySelector('.mark-all-read');
 
-    let invitationNotifications = [];    function createNotificationItem(notification) {
+    // Template notifications based on existing HTML
+    const notifications = [
+        {
+            id: 'invite-1',
+            type: 'invite',
+            title: 'Workspace Invitation',
+            text: 'You\'ve been invited to join Creative Agency workspace',
+            time: '5 minutes ago',
+            unread: true,
+            icon: './assets/icons/notifications/invite-accepted.png'
+        },
+        {
+            id: 'notif-2',
+            type: 'task',
+            title: 'Task Completed',
+            text: 'Team member completed a task',
+            time: '1 hour ago',
+            unread: false,
+            icon: './assets/icons/notifications/task-complete.png'
+        }
+    ];    // Create notification HTML template
+    function createNotification(notification) {
+        // Check if this is an invite type notification
+        const isInviteNotification = notification.type === 'invite';
+        
         return `
             <div class="notification-item ${notification.unread ? 'unread' : ''}" data-id="${notification.id}">
                 <div class="notification-icon">
-                    <img src="./assets/icons/notifications/${notification.type}.png" alt="${notification.type}">
+                    <img src="${notification.icon}" alt="${notification.type}">
                 </div>
                 <div class="notification-content">
                     <div class="notification-title">${notification.title}</div>
                     <div class="notification-text">${notification.text}</div>
                     <div class="notification-time">${notification.time}</div>
                 </div>
+                ${isInviteNotification ? `
+                    <div class="notification-actions">
+                        <button class="action-btn accept-btn" onclick="handleInviteAction('${notification.id}', 'accept')">Accept</button>
+                        <button class="action-btn decline-btn" onclick="handleInviteAction('${notification.id}', 'decline')">Decline</button>
+                    </div>
+                ` : ''}
             </div>
         `;
-    }    function createInvitationItem(invitation) {
-        return `
-            <div class="notification-item invitation-notification ${invitation.unread ? 'unread' : ''}" data-id="${invitation.id}" data-workspace="${invitation.workspaceName}" data-workspace-id="${invitation.workspaceId}">
-                <div class="notification-icon">
-                    <img src="./assets/icons/notifications/invite.png" alt="invitation">
-                </div>
-                <div class="notification-content">
-                    <div class="notification-title">${invitation.title}</div>
-                    <div class="notification-text">${invitation.text}</div>
-                    <div class="notification-time">${invitation.time}</div>
-                </div>
-                <div class="invitation-actions">
-                    <button class="action-btn accept-btn" onclick="handleInvitationAction('${invitation.id}', 'accept', '${invitation.workspaceId}')">Accept</button>
-                    <button class="action-btn decline-btn" onclick="handleInvitationAction('${invitation.id}', 'decline', '${invitation.workspaceId}')">Decline</button>
-                </div>
-            </div>
-        `;
-    }function renderNotifications() {
-        // Create a separator between static and dynamic content
-        const dynamicSection = document.createElement('div');
-        dynamicSection.classList.add('dynamic-notifications');
-        dynamicSection.innerHTML = `
-            <div class="notifications-section-header">
-                <h3>Dynamic Notifications</h3>
-            </div>
-            ${notifications.map(notification => createNotificationItem(notification)).join('')}
-        `;
-        
-        // Append dynamic content after static content
-        notificationsList.appendChild(dynamicSection);
     }
 
-    // Fetch and render invitation notifications
-    async function fetchInvitationNotifications() {
+    // Render notifications
+    function renderNotifications() {
+        notificationsList.innerHTML = notifications.map(createNotification).join('');
+    }    // Handle invitation actions (for invite type notifications)
+    window.handleInviteAction = async (notificationId, action) => {
+        const notification = document.querySelector(`[data-id="${notificationId}"]`);
+        const actionBtns = notification.querySelectorAll('.action-btn');
+        
+        // Disable buttons
+        actionBtns.forEach(btn => btn.disabled = true);
+        
         try {
-            const response = await fetch('/api/notifications/get', {
-                method: 'GET',
-                credentials: 'include'
-            });
-
-            if (response.ok) {
-                const data = await response.json();
-                if (data.success && data.notifications) {
-                    invitationNotifications = data.notifications.filter(notification => 
-                        notification.type === 'invite'
-                    ).map(notification => ({
-                        id: notification._id,
-                        title: 'Workspace Invitation',
-                        text: notification.message,
-                        time: getTimeAgo(notification.createdAt),
-                        unread: !notification.read,
-                        workspaceId: notification.workspaceId || null,
-                    }));
-
-                    renderInvitationNotifications();
-                }
-            }
+            // Simulate API call
+            await new Promise(resolve => setTimeout(resolve, 500));
+              // Remove notification
+            notification.style.opacity = '0';
+            notification.style.transform = 'translateX(-20px)';
+            setTimeout(() => notification.remove(), 300);
+            
+            // Show proper message with correct grammar
+            const actionMessage = action === 'accept' ? 'accepted' : 'declined';
+            showMessage(`Invitation ${actionMessage} successfully!`);
+            
         } catch (error) {
-            console.error('Error fetching invitation notifications:', error);
-        }
-    }
-
-    function renderInvitationNotifications() {
-        if (invitationNotifications.length > 0) {
-            const invitationSection = document.createElement('div');
-            invitationSection.classList.add('invitation-notifications');
-            invitationSection.innerHTML = `
-                <div class="notifications-section-header">
-                    <h3>Workspace Invitations</h3>
-                </div>
-                ${invitationNotifications.map(invitation => createInvitationItem(invitation)).join('')}
-            `;
-            
-            // Insert invitation section at the beginning of the list
-            notificationsList.insertBefore(invitationSection, notificationsList.firstChild);
-        }
-    }    // Handle invitation actions (accept/decline)
-    window.handleInvitationAction = async (invitationId, action, workspaceId) => {
-        const actionBtn = event.target;
-        const allActionBtns = actionBtn.parentElement.querySelectorAll('.action-btn');
-        
-        // Disable buttons to prevent multiple clicks
-        allActionBtns.forEach(btn => btn.disabled = true);
-        
-        try {            
-            // Continue with normal processing for other invitations
-            const endpoint = action === 'accept' ? '/api/workspace/accept' : '/api/workspace/decline';
-            const response = await fetch(endpoint, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                credentials: 'include',
-                body: JSON.stringify({ workspaceId: workspaceId })
-            });
-
-            const data = await response.json();
-            
-            if (data.success) {
-                // Remove the invitation from the list with animation
-                const invitationElement = document.querySelector(`[data-id="${invitationId}"]`);
-                if (invitationElement) {
-                    invitationElement.style.transform = 'translateX(-100%)';
-                    invitationElement.style.opacity = '0';
-                    setTimeout(() => {
-                        invitationElement.remove();
-                        
-                        // Remove from local array
-                        invitationNotifications = invitationNotifications.filter(inv => inv.id !== invitationId);
-                        
-                        // If no more invitations, remove the section
-                        if (invitationNotifications.length === 0) {
-                            const invitationSection = document.querySelector('.invitation-notifications');
-                            if (invitationSection) invitationSection.remove();
-                        }
-                    }, 300);
-                }
-                
-                // Show success message
-                showMessage(`Invitation ${action}ed successfully!`, 'success');
-                
-            } else {
-                throw new Error(data.message || `Failed to ${action} invitation`);
-            }        } catch (error) {
-            console.error(`Error ${action}ing invitation:`, error);
-            
-            // Show error message
-            showMessage(`Error ${action}ing invitation: ${error.message}`, 'error');
-            
-            // Re-enable buttons on error
-            allActionBtns.forEach(btn => btn.disabled = false);
+            console.error('Error:', error);
+            const actionMessage = action === 'accept' ? 'accepting' : 'declining';
+            showMessage(`Error ${actionMessage} invitation`, 'error');
+            actionBtns.forEach(btn => btn.disabled = false);
         }
     };
 
-    // Mark notification as read
-    async function markNotificationAsRead(notificationId) {
-        try {
-            await fetch('/api/notifications/mark-read', {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                credentials: 'include',
-                body: JSON.stringify({ notificationId })
-            });
-        } catch (error) {
-            console.error('Error marking notification as read:', error);
+    // Handle task notifications (for task type notifications)
+    function handleTaskNotification(notificationId) {
+        const notification = document.querySelector(`[data-id="${notificationId}"]`);
+        if (notification) {
+            notification.classList.remove('unread');
+            showMessage('Task notification marked as read');
         }
-    }
-    function showMessage(message, type = 'info') {
+    }    // Show message with enhanced styling
+    function showMessage(message, type = 'success') {
         const messageEl = document.createElement('div');
-        messageEl.className = `notification-message ${type}`;
-        messageEl.textContent = message;
-        messageEl.style.cssText = `
+        
+        // Check if it's an acceptance message for special styling
+        const isAcceptanceMessage = message.includes('accepted successfully');
+        const isDeclineMessage = message.includes('declined successfully');
+        
+        if (isAcceptanceMessage) {
+            messageEl.innerHTML = `
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <span style="font-size: 18px;">✅</span>
+                    <span>${message}</span>
+                </div>
+            `;        } else if (isDeclineMessage) {
+            messageEl.innerHTML = `
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <span style="font-size: 18px; color: white; font-weight: bold;">✕</span>
+                    <span>${message}</span>
+                </div>
+            `;
+        } else {
+            messageEl.textContent = message;
+        }
+          messageEl.style.cssText = `
             position: fixed;
             top: 20px;
             right: 20px;
-            padding: 12px 20px;
-            border-radius: 6px;
+            padding: ${isAcceptanceMessage || isDeclineMessage ? '16px 24px' : '12px 20px'};
+            border-radius: 8px;
             color: white;
-            font-weight: 500;
+            font-family: 'Red Hat Display', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-weight: ${isAcceptanceMessage || isDeclineMessage ? '600' : '500'};
+            font-size: ${isAcceptanceMessage || isDeclineMessage ? '16px' : '14px'};
+            letter-spacing: 0.3px;
             z-index: 1000;
+            background: ${isDeclineMessage ? 
+                'linear-gradient(135deg, #f44336 0%, #d32f2f 100%)' :
+                (type === 'success' ? 
+                    (isAcceptanceMessage ? 'linear-gradient(135deg, #4caf50 0%, #45a049 100%)' : '#4caf50') 
+                    : '#f44336')};
+            box-shadow: ${isAcceptanceMessage || isDeclineMessage ? 
+                (isDeclineMessage ? 
+                    '0 8px 25px rgba(244, 67, 54, 0.4), 0 4px 12px rgba(0, 0, 0, 0.15)' :
+                    '0 8px 25px rgba(76, 175, 80, 0.4), 0 4px 12px rgba(0, 0, 0, 0.15)') 
+                : '0 4px 12px rgba(0, 0, 0, 0.15)'};
             transform: translateX(100%);
-            transition: transform 0.3s ease;
-            ${type === 'success' ? 'background: #4caf50;' : 'background: #f4436;'}
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border-left: ${isAcceptanceMessage ? '4px solid #2e7d32' : 
+                         isDeclineMessage ? '4px solid #c62828' : 'none'};
+            min-width: ${isAcceptanceMessage || isDeclineMessage ? '280px' : '200px'};
         `;
         
         document.body.appendChild(messageEl);
         
-        setTimeout(() => {
-            messageEl.style.transform = 'translateX(0)';
-        }, 100);
-        
-        setTimeout(() => {
+        setTimeout(() => messageEl.style.transform = 'translateX(0)', 100);        setTimeout(() => {
             messageEl.style.transform = 'translateX(100%)';
-            setTimeout(() => messageEl.remove(), 300);
-        }, 3000);
+            setTimeout(() => messageEl.remove(), 400);
+        }, isAcceptanceMessage ? 4000 : 3000);
     }
-    function getTimeAgo(dateString) {
-        const now = new Date();
-        const past = new Date(dateString);
-        const diffInSeconds = Math.floor((now - past) / 1000);
-        
-        if (diffInSeconds < 60) return 'Just now';
-        if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)} minutes ago`;
-        if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)} hours ago`;
-        return `${Math.floor(diffInSeconds / 86400)} days ago`;
-    }    // Mark individual notification as read
+
+    // Mark as read on click
     notificationsList.addEventListener('click', (e) => {
-        const notificationItem = e.target.closest('.notification-item');
-        if (notificationItem && !notificationItem.classList.contains('invitation-notification')) {
-            notificationItem.classList.remove('unread');
+        const notification = e.target.closest('.notification-item');
+        if (notification) {
+            notification.classList.remove('unread');
         }
     });
 
-    // Mark all notifications as read
+    // Mark all as read
     markAllReadBtn.addEventListener('click', () => {
         document.querySelectorAll('.notification-item').forEach(item => {
             item.classList.remove('unread');
         });
     });
 
-    // Show badge with count
-    document.getElementById('sidebarNotifBadge').textContent = '5';
-    document.getElementById('sidebarNotifBadge').style.display = 'inline-block';
-
-    // Hide badge when count is 0
-    document.getElementById('sidebarNotifBadge').style.display = 'none';
-
-    // Initial render
-    fetchInvitationNotifications();
+    // Initialize
     renderNotifications();
 });

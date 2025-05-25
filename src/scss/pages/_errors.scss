@@ -1,0 +1,70 @@
+@use '../base/typography' as *;
+@use '../base/colors' as *;
+@use '../base/breakpoints' as *;
+@use '../base/animations' as *;
+
+.error-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  text-align: center;
+  padding: 2rem;
+  background-color: $accent-white;
+  
+  img {
+    max-width: 200px;
+    margin-bottom: 2rem;
+    @include hover-grow;
+  }
+  
+  h1 {
+    @extend .display-1;
+    color: $primary-navy-blue;
+    margin: 0;
+    line-height: 1;
+  }
+  
+  h2 {
+    @extend .h2;
+    color: $accent-black;
+    margin: 0.5rem 0;
+  }
+  
+  p {
+    @extend .body-regular;
+    color: $accent-black;
+    margin: 1rem 0 2rem;
+    max-width: 500px;
+  }
+  
+  .back-button {
+    @extend .button-cta;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 20px;
+    background-color: $primary-navy-blue;
+    color: $accent-white;
+    border-radius: 15px;
+    text-decoration: none;
+    gap: 10px;
+    @include hover-lift;
+    @include button-border-animation($tertiary-beige);
+    
+    img {
+      width: 20px;
+      height: 20px;
+      margin-bottom: 0;
+    }
+  }
+
+  @include mobile {
+    padding: 1rem;
+    
+    img {
+      max-width: 150px;
+    }
+  }
+}
