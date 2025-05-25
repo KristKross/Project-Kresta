@@ -30,14 +30,16 @@ $transition-duration: 0.3s;
             opacity: 1;
             pointer-events: all;
         }
-
+        
         .nav-items {
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
+            justify-content: flex-start; // Change from center to flex-start
             height: 100%;
-            padding: 0;
+            overflow-y: auto; // Add scrolling capability
+            overflow-x: hidden; // Prevent horizontal scroll
+            padding: 20px 0; // Add some top and bottom padding
             margin: 0;
 
             .container {
@@ -47,13 +49,14 @@ $transition-duration: 0.3s;
                 transition-delay: calc(var(--delay) * 0.1s);
                 width: 100%;
                 max-width: 300px;
-                margin-bottom: 20px; // Add consistent margin for all containers
+                margin-top: 20px; // Add consistent margin for all containers
                 
                 // Remove the special styling for last container on mobile
                 &:last-child {
-                    margin-top: 0; // Reset the margin-top: auto
+                    // margin-top: 100px;
+                    margin-bottom: 100px; // Reset the margin-top: auto
                     padding-top: 12px; // Match the regular padding
-                    margin-bottom: 20px; // Keep consistent with others
+                    // margin-bottom: 20px; // Keep consistent with others
                 }
             }
 
