@@ -1,5 +1,5 @@
 const Social = require("../models/Social");
-const { encryptToken } = require("../utils/encryption");
+const { encryptToken } = require("../utils/encryptionUtil");
 const axios = require("axios");
 
 const FACEBOOK_APP_ID = process.env.FACEBOOK_APP_ID;

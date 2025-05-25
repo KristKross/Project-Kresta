@@ -1,5 +1,5 @@
 const Task = require('../models/Task');
-const { getWorkspace } = require('../utils/workspace');
+const { getWorkspace } = require('../utils/workspaceUtil');
 
 const User = require('../models/User');
 
@@ -8,6 +8,10 @@ exports.createTask = async (req, res) => {
         const { title, priority, status, dueDate, assigneeName, details } = req.body;
 
         const workspace = await getWorkspace(req);
+
+        if (!workspace) {
+            return res.status(404).json({ error: 'Workspace not found' });
+        }
 
         const user = await User.findOne({ username: assigneeName });
         if (!user) {
@@ -68,3 +72,4 @@ exports.deleteTask = async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 };
+

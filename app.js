@@ -30,24 +30,6 @@ app.use((req, res, next) => {
     next();
 });
 
-const Workspace = require("./models/Workspace");
-app.get("/create-workspace", async (req, res) => {
-    try {
-        const workspace = new Workspace({
-            name: "Test Workspace",
-            owner: req.session.userData?.user._id,
-            members: [req.session.userData?.user._id],
-        });
-        const doc = await workspace.save();
-        return res.send(doc);
-    } catch (err) {
-        if (err.name === "MongooseError" && err.message === "Model.prototype.save() no longer accepts a callback") {
-            throw new Error("Model.prototype.save() no longer accepts a callback");
-        }
-        console.log(err);
-        return res.status(500).send(err);
-    }
-});
 // Serve static files
 app.get('/', (req, res) => {
     if (req.session.userData?.user) {
@@ -75,7 +57,7 @@ app.get('/dashboard', (req, res) => {
     res.sendFile(path.join(__dirname, 'dist', 'dashboard.html'));
 });
 
-app.get('/tasks', (req, res) => {
+app.get('/tasks', checkPremiumTier, (req, res) => {
     if (!req.session.userData?.user) {
         return res.redirect('/login');
     }
@@ -103,6 +85,13 @@ app.get('/pricing', (req, res) => {
     res.sendFile(path.join(__dirname, 'dist', 'pricing.html'));
 });
 
+app.get('/profile', (req, res) => {
+    if (!req.session.userData?.user) {
+        return res.redirect('/login');
+    }
+    res.sendFile(path.join(__dirname, 'dist', 'profile.html'));
+});
+
 
 app.use(express.static(path.join(__dirname, 'dist')));
 
@@ -117,10 +106,10 @@ const instagramRoutes = require("./routes/instagramRoute");
 app.use('/api/instagram', isAuthenticated, instagramRoutes);
 
 const workspaceRoutes = require("./routes/workspaceRoute");
-app.use('/api/workspace', checkPremiumTier, isAuthenticated, workspaceRoutes);
+app.use('/api/workspace', isAuthenticated, checkPremiumTier, workspaceRoutes);
 
 const taskRoutes = require("./routes/taskRoute");
-app.use('/api/task', checkPremiumTier, isAuthenticated, taskRoutes);
+app.use('/api/task', isAuthenticated, checkPremiumTier, taskRoutes);
 
 const uploadRoutes = require("./routes/uploadRoute");
 app.use('/api', uploadRoutes);

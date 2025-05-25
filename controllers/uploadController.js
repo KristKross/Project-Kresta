@@ -6,52 +6,91 @@ const upload = multer({ storage });
 
 exports.uploadMiddleware = upload.single('imageFile');
 
-exports.uploadImageToCloudinary = async (req, res) => {
-  try {
-    if (!req.file) {
-      return res.status(400).json({ error: 'Image file is required' });
-    }
+// @route POST /api/upload-media
+exports.uploadMediaToCloudinary = async (req, res) => {
+    try {
+        const { resourceType } = req.body;
 
-    const uploadResult = await new Promise((resolve, reject) => {
-      const uploadStream = cloudinary.uploader.upload_stream(
-        { folder: 'posts', resource_type: 'image' },
-        (error, result) => {
-          if (error) return reject(error);
-          resolve(result);
+        if (!req.file || !resourceType) {
+            return res.status(400).json({ error: "File and resource type are required" });
         }
-      );
-      uploadStream.end(req.file.buffer);
-    });
 
-    res.status(201).json({
-      message: 'Image uploaded successfully',
-      imageUrl: uploadResult.secure_url,
-    });
+        const folder = resourceType === "video" ? "post_videos" : "post_images";
 
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Failed to upload image' });
-  }
+        const uploadResult = await new Promise((resolve, reject) => {
+            const uploadStream = cloudinary.uploader.upload_stream(
+              { folder, type: "authenticated", resource_type: resourceType },
+              (error, result) => (error ? reject(error) : resolve(result))
+            );
+            uploadStream.end(req.file.buffer);
+        });
+
+        if (!uploadResult?.public_id) {
+            return res.status(500).json({ error: "Cloudinary upload failed" });
+        }
+
+        res.status(201).json({
+            success: true,
+            message: "Media uploaded successfully",
+            publicId: uploadResult.public_id,
+            resourceType: resourceType,
+        });
+
+    } catch (error) {
+        console.error("Error uploading media:", error);
+        res.status(500).json({ error: "Failed to upload media" });
+    }
 };
 
-exports.deleteImageFromCloudinary = async (req, res) => {
-  try {
-    const { imageId } = req.params;
-    if (!imageId) {
-      return res.status(400).json({ error: 'Image ID is required' });
+// @route GET /api/post-media/:folderName/:publicId/:resourceType
+exports.getPostMedia = async (req, res) => {
+    try {
+        const { folderName, publicId, resourceType } = req.params;
+        const path = `${folderName}/${publicId}`;
+
+        if (!publicId || !resourceType) return res.status(400).json({ error: "Media ID and resource type required" });
+
+        const signedUrl = cloudinary.url(path, {
+          sign_url: true,
+          type: "authenticated",
+          resource_type: resourceType
+        });
+
+        res.json({ success: true, mediaUrl: signedUrl });
+
+    } catch (error) {
+        console.error("Error retrieving media:", error);
+        res.status(500).json({ error: "Error retrieving media" });
     }
+};
 
-    const result = await cloudinary.uploader.destroy(imageId);
+// @route DELETE /api/delete-media/:folderName/:publicId/:resourceType
+exports.deleteMediaFromCloudinary = async (req, res) => {
+    try {
+        const { folderName, publicId, resourceType } = req.params;
 
-    if (result.result !== 'ok') {
-      return res.status(500).json({ error: 'Failed to delete image' });
+        if (!folderName || !publicId || !resourceType) {
+            return res.status(400).json({ error: "Folder name, public ID, and resource type are required" });
+        }
+
+        const fullPublicId = `${folderName}/${publicId}`;
+
+        console.log("Attempting to delete:", fullPublicId);
+
+        const result = await cloudinary.uploader.destroy(fullPublicId, {
+            sign_url: true,
+            type: "authenticated",
+            resource_type: resourceType
+        });
+
+        if (result.result !== "ok") {
+            return res.status(500).json({ error: "Failed to delete media" }); 
+        }
+
+        res.status(200).json({ success: true, message: "Media deleted successfully" });
+
+    } catch (error) {
+        console.error("Error deleting media:", error);
+        res.status(500).json({ error: "Error deleting media" });
     }
-
-    res.status(200).json({ message: 'Image deleted successfully' });
-    console.log(`Image ${imageId} deleted successfully from Cloudinary.`);
-
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'An error occurred while deleting the image' });
-  }
 };

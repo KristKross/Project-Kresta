@@ -6,9 +6,9 @@ const postSchema = new mongoose.Schema({
   igPostId: { type: String, default: null },
   title: { type: String, required: true },
   caption: { type: String, required: true },
-  imageUrl: { type: String, required: true },
+  mediaPublicId: { type: String, required: true },
+  resourceType: { type: String, required: true },
   scheduledTime: { type: Date, required: true },
-  status: { type: String, enum: ['scheduled', 'posted'], default: 'posted' },
 }, {
   timestamps: true
 });

@@ -183,44 +183,38 @@ document.addEventListener('DOMContentLoaded', () => {
     postForm.addEventListener('submit', async (e) => {
         e.preventDefault();
 
-        const selectedPlatforms = Array.from(platformOptions)
-            .filter(option => option.classList.contains('selected'))
-            .map(option => option.dataset.platform);
-
-        if (selectedPlatforms.length === 0) {
-            alert('Please select at least one platform');
-            return;
-        }
-
         const mediaInputFile = mediaInput.files[0];
         if (!mediaInputFile) {
             alert('Please upload a media file');
             return;
         }
 
-        // 🌟 Step 1: Upload Image to Cloudinary First
-        const imageFormData = new FormData();
-        imageFormData.append('imageFile', mediaInputFile);
+        const fileType = mediaInputFile.type.startsWith('video') ? 'video' : 'image';
+        const mediaFormData = new FormData();
+        mediaFormData.append('imageFile', mediaInputFile);
+        mediaFormData.append('resourceType', fileType);
 
         try {
-            const uploadResponse = await fetch('/api/upload', {
+            const uploadResponse = await fetch('/api/upload-media', {
                 method: 'POST',
-                body: imageFormData
+                body: mediaFormData
             });
+
+            console.log('Upload response:', uploadResponse);
 
             const uploadResult = await uploadResponse.json();
             if (!uploadResponse.ok) {
-                throw new Error(uploadResult.error || 'Image upload failed');
+                throw new Error(uploadResult.error || 'Media upload failed');
             }
 
-            const cloudinaryUrl = uploadResult.imageUrl;
-            console.log('Uploaded Cloudinary URL:', cloudinaryUrl);
+            const cloudinaryPublicId = uploadResult.publicId;
+            console.log('Uploaded Cloudinary Public ID:', cloudinaryPublicId);
 
-            // 🌟 Step 2: Send Cloudinary URL Along with Post Data
             const postFormData = {
                 title: postForm.querySelector('.post-title').value,
                 caption: postForm.querySelector('.post-description').value,
-                imageUrl: cloudinaryUrl,
+                mediaPublicId: cloudinaryPublicId,
+                resourceType: fileType,
                 scheduled: scheduleToggle.checked,
                 scheduledTime: scheduleToggle.checked ? postForm.querySelector('.schedule-time').value : null,
                 status: scheduleToggle.checked ? 'scheduled' : 'posted'
@@ -237,7 +231,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 throw new Error(postResult.error || 'Failed to publish post');
             }
 
+            alert('Post published successfully!');
             postCreatorPanel.classList.remove('active');
+            postForm.reset();
             
         } catch (error) {
             console.error('Error:', error);
