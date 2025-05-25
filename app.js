@@ -26,7 +26,7 @@ const protectedHtml = ['/tasks.html', '/planner.html', '/analytics.html', 'dashb
 
 app.use((req, res, next) => {
     if (!req.session.userData?.user && protectedHtml.includes(req.path)) {
-        return res.redirect('/home');
+        return res.redirect('/login');
     }
     next();
 });
@@ -63,18 +63,6 @@ app.get('/register', (req, res) => {
     res.sendFile(path.join(__dirname, 'dist', 'register.html'));
 });
 
-app.get('/401', (req, res) => {
-    res.sendFile(path.join(__dirname, 'dist', '401.html'));
-});
-
-app.get('/403', (req, res) => {
-    res.sendFile(path.join(__dirname, 'dist', '403.html'));
-});
-
-app.get('/404', (req, res) => {
-    res.sendFile(path.join(__dirname, 'dist', '404.html'));
-});
-
 app.get('/dashboard', isAuthenticated, (req, res) => {
     res.sendFile(path.join(__dirname, 'dist', 'dashboard.html'));
 });
@@ -101,6 +89,18 @@ app.get('/notification', isAuthenticated, (req, res) => {
 
 app.use(express.static(path.join(__dirname, 'dist')));
 
+app.use((req, res) => {
+    res.status(401).sendFile(path.join(__dirname, 'dist', '401.html'));
+});
+
+app.use((req, res) => {
+    res.status(403).sendFile(path.join(__dirname, 'dist', '403.html'));
+});
+
+app.use((req, res) => {
+    res.status(404).sendFile(path.join(__dirname, 'dist', '404.html'));
+});
+
 // API Routes
 const authRoutes = require("./routes/authRoute");
 app.use('/auth', authRoutes);
@@ -122,18 +122,6 @@ app.use('/api', uploadRoutes);
 
 const notificationRoutes = require("./routes/notificationRoute");
 app.use('/api/notifications', isAuthenticated, notificationRoutes);
-
-app.use((req, res, next) => {
-    res.status(404).sendFile(path.join(__dirname, 'dist', '404.html'));
-});
-
-app.use((req, res, next) => {
-    res.status(401).sendFile(path.join(__dirname, 'dist', '401.html'));
-});
-
-app.use((req, res, next) => {
-    res.status(403).sendFile(path.join(__dirname, 'dist', '403.html'));
-});
 
 // Start the server
 const PORT = process.env.PORT;
