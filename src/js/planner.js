@@ -200,15 +200,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 body: mediaFormData
             });
 
-            console.log('Upload response:', uploadResponse);
-
             const uploadResult = await uploadResponse.json();
             if (!uploadResponse.ok) {
                 throw new Error(uploadResult.error || 'Media upload failed');
             }
 
             const cloudinaryPublicId = uploadResult.publicId;
-            console.log('Uploaded Cloudinary Public ID:', cloudinaryPublicId);
 
             const postFormData = {
                 title: postForm.querySelector('.post-title').value,
