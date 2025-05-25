@@ -227,8 +227,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         };
 
         const { user, premium } = userData;
-        const usernameInput = document.querySelector('input[type="text"].form-input');
-        const emailInput = document.querySelector('input[type="email"].form-input');
+        const usernameInput = document.getElementById('username-input');
+        const emailInput = document.getElementById('email-input');
 
         const memberSince = new Date(user.createdAt);
 
