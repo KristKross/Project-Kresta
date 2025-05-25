@@ -18,14 +18,23 @@ module.exports = async function (req, res, next) {
         const premiumInfo = await Premium.findOne({ userId });
         const tier = premiumInfo?.tier || "free";
 
-        if (tier !== "pro" && tier !== "business") {
+        if (tier !== "creator" && tier !== "business") {
             const isApiRequest =
                 req.originalUrl.startsWith('/api') ||
                 req.xhr ||
                 req.headers.accept?.includes('application/json');
+                
+            // Determine which feature is being accessed to customize the error message
+            let errorMessage = "Creator or Business plan required";
+            
+            if (req.originalUrl.includes('workspace')) {
+                errorMessage = "Workspace collaboration features require a Creator or Business plan";
+            } else if (req.originalUrl.includes('task')) {
+                errorMessage = "Task management features require a Creator or Business plan";
+            }
 
             if (isApiRequest) {
-                return res.status(403).json({ success: false, message: "Pro or Business plan required" });
+                return res.status(403).json({ success: false, message: errorMessage });
             } else {
                 return res.redirect("/403");
             }

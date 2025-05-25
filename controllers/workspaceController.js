@@ -85,15 +85,16 @@ exports.inviteMember = async (req, res) => {
 
     if (workspace.pendingInvites.includes(userToInvite._id)) {
       return res.status(400).json({ success: false, message: "User has already been invited" });
-    }
-
-    workspace.pendingInvites.push(userToInvite._id);
+    }    workspace.pendingInvites.push(userToInvite._id);
     await workspace.save();
 
     await Notification.create({
       user: userToInvite._id,
       type: "invite",
       message: `You have been invited to join ${workspace.name}.`,
+      workspaceId: workspace._id,
+      workspaceName: workspace.name,
+      ownerEmail: req.session.userData.user.email
     });
 
     res.json({ success: true, user: userToInvite, message: "Invitation sent. Awaiting acceptance." });
@@ -146,32 +147,40 @@ exports.removeInvite = async (req, res) => {
 // @route POST /api/workspace/accept
 exports.acceptInvite = async (req, res) => {
     try {
-        const ownerId = req.session?.userData?.user?._id;
-        if (!ownerId) {
+        const userId = req.session?.userData?.user?._id;
+        if (!userId) {
             return res.status(401).json({ success: false, message: "User not authenticated" });
         }
 
-        const { email } = req.body;
-        const userToAccept = await User.findOne({ email });
-
-        if (!userToAccept) {
-            return res.status(404).json({ success: false, message: "User not found" });
+        const { workspaceId } = req.body;
+        
+        // Find workspace by ID if provided, otherwise find by checking pending invites
+        let workspace;
+        if (workspaceId) {
+            workspace = await Workspace.findById(workspaceId);
+        } else {
+            workspace = await Workspace.findOne({ pendingInvites: userId });
         }
-
-        const workspace = await Workspace.findOne({ owner: ownerId });
 
         if (!workspace) {
             return res.status(404).json({ success: false, message: "Workspace not found" });
         }
 
-        const inviteIndex = workspace.pendingInvites.indexOf(userToAccept._id);
+        const inviteIndex = workspace.pendingInvites.indexOf(userId);
         if (inviteIndex === -1) {
             return res.status(404).json({ success: false, message: "Invite not found" });
         }
 
-        workspace.members.push(userToAccept._id);
+        workspace.members.push(userId);
         workspace.pendingInvites.splice(inviteIndex, 1);
         await workspace.save();
+
+        // Mark notification as read and remove it
+        await Notification.findOneAndDelete({ 
+            user: userId, 
+            type: 'invite',
+            workspaceId: workspace._id 
+        });
 
         res.json({ success: true, message: "Invite accepted successfully" });
     } catch (error) {
@@ -183,31 +192,39 @@ exports.acceptInvite = async (req, res) => {
 // @route POST /api/workspace/decline
 exports.declineInvite = async (req, res) => {
     try {
-        const ownerId = req.session?.userData?.user?._id;
-        if (!ownerId) {
+        const userId = req.session?.userData?.user?._id;
+        if (!userId) {
             return res.status(401).json({ success: false, message: "User not authenticated" });
         }
 
-        const { email } = req.body;
-        const userToDecline = await User.findOne({ email });
-
-        if (!userToDecline) {
-            return res.status(404).json({ success: false, message: "User not found" });
+        const { workspaceId } = req.body;
+        
+        // Find workspace by ID if provided, otherwise find by checking pending invites
+        let workspace;
+        if (workspaceId) {
+            workspace = await Workspace.findById(workspaceId);
+        } else {
+            workspace = await Workspace.findOne({ pendingInvites: userId });
         }
-
-        const workspace = await Workspace.findOne({ owner: ownerId });
 
         if (!workspace) {
             return res.status(404).json({ success: false, message: "Workspace not found" });
         }
 
-        const inviteIndex = workspace.pendingInvites.indexOf(userToDecline._id);
+        const inviteIndex = workspace.pendingInvites.indexOf(userId);
         if (inviteIndex === -1) {
             return res.status(404).json({ success: false, message: "Invite not found" });
         }
 
         workspace.pendingInvites.splice(inviteIndex, 1);
         await workspace.save();
+
+        // Mark notification as read and remove it
+        await Notification.findOneAndDelete({ 
+            user: userId, 
+            type: 'invite',
+            workspaceId: workspace._id 
+        });
 
         res.json({ success: true, message: "Invite declined successfully" });
     } catch (error) {

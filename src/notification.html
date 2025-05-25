@@ -17,10 +17,38 @@
     <div class="notifications-container">
         <div class="notifications-header">
             <h2 class="subtitle">Recent Notifications</h2>
-            <button class="mark-all-read">Mark all as read</button>
-        </div>
+            <button class="mark-all-read">Mark all as read</button>        </div>        <div class="notifications-list">
+            <!-- Premium Upgrade Notification -->        <div class="premium-upgrade-notification">
+                <div class="premium-content">
+                    <div class="premium-icon"></div>
+                    <div class="premium-text">
+                        <div class="premium-title">Premium Feature</div>
+                        <div class="premium-message">Workspace collaboration features require a premium plan. Upgrade to access team workspaces and task management.</div>
+                        <div class="premium-links">
+                            <a href="pricing.html#creator" class="plan-link" onclick="window.location.href='pricing.html#creator'">Creator Plan</a>
+                            <span class="separator">or</span>
+                            <a href="pricing.html#business" class="plan-link" onclick="window.location.href='pricing.html#business'">Business Plan</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Workspace Invitation Example -->
+            <div class="notification-item invitation-notification unread" data-id="invite-1" data-workspace="Creative Agency" data-workspace-id="example-workspace-id">
+                <div class="notification-icon">
+                    <img src="./assets/icons/notifications/invite-accepted.png" alt="invitation">
+                </div>
+                <div class="notification-content">
+                    <div class="notification-title">Workspace Invitation</div>
+                    <div class="notification-text">You have been invited to join Creative Agency workspace</div>
+                    <div class="notification-time">5 minutes ago</div>
+                </div>
+                <div class="invitation-actions">
+                    <button class="action-btn accept-btn" onclick="handleInvitationAction('invite-1', 'accept', 'example-workspace-id')">Accept</button>
+                    <button class="action-btn decline-btn" onclick="handleInvitationAction('invite-1', 'decline', 'example-workspace-id')">Decline</button>
+                </div>
+            </div>
 
-        <div class="notifications-list">
             <div class="notification-item unread">
                 <div class="notification-icon">
                     <img src="./assets/icons/notifications/invite-accepted.png" alt="post">
