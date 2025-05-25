@@ -83,8 +83,12 @@ exports.inviteMember = async (req, res) => {
       return res.status(404).json({ success: false, message: "User not found" });
     }
 
-    if (workspace.members.includes(userToInvite._id)) {
-      return res.status(400).json({ success: false, message: "User is already in the workspace" });
+    // Check if the user is already in the workspace or if they are in any workspace
+    const isUserInWorkspace = workspace.members.includes(userToInvite._id) ||
+      await Workspace.findOne({ members: userToInvite._id });
+
+    if (isUserInWorkspace) {
+      return res.status(400).json({ success: false, message: "User is already in a workspace" });
     }
 
     if (workspace.pendingInvites.includes(userToInvite._id)) {

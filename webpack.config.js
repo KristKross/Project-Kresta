@@ -23,8 +23,6 @@ module.exports = {
         about: "./src/js/about.js",
         contact: "./src/js/contact.js",
         pricing: "./src/js/pricing.js",
-        sidebar: "./src/js/sidebar.js",
-        sidebar: "./src/js/creators.js",
         privacyPolicy: "./src/js/privacyPolicy.js",
     },
     optimization: {

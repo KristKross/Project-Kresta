@@ -44,7 +44,7 @@ exports.getAllTasks = async (req, res) => {
 
     try {
         const tasks = await Task.find({ workspace: workspace._id })
-            .populate('assignedTo', 'username');
+            .populate('assignedTo', 'username profilePicture');
         res.status(200).json(tasks);
     } catch (err) {
         res.status(500).json({ error: err.message });

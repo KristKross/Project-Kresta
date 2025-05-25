@@ -10,6 +10,8 @@ module.exports = async (req, res, next) => {
 
         const social = await Social.findOne({ userId: sessionUser._id });
 
+        console.log("social:", social);
+
         if (!social || !social.instagramAccountId) {
             return res.redirect("/api/social/facebook");
         }

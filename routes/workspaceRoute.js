@@ -1,20 +1,21 @@
 const express = require('express');
 const workspaceController = require('../controllers/workspaceController');
+const checkPremiumTier = require('../middleware/checkPremiumTier');
 
 const router = express.Router();
 
 // Create workspace
-router.post('/', workspaceController.createWorkspace);
+router.post('/', checkPremiumTier, workspaceController.createWorkspace);
 
 // Read selected workspace via session
-router.get('/my', workspaceController.getMyWorkspace);
+router.get('/my', checkPremiumTier, workspaceController.getMyWorkspace);
 
-router.post('/invite', workspaceController.inviteMember);
-router.delete('/invite', workspaceController.removeInvite);
+router.post('/invite', checkPremiumTier, workspaceController.inviteMember);
+router.delete('/invite', checkPremiumTier, workspaceController.removeInvite);
 
 router.post('/accept', workspaceController.acceptInvite);
 router.post('/decline', workspaceController.declineInvite);
 
-router.post('/remove', workspaceController.removeMember);
+router.post('/remove', checkPremiumTier, workspaceController.removeMember);
 
 module.exports = router;
