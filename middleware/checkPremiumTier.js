@@ -36,7 +36,7 @@ module.exports = async function (req, res, next) {
             if (isApiRequest) {
                 return res.status(403).json({ success: false, message: errorMessage });
             } else {
-                return res.redirect("/pricing.html");
+                return res.redirect("/403");
             }
         }
 

@@ -8,7 +8,7 @@ module.exports = (req, res, next) => {
         if (isApiRequest) {
             return res.status(401).json({ message: "Unauthorized" });
         } else {
-            return res.redirect("/login");
+            return res.redirect("/401");
         }
     }
     next();

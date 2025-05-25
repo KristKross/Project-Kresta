@@ -27,10 +27,6 @@ exports.getInstagramAccountAnalytics = async (req, res) => {
         if (error.status === 403) {
             return res.status(403).json({ error: error.message });
         }
-        console.error(
-            "Error fetching Instagram account analytics:",
-            error.response?.data || error.message
-        );
         res.status(500).json({
             error: "Failed to retrieve Instagram account analytics.",
         });
