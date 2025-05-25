@@ -46,10 +46,12 @@ app.get('/pricing', (req, res) => {
 });
 
 app.get('/login', (req, res) => {
+    if (req.session.userData?.user) return res.redirect('/dashboard');
     res.sendFile(path.join(__dirname, 'dist', 'login.html'));
 });
 
 app.get('/register', (req, res) => {
+    if (req.session.userData?.user) return res.redirect('/dashboard');
     res.sendFile(path.join(__dirname, 'dist', 'register.html'));
 });
 
@@ -129,6 +131,7 @@ app.use((req, res) => {
 app.use((req, res) => {
     return res.status(403).sendFile(path.join(__dirname, 'dist', '403.html'));
 });
+
 // Start the server
 const PORT = process.env.PORT;
 app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
