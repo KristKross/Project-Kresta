@@ -3,9 +3,14 @@
 
 // For screens up to 600px (Mobile First)
 @include mobile {
+    .planner-page {
+        margin-bottom: 100px; // Add bottom margin for sidebar button
+    }
+
     .planner-container {
         flex-direction: column;
         padding: 10px;
+        margin-bottom: 100px; // Add bottom margin for sidebar button
         
         .planner-sidebar {
             width: 100% !important;

@@ -9,71 +9,52 @@
 span, a{
     @extend .body-regular;
 }
-.title-h1{
-    @extend .h1;
-    background: $primary-navy-blue;
-    height: 10vh;
-    // position: relative;
-    overflow: hidden;
-    color: $accent-white;
-    text-align: center;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    gap: 50px;
-}
 
-.h1{
-    @extend .h1;
-    color: $accent-white;
-    text-align: center;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    padding: 10px; // Add some padding
-    gap: 50px;
-    width: 100%;
-    background-color: $primary-navy-blue;
-    // flex: 1; // This makes the title take up available space
-    // flex-direction: row;
+.dashboard-page{
+    margin-left: 110px;
 }
 
 .dashboard-container {
-    display: grid;
-    grid-template-columns: 1fr 2px 1fr 2px 1fr; // Three columns with separators
+    display: flex; // Change from grid to flex
+    justify-content: center; // Center the content
+    align-items: flex-start; // Align items to the top
     gap: 30px;
     min-height: 90vh;
     padding: 20px;
     background: $ui-surface;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
     border-radius: 20px;
-    margin: 20px;
-    min-width: 1200px; // Base minimum width for the entire dashboard
 
-    // Modify container widths
+    // Modify container widths - use flex properties without restrictive max-widths
     .dashboard-left-container {
-        width: 100%;
-        min-width: 350px;
+        flex: 1; // Equal flex grow
+        min-width: 300px; // Keep minimum width
+        // Remove max-width to let it extend
+    }
+
+    .vertical-separator {
+        width: 2px;
+        min-height: 100%;
+        background: $secondary-ice-blue;
+        flex-shrink: 0;
+        margin: 0 15px;
+        align-self: stretch;
+        opacity: 0.3;
+        
+        // Remove the ::before pseudo-element - it's causing the issue
     }
 
     .dashboard-middle-container {
-        width: 100%;
-        min-width: 400px;
+        flex: 1; // Equal flex grow
+        min-width: 350px; // Keep minimum width
+        // Remove max-width to let it extend
     }
 
     .dashboard-workspace {
-        width: 100%;
-        min-width: 350px;
+        flex: 1; // Equal flex grow
+        min-width: 300px; // Keep minimum width
+        // Remove max-width to let it extend
     }
-}
-
-.vertical-separator {
-    width: 2px;
-    height: 100%;
-    background-color: $ui-border;
-    margin: 0;
 }
 
 .section-header {
@@ -84,7 +65,7 @@ span, a{
     padding: 15px 20px;
     border-radius: 10px;
     background-color: $primary-navy-blue;
-    min-width: 300px;
+    min-width: 250px; // Reduced from 300px
 
     h2 {
         @extend .h2;
@@ -147,7 +128,7 @@ span, a{
     background: white;
     border-radius: 12px;
     border: 2px dashed rgba($primary-navy-blue, 0.2);
-    min-width: 280px;
+    min-width: 220px; // Reduced from 280px
 
     h3 {
         @extend .h3;
@@ -187,7 +168,7 @@ span, a{
     border-radius: 20px;
     padding: 2rem;
     margin-bottom: 2rem;
-    min-width: 350px;
+    min-width: 280px; // Reduced from 350px
 
     .welcome-text {
         @extend .h3;
@@ -205,7 +186,7 @@ span, a{
         display: flex;
         align-items: center;
         gap: 1.5rem;
-        min-width: 300px;
+        min-width: 250px; // Reduced from 300px
 
         .profile-picture {
             width: 80px;
@@ -269,7 +250,7 @@ span, a{
 }
 
 .dashboard-left-container{
-    min-width: 30vw;
+    min-width: 25vw; // Changed from 30vw
     display: flex;
     flex-direction: column;
     gap: 30px;
@@ -372,7 +353,7 @@ span, a{
 }
 
 .dashboard-tasks{
-    min-width: 30vw;
+    min-width: 25vw; // Changed from 30vw
 
     @extend .body-regular;
     display: flex;
@@ -411,7 +392,7 @@ span, a{
         border-left: 4px solid $primary-navy-blue;
         box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
         transition: all 0.2s ease;
-        min-width: 300px;
+        min-width: 250px; // Reduced from 300px
         
         &:hover {
             transform: translateX(4px);
@@ -421,8 +402,8 @@ span, a{
 }
 
 .dashboard-middle-container{
-    min-width: 30vw;
-    max-width: 35vw; // Add max-width to prevent expansion
+    min-width: 25vw; // Changed from 30vw
+    max-width: 40vw; // Increased from 35vw to be more flexible
     display: flex;
     flex-direction: column;
     gap: 30px;
@@ -453,12 +434,12 @@ span, a{
     .content-planner {
         display: flex;
         flex-direction: column;
-        gap: 15px; // Reduced gap between columns
+        gap: 15px;
         padding: 15px;
         background-color: $accent-white;
         border-radius: 10px;
-        width: 100%; // Ensure it takes full width of container
-        min-width: 380px;
+        width: 100%;
+        min-width: 300px; // Reduced from 380px
         
         .planner-column {
             flex: 1;
@@ -545,8 +526,8 @@ span, a{
 }
 
 .dashboard-workspace{
-    min-width: 30vw;
-    max-width: 35vw; // Add max-width to prevent expansion
+    min-width: 25vw; // Changed from 30vw
+    max-width: 40vw; // Increased from 35vw
     display: flex;
     flex-direction: column;
     gap:30px;
@@ -583,7 +564,7 @@ span, a{
     border-radius: 16px;
     padding: 20px;
     transition: all 0.3s ease;
-    min-width: 280px;
+    min-width: 220px; // Reduced from 280px
     
     img {
         border-radius: 50%;
@@ -605,7 +586,7 @@ span, a{
 
 .actions-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); // Reduced from 200px
     gap: 20px;
     width: 100%;
 
@@ -618,9 +599,9 @@ span, a{
         padding: 20px;
         text-decoration: none;
         transition: all 0.3s ease;
-        background-color: $accent-white; // Add white background
-        border: 1px solid $accent-black; // Add border
-        min-width: 250px;
+        background-color: $accent-white;
+        border: 1px solid $accent-black;
+        min-width: 200px; // Reduced from 250px
 
         .action-icon {
             img {

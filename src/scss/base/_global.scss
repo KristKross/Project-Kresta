@@ -1,3 +1,50 @@
+@use 'sass:color';
+@use '../base/animations' as *;
+@use '../base/typography' as *;
+@use '../base/animations' as *;
+@use '../base/colors' as *;
+@use '../base/breakpoints' as *;
+@use '../components/buttons' as *;
+
+
 html{
     scroll-behavior: smooth;
+    // Global title header styles
+}
+
+.title-header {
+    .title-h1 {
+        @extend .h1;
+        background: $primary-navy-blue;
+        height: 10vh;
+        overflow: hidden;
+        color: $accent-white;
+        text-align: center;
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        gap: 50px;
+        // margin-left: 110px;
+        width: 100%;
+        box-sizing: border-box;
+        
+        @include mobile {
+            margin-left: 0;
+            width: 100%;
+            height: auto;
+            padding: 15px 10px;
+            gap: 15px;
+        }
+
+        img {
+            width: 32px;
+            height: 32px;
+            object-fit: contain;
+        }
+
+        i {
+            font-size: 32px;
+        }
+    }
 }

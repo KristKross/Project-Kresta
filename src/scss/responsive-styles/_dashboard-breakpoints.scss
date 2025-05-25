@@ -7,36 +7,46 @@
         display: flex;
         flex-direction: column;
         grid-template-columns: 1fr;
-        margin: 10px;
-        padding: 15px;
-        gap: 20px;
-        min-width: 768px;
+        margin: 10px auto; // Center on tablet
+        // margin-left: 130px; // Add sidebar offset for tablet
+        // width: calc(100% - 150px); // Adjust width to account for sidebar and margins
+        // padding: 15px;
+        // gap: 20px;
+        // min-width: unset; // Remove min-width that causes overflow
+        // max-width: unset; // Remove max-width constraint
 
         .dashboard-middle-container {
             order: -1; // Moves it to the top
-            min-width: 100%;
-            max-width: 100%;
+            min-width: unset; // Remove min-width
+            max-width: unset; // Remove max-width
+            width: 100%;
         }
 
         .dashboard-left-container {
             order: 1;
-            min-width: 100%;
-            max-width: 100%;
+            min-width: unset; // Remove min-width
+            max-width: unset;
+            width: 100%;
         }
 
         .dashboard-workspace {
             order: 2;
-            min-width: 100%;
-            max-width: 100%;
+            min-width: unset; // Remove min-width
+            max-width: unset;
+            width: 100%;
         }
     }
 
     .user-welcome {
         padding: 1.5rem;
+        min-width: unset; // Remove min-width
+        width: 100%;
         
         .user-info {
             flex-direction: column;
             text-align: center;
+            min-width: unset; // Remove min-width
+            width: 100%;
             
             .profile-picture {
                 width: 100px;
@@ -46,19 +56,54 @@
     }
 
     .actions-grid {
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        
+        .action-card {
+            min-width: unset; // Remove min-width
+            width: 100%;
+        }
+    }
+
+    .section-header {
+        min-width: unset; // Remove min-width
+        width: 100%;
+        padding: 12px 15px;
+    }
+
+    .content-planner {
+        min-width: unset; // Remove min-width
+        width: 100%;
+    }
+
+    .people-card {
+        min-width: unset; // Remove min-width
+        width: 100%;
+    }
+
+    .task-bullet {
+        min-width: unset; // Remove min-width
+        width: 100%;
+    }
+
+    .empty-state {
+        min-width: unset; // Remove min-width
+        width: 100%;
     }
 }
 
 // Mobile Styles
 @include mobile {
+    .dashboard-page{
+        margin-left:0px;
+    }
     .title-h1 {
         height: auto;
         padding: 15px;
         gap: 15px;
         font-size: 1.5rem;
-        width: 100%; // Ensure full width
-        justify-content: center; // Center content
+        width: 100%;
+        margin-left: 0; // Remove sidebar offset on mobile
+        justify-content: center;
         
         img {
             width: 24px;
@@ -67,18 +112,53 @@
     }
 
     .dashboard-container {
-        margin: 5px;
+        margin: 5px auto;
+        margin-left: auto;
+        margin-right: auto;
+        width: calc(100% - 10px);
         padding: 10px;
         gap: 15px;
-        min-width: unset; // Remove min-width constraint
-        width: calc(100% - 10px); // Ensure full width minus margins
-        box-sizing: border-box; // Include padding in width calculation
+        min-width: unset;
+        max-width: unset;
+        box-sizing: border-box;
         display: flex;
         flex-direction: column;
+        margin-bottom: 100px; // Add bottom margin for sidebar button
+
+        .dashboard-middle-container {
+            order: -1; // Moves it to the top (same as tablet)
+            min-width: unset;
+            max-width: unset;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .dashboard-left-container {
+            order: 1; // Second position (same as tablet)
+            min-width: unset;
+            max-width: unset;
+            width: 100%;
+            box-sizing: border-box;
+            .engagement-metrics{
+                min-height: fit-content;
+            }
+            .actions-container{
+                gap:0px;
+            }
+        }
+
+        .dashboard-workspace {
+            order: 2; // Third position (same as tablet)
+            min-width: unset;
+            max-width: unset;
+            width: 100%;
+            box-sizing: border-box; 
+            margin-bottom: 100px;
+        }
 
         .section-header {
             padding: 12px 15px;
-            min-width: unset; // Remove min-width
+            min-width: unset;
             width: 100%;
             box-sizing: border-box;
             
@@ -91,27 +171,27 @@
                 }
             }
         }
+    }
 
-        .dashboard-left-container,
-        .dashboard-middle-container,
-        .dashboard-workspace {
-            min-width: unset;
-            max-width: unset;
-            width: 100%;
-            box-sizing: border-box;
-        }
+    // Apply unset to all problematic min-widths on mobile
+    .user-welcome,
+    .content-planner,
+    .people-card,
+    .task-bullet,
+    .empty-state,
+    .section-header {
+        min-width: unset;
+        width: 100%;
+        box-sizing: border-box;
     }
 
     .user-welcome {
         padding: 1rem;
         margin-bottom: 1rem;
-        min-width: unset; // Remove min-width
-        width: 100%;
-        box-sizing: border-box;
         
         .user-info {
             gap: 1rem;
-            min-width: unset; // Remove min-width
+            min-width: unset;
             width: 100%;
             
             .user-details {
@@ -132,7 +212,7 @@
         
         .action-card {
             padding: 15px;
-            min-width: unset; // Remove min-width
+            min-width: unset;
             width: 100%;
             box-sizing: border-box;
         }
@@ -141,32 +221,11 @@
     .empty-state {
         padding: 1.5rem;
         min-height: 200px;
-        min-width: unset; // Remove min-width
-        width: 100%;
-        box-sizing: border-box;
         
         img {
             width: 80px;
             height: 80px;
         }
-    }
-
-    .content-planner {
-        min-width: unset; // Remove min-width
-        width: 100%;
-        box-sizing: border-box;
-    }
-
-    .people-card {
-        min-width: unset; // Remove min-width
-        width: 100%;
-        box-sizing: border-box;
-    }
-
-    .task-bullet {
-        min-width: unset; // Remove min-width
-        width: 100%;
-        box-sizing: border-box;
     }
 
     // Hide separators on mobile
@@ -180,18 +239,18 @@
     .dashboard-container {
         margin: 0;
         border-radius: 0;
-        padding: 5px; // Reduce padding further
+        padding: 5px;
         width: 100%;
     }
 
     .user-welcome {
         border-radius: 0;
-        padding: 0.8rem; // Reduce padding
+        padding: 0.8rem;
     }
 
     .section-header {
         border-radius: 8px;
-        padding: 10px 12px; // Reduce padding
+        padding: 10px 12px;
         
         h2 {
             font-size: 1.1rem;
@@ -199,6 +258,6 @@
     }
 
     .actions-grid .action-card {
-        padding: 12px; // Reduce padding
+        padding: 12px;
     }
 }
