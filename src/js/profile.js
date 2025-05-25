@@ -477,9 +477,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         logoutPopup?.querySelector('.cancel-btn')?.addEventListener('click', () => {
             hidePopup(logoutPopup);
-        });
-
-        logoutPopup?.querySelector('.confirm-btn')?.addEventListener('click', () => {
+        });        logoutPopup?.querySelector('.confirm-btn')?.addEventListener('click', () => {
             fetch('/auth/logout', { method: 'POST' })
                 .then(res => res.json())
                 .then(data => {
@@ -493,10 +491,13 @@ document.addEventListener('DOMContentLoaded', async () => {
                 });
         });
 
-    document.addEventListener('click', (e) => {
-        if (e.target.classList.contains('workspace-popup')) {
-            hidePopup(e.target);
-            memberToDelete = null;
-        }
-    });
+        document.addEventListener('click', (e) => {
+            if (e.target.classList.contains('workspace-popup')) {
+                hidePopup(e.target);
+                memberToDeleteEmail = null;
+            }
+        });
+    } catch (error) {
+        console.error('Error initializing profile page:', error);
+    }
 });
