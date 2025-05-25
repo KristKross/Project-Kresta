@@ -9,12 +9,21 @@ module.exports = async function (req, res, next) {
             return res.status(401).json({ success: false, message: "User not logged in" });
         }
 
+        // Check if user is already a workspace member
         const workspace = await Workspace.findOne({ members: userId });
 
         if (workspace) {
             return next();
         }
 
+        // Check if user has a pending invite
+        const hasInvite = await Workspace.findOne({ pendingInvites: { $in: [userId] } });
+
+        if (hasInvite) {
+            return next();
+        }
+
+        // Check premium tier
         const premiumInfo = await Premium.findOne({ userId });
         const tier = premiumInfo?.tier || "free";
 

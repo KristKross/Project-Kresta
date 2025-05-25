@@ -1,34 +1,57 @@
-document.addEventListener('DOMContentLoaded', () => {
+import inviteIconPath from "../assets/icons/notifications/invite-accepted.png";
+import taskIconPath from '../assets/icons/notifications/task-complete.png';
+
+document.addEventListener('DOMContentLoaded', async () => {
     const notificationsList = document.querySelector('.notifications-list');
     const markAllReadBtn = document.querySelector('.mark-all-read');
 
-    // Template notifications based on existing HTML
-    const notifications = [
-        {
-            id: 'invite-1',
-            type: 'invite',
-            title: 'Workspace Invitation',
-            text: 'You\'ve been invited to join Creative Agency workspace',
-            time: '5 minutes ago',
-            unread: true,
-            icon: './assets/icons/notifications/invite-accepted.png'
-        },
-        {
-            id: 'notif-2',
-            type: 'task',
-            title: 'Task Completed',
-            text: 'Team member completed a task',
-            time: '1 hour ago',
-            unread: false,
-            icon: './assets/icons/notifications/task-complete.png'
+    // Fetch notifications from API
+    async function fetchNotifications() {
+        try {
+            const response = await fetch("/api/notifications/get");
+            const data = await response.json();
+
+            console.log(data);
+
+            if (data.success) {
+                return data.notifications.map(notification => ({
+                    id: notification._id,
+                    type: notification.type,
+                    title: notification.type === 'invite' ? 'Workspace Invitation' : notification.type === 'task' ? 'Task Completed' : '',
+                    text: notification.message,
+                    time: new Date(notification.createdAt).toLocaleString(),
+                    unread: !notification.read,
+                    icon: getNotificationIcon(notification.type),
+                    workspaceId: notification.workspaceId?._id || null // Ensure workspaceId is extracted correctly
+                }));
+            } else {
+                console.error("Error fetching notifications:", data.message);
+                return [];
+            }
+        } catch (error) {
+            console.error("Error fetching notifications:", error);
+            return [];
         }
-    ];    // Create notification HTML template
+    }
+
+    // Function to get correct icon for notification type
+    function getNotificationIcon(type) {
+        const icons = {
+            invite: inviteIconPath,
+            task: taskIconPath,
+        };
+        return icons[type] || "./assets/icons/notifications/default.png";
+    }
+
+    // Create notification HTML template
     function createNotification(notification) {
-        // Check if this is an invite type notification
         const isInviteNotification = notification.type === 'invite';
-        
+        const isTaskNotification = notification.type === 'task';
+
         return `
-            <div class="notification-item ${notification.unread ? 'unread' : ''}" data-id="${notification.id}">
+            <div class="notification-item ${notification.unread ? 'unread' : ''}" 
+                 data-id="${notification.id}" 
+                 data-workspace-id="${notification.workspaceId}">
                 <div class="notification-icon">
                     <img src="${notification.icon}" alt="${notification.type}">
                 </div>
@@ -39,37 +62,62 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
                 ${isInviteNotification ? `
                     <div class="notification-actions">
-                        <button class="action-btn accept-btn" onclick="handleInviteAction('${notification.id}', 'accept')">Accept</button>
-                        <button class="action-btn decline-btn" onclick="handleInviteAction('${notification.id}', 'decline')">Decline</button>
+                        <button class="action-btn accept-btn" onclick="handleInviteAction('${notification.workspaceId}', 'accept')">Accept</button>
+                        <button class="action-btn decline-btn" onclick="handleInviteAction('${notification.workspaceId}', 'decline')">Decline</button>
+                    </div>
+                ` : ''}
+                ${isTaskNotification ? `
+                    <div class="notification-actions">
+                        <button class="action-btn view-task-btn" onclick="handleTaskNotification('${notification.workspaceId}')">View Task</button>
                     </div>
                 ` : ''}
             </div>
         `;
     }
 
-    // Render notifications
-    function renderNotifications() {
+    // Render notifications from API response
+    async function renderNotifications() {
+        const notifications = await fetchNotifications();
         notificationsList.innerHTML = notifications.map(createNotification).join('');
-    }    // Handle invitation actions (for invite type notifications)
-    window.handleInviteAction = async (notificationId, action) => {
-        const notification = document.querySelector(`[data-id="${notificationId}"]`);
+    }
+
+    // Handle invitation actions (for invite type notifications)
+    window.handleInviteAction = async (workspaceId, action) => {
+        if (!workspaceId) {
+            console.error("Error: Workspace ID not found in notification.");
+            showMessage("Error: Workspace ID missing", "error");
+            return;
+        }
+
+        const notification = document.querySelector(`[data-workspace-id="${workspaceId}"]`);
         const actionBtns = notification.querySelectorAll('.action-btn');
-        
+
         // Disable buttons
         actionBtns.forEach(btn => btn.disabled = true);
-        
+
         try {
-            // Simulate API call
-            await new Promise(resolve => setTimeout(resolve, 500));
-              // Remove notification
-            notification.style.opacity = '0';
-            notification.style.transform = 'translateX(-20px)';
-            setTimeout(() => notification.remove(), 300);
-            
-            // Show proper message with correct grammar
-            const actionMessage = action === 'accept' ? 'accepted' : 'declined';
-            showMessage(`Invitation ${actionMessage} successfully!`);
-            
+            const response = await fetch(`/api/workspace/${action}`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ workspaceId }) // Send correct workspaceId
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                // Remove notification
+                notification.style.opacity = '0';
+                notification.style.transform = 'translateX(-20px)';
+                setTimeout(() => notification.remove(), 300);
+
+                // Show success message
+                const actionMessage = action === 'accept' ? 'accepted' : 'declined';
+                showMessage(`Invitation ${actionMessage} successfully!`);
+            } else {
+                throw new Error(data.message);
+            }
         } catch (error) {
             console.error('Error:', error);
             const actionMessage = action === 'accept' ? 'accepting' : 'declining';
@@ -79,88 +127,59 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     // Handle task notifications (for task type notifications)
-    function handleTaskNotification(notificationId) {
-        const notification = document.querySelector(`[data-id="${notificationId}"]`);
+    function handleTaskNotification(workspaceId) {
+        const notification = document.querySelector(`[data-workspace-id="${workspaceId}"]`);
         if (notification) {
             notification.classList.remove('unread');
             showMessage('Task notification marked as read');
         }
-    }    // Show message with enhanced styling
+    }
+
+    // Show message with enhanced styling
     function showMessage(message, type = 'success') {
         const messageEl = document.createElement('div');
-        
-        // Check if it's an acceptance message for special styling
-        const isAcceptanceMessage = message.includes('accepted successfully');
-        const isDeclineMessage = message.includes('declined successfully');
-        
-        if (isAcceptanceMessage) {
-            messageEl.innerHTML = `
-                <div style="display: flex; align-items: center; gap: 8px;">
-                    <span style="font-size: 18px;">✅</span>
-                    <span>${message}</span>
-                </div>
-            `;        } else if (isDeclineMessage) {
-            messageEl.innerHTML = `
-                <div style="display: flex; align-items: center; gap: 8px;">
-                    <span style="font-size: 18px; color: white; font-weight: bold;">✕</span>
-                    <span>${message}</span>
-                </div>
-            `;
-        } else {
-            messageEl.textContent = message;
-        }
-          messageEl.style.cssText = `
+
+        messageEl.textContent = message;
+        messageEl.style.cssText = `
             position: fixed;
             top: 20px;
             right: 20px;
-            padding: ${isAcceptanceMessage || isDeclineMessage ? '16px 24px' : '12px 20px'};
+            padding: 12px 20px;
             border-radius: 8px;
             color: white;
-            font-family: 'Red Hat Display', -apple-system, BlinkMacSystemFont, sans-serif;
-            font-weight: ${isAcceptanceMessage || isDeclineMessage ? '600' : '500'};
-            font-size: ${isAcceptanceMessage || isDeclineMessage ? '16px' : '14px'};
+            font-family: 'Red Hat Display', sans-serif;
+            font-weight: 500;
+            font-size: 14px;
             letter-spacing: 0.3px;
             z-index: 1000;
-            background: ${isDeclineMessage ? 
-                'linear-gradient(135deg, #f44336 0%, #d32f2f 100%)' :
-                (type === 'success' ? 
-                    (isAcceptanceMessage ? 'linear-gradient(135deg, #4caf50 0%, #45a049 100%)' : '#4caf50') 
-                    : '#f44336')};
-            box-shadow: ${isAcceptanceMessage || isDeclineMessage ? 
-                (isDeclineMessage ? 
-                    '0 8px 25px rgba(244, 67, 54, 0.4), 0 4px 12px rgba(0, 0, 0, 0.15)' :
-                    '0 8px 25px rgba(76, 175, 80, 0.4), 0 4px 12px rgba(0, 0, 0, 0.15)') 
-                : '0 4px 12px rgba(0, 0, 0, 0.15)'};
+            background: ${type === 'success' ? '#4caf50' : '#f44336'};
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
             transform: translateX(100%);
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            border-left: ${isAcceptanceMessage ? '4px solid #2e7d32' : 
-                         isDeclineMessage ? '4px solid #c62828' : 'none'};
-            min-width: ${isAcceptanceMessage || isDeclineMessage ? '280px' : '200px'};
         `;
-        
+
         document.body.appendChild(messageEl);
-        
-        setTimeout(() => messageEl.style.transform = 'translateX(0)', 100);        setTimeout(() => {
+
+        setTimeout(() => messageEl.style.transform = 'translateX(0)', 100);
+        setTimeout(() => {
             messageEl.style.transform = 'translateX(100%)';
             setTimeout(() => messageEl.remove(), 400);
-        }, isAcceptanceMessage ? 4000 : 3000);
+        }, 3000);
     }
 
-    // Mark as read on click
-    notificationsList.addEventListener('click', (e) => {
-        const notification = e.target.closest('.notification-item');
-        if (notification) {
-            notification.classList.remove('unread');
-        }
-    });
-
-    // Mark all as read
-    markAllReadBtn.addEventListener('click', () => {
+    // Mark all notifications as read
+    markAllReadBtn.addEventListener('click', async () => {
         document.querySelectorAll('.notification-item').forEach(item => {
             item.classList.remove('unread');
         });
+
+        try {
+            await fetch("/api/notifications/mark-read", { method: "PUT" });
+        } catch (error) {
+            console.error("Error marking notifications as read:", error);
+        }
     });
 
-    // Initialize
+    // Initialize by fetching and rendering notifications
     renderNotifications();
 });
