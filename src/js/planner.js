@@ -233,6 +233,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             alert('Post published successfully!');
             postCreatorPanel.classList.remove('active');
+            postForm.reset();
             
         } catch (error) {
             console.error('Error:', error);

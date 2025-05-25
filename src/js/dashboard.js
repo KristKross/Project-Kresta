@@ -7,10 +7,6 @@ import repliesIcon from '../assets/icons/dashboard/reply.png';
 
 let userData = null;
 
-document.addEventListener('DOMContentLoaded', function () {
-    fetchUserData();
-});
-
 async function fetchUserData() {
     try {
         const response = await fetch("auth/user", {
@@ -20,8 +16,7 @@ async function fetchUserData() {
 
         if (response.ok) {
             const res = await response.json();
-            userData = res;
-            initDashboard();
+            userData = res
         } else {
             window.location.href = "/login";
         }
@@ -30,6 +25,22 @@ async function fetchUserData() {
         window.location.href = "/login";
     }
 }
+
+async function fetchProfileImage(publicId) {
+    try {
+        const res = await fetch(`/auth/profile-picture/${publicId}`);
+        const data = await res.json();
+
+        if (!res.ok || !data.success) {
+            throw new Error('Failed to retrieve profile picture');
+        }
+
+        return data.imageUrl;
+    } catch (error) {
+        console.error('Error fetching profile picture:', error);
+        return null;
+    }
+};
 
 async function fetchInstagramAnalysis() {
     try {
@@ -288,3 +299,17 @@ async function updateTaskSection() {
     `;
 }
 
+document.addEventListener('DOMContentLoaded', async function () {
+    await fetchUserData();
+
+    initDashboard();
+
+    if (userData.user.profilePicture) {
+        const imageUrl = await fetchProfileImage(userData.user.profilePicture);
+        if (imageUrl) {
+            document.querySelectorAll('.profile-picture').forEach(img => {
+                img.src = imageUrl;
+            });
+        }
+    }
+});

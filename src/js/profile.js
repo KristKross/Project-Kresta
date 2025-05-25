@@ -2,7 +2,7 @@ import defaultAvatarPath from '../assets/images/dashboard/user-pfp.png';
 import creatorBusinessPath from '../assets/icons/workspace/creator-business.png';
 import emptyWorkspacePath from '../assets/icons/workspace/empty-workspace.png';
 
-async function fetchAndSetProfileData() {
+async function fetchUserData() {
     try {
         const response = await fetch('/auth/user');
         if (!response.ok) throw new Error('Failed to fetch user data');
@@ -16,6 +16,22 @@ async function fetchAndSetProfileData() {
         return null;
     }
 }
+
+async function fetchProfileImage(publicId) {
+    try {
+        const res = await fetch(`/auth/profile-picture/${publicId}`);
+        const data = await res.json();
+
+        if (!res.ok || !data.success) {
+            throw new Error('Failed to retrieve profile picture');
+        }
+
+        return data.imageUrl;
+    } catch (error) {
+        console.error('Error fetching profile picture:', error);
+        return null;
+    }
+};
 
 function showPopup(popup) {
     popup.classList.add('active');
@@ -98,7 +114,7 @@ async function checkUserPlanAndWorkspace() {
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
-    const userData = await fetchAndSetProfileData();
+    const userData = await fetchUserData();
     if (!userData) return;
 
     const { user, premium } = userData;
@@ -155,7 +171,15 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Profile picture upload
     const profilePictureInput = document.getElementById('profile-picture-input');
     const changePictureBtn = document.querySelector('.change-picture-btn');
-    const profilePictures = document.querySelectorAll('.profile-picture');
+
+    if (user.profilePicture) {
+        const imageUrl = await fetchProfileImage(user.profilePicture);
+        if (imageUrl) {
+            document.querySelectorAll('.profile-picture').forEach(img => {
+                img.src = imageUrl;
+            });
+        }
+    }
 
     changePictureBtn?.addEventListener('click', () => profilePictureInput?.click());
 
@@ -165,9 +189,16 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         const profilePicture = new FormData();
         profilePicture.append('imageFile', file);
+        profilePicture.append('resourceType', 'image');
 
         try {
-            const uploadResponse = await fetch('/api/upload', {
+            const oldPublicId = user.profilePicture;
+
+            if (oldPublicId) {
+                await fetch(`/api/delete-media/${oldPublicId}/image`, { method: 'DELETE' });
+            }
+
+            const uploadResponse = await fetch('/api/upload-media', {
                 method: 'POST',
                 body: profilePicture
             });
@@ -177,19 +208,13 @@ document.addEventListener('DOMContentLoaded', async () => {
                 throw new Error(uploadResult.error || 'Image upload failed');
             }
 
-            const cloudinaryUrl = uploadResult.imageUrl;
-            console.log('Uploaded Cloudinary URL:', cloudinaryUrl);
+            const newPublicId = uploadResult.publicId;
 
-            const updateResponse = await fetch('/auth/update', {
+            await fetch('/auth/update', {
                 method: 'PATCH',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ profilePicture: cloudinaryUrl }),
+                body: JSON.stringify({ profilePicturePublicId: newPublicId,  }),
             });
-
-            const updateResult = await updateResponse.json();
-            if (!updateResponse.ok) {
-                throw new Error(updateResult.error || 'Profile picture update failed');
-            }
 
             alert('Profile picture updated successfully!');
         } catch (error) {

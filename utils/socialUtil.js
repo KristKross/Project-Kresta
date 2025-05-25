@@ -1,5 +1,5 @@
 const Social = require("../models/Social");
-const { decryptToken } = require("../utils/encryption");
+const { decryptToken } = require("./encryptionUtil");
 
 const getSocialCredentials = async (req) => {
   if (!req.session?.userData?.user?._id) {

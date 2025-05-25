@@ -1,5 +1,5 @@
 const Task = require('../models/Task');
-const { getWorkspace } = require('../utils/workspace');
+const { getWorkspace } = require('../utils/workspaceUtil');
 
 const User = require('../models/User');
 

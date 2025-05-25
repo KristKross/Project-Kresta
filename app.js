@@ -30,24 +30,6 @@ app.use((req, res, next) => {
     next();
 });
 
-const Workspace = require("./models/Workspace");
-app.get("/create-workspace", async (req, res) => {
-    try {
-        const workspace = new Workspace({
-            name: "Test Workspace",
-            owner: req.session.userData?.user._id,
-            members: [req.session.userData?.user._id],
-        });
-        const doc = await workspace.save();
-        return res.send(doc);
-    } catch (err) {
-        if (err.name === "MongooseError" && err.message === "Model.prototype.save() no longer accepts a callback") {
-            throw new Error("Model.prototype.save() no longer accepts a callback");
-        }
-        console.log(err);
-        return res.status(500).send(err);
-    }
-});
 // Serve static files
 app.get('/', (req, res) => {
     if (req.session.userData?.user) {

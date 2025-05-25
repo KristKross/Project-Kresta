@@ -1,8 +1,8 @@
 const axios = require('axios');
 const Post = require('../models/Post');
 const Social = require('../models/Social');
-const { getSocialCredentials } = require('../utils/social');
-const { getWorkspace } = require('../utils/workspace');
+const { getSocialCredentials } = require('../utils/socialUtil');
+const { getWorkspace } = require('../utils/workspaceUtil');
 
 const cloudinary = require('../config/cloudinary');
 

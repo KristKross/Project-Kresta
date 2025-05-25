@@ -3,6 +3,7 @@ const Social = require("../models/Social");
 const Premium = require("../models/Premium");
 const { initializeSession } = require("../utils/sessionUtil");
 const bcrypt = require("bcrypt");
+const cloudinary = require("../config/cloudinary");
 
 // @route   POST /auth/register
 exports.register = async (req, res) => {
@@ -39,8 +40,8 @@ exports.register = async (req, res) => {
             { user: { 
                 _id: newUser._id, 
                 username, 
-                email 
-            } 
+                email
+            }
         });
 
         res.status(201).json({ success: true, message: "User registered and logged in successfully!" });
@@ -77,6 +78,8 @@ exports.login = async (req, res) => {
                 email: user.email,
             },
         });
+
+        console.log(user)
 
         res.json({ success: true, message: "Login successful" });
 
@@ -158,7 +161,7 @@ exports.getUser = async (req, res) => {
             return res.status(401).json({ authenticated: false });
         }
 
-        const user = await User.findById(sessionUser._id).select('email username createdAt');
+        const user = await User.findById(sessionUser._id).select('email username createdAt profilePicture');
         const socialData = await Social.findOne({ userId: user._id });
         const premiumData = await Premium.findOne({ userId: user._id });
 
@@ -174,6 +177,29 @@ exports.getUser = async (req, res) => {
         res.status(500).json({ message: "Error retrieving user details" });
     }
 };
+
+// @route   GET /auth/profile-picture/:folderName/:publicId
+exports.getProfilePicture = async (req, res) => {
+    try {
+        const { folderName, publicId, resourceType } = req.params;
+        const path = `${folderName}/${publicId}`;
+
+        if (!publicId) return res.status(400).json({ error: "Image ID required" });
+
+        const signedUrl = cloudinary.url(path, {
+          sign_url: true,
+          type: "authenticated",
+          resource_type: resourceType,
+        });
+
+        res.json({ success: true, imageUrl: signedUrl });
+
+    } catch (error) {
+        console.error("Error retrieving profile picture:", error);
+        res.status(500).json({ error: "Error retrieving profile picture" });
+    }
+};
+
 // @route   POST auth/logout
 exports.logout = (req, res) => {
     req.session.destroy(err => {

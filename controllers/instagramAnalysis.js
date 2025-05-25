@@ -1,5 +1,5 @@
 const axios = require("axios");
-const { getSocialCredentials } = require("../utils/social");
+const { getSocialCredentials } = require("../utils/socialUtil");
 
 exports.getInstagramAccountAnalytics = async (req, res) => {
     try {
