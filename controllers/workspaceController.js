@@ -103,8 +103,6 @@ exports.inviteMember = async (req, res) => {
   }
 };
 
-
-
 // @route DELETE /api/workspace/invite
 exports.removeInvite = async (req, res) => {
   try {
@@ -157,6 +155,7 @@ exports.acceptInvite = async (req, res) => {
     }
 
     const { workspaceId } = req.body;
+    console.log('workspaceId:', workspaceId);
 
     let workspace;
 
@@ -223,7 +222,6 @@ exports.declineInvite = async (req, res) => {
     workspace.pendingInvites.splice(inviteIndex, 1);
     await workspace.save();
 
-    // Mark notification as read and remove it
     await Notification.findOneAndDelete({ 
         user: userId, 
         type: 'invite',
@@ -235,4 +233,38 @@ exports.declineInvite = async (req, res) => {
       console.error("Error declining invite:", error);
       res.status(500).json({ success: false, message: "Error declining invite" });
   }
+};
+
+// @route DELETE /api/workspace/remove
+exports.removeMember = async (req, res) => {
+    try {
+        const userId = req.session?.userData?.user?._id;
+        if (!userId) {
+            return res.status(401).json({ success: false, message: "User not authenticated" });
+        }
+
+        const { workspaceId, email } = req.body;
+        const workspace = await Workspace.findById(workspaceId);
+        if (!workspace) {
+            return res.status(404).json({ success: false, message: "Workspace not found" });
+        }
+
+        const userToRemove = await User.findOne({ email });
+        if (!userToRemove) {
+            return res.status(404).json({ success: false, message: "User not found" });
+        }
+
+        const memberIndex = workspace.members.indexOf(userToRemove._id);
+        if (memberIndex === -1) {
+            return res.status(404).json({ success: false, message: "User is not a member of the workspace" });
+        }
+
+        workspace.members.splice(memberIndex, 1);
+        await workspace.save();
+
+        res.json({ success: true, message: "User removed from workspace successfully" });
+    } catch (error) {
+        console.error("Error removing user from workspace:", error);
+        res.status(500).json({ success: false, message: "Error removing user from workspace" });
+    }
 };

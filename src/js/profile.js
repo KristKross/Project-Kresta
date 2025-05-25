@@ -430,7 +430,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         });
 
-        let memberToDeleteEmail = null; // Use email instead of member element
         const removePendingInvite = async (email) => {
             fetch('/api/workspace/invite', {
                 method: 'DELETE',
@@ -447,6 +446,22 @@ document.addEventListener('DOMContentLoaded', async () => {
             .catch(error => console.error("Error removing invite:", error));
         };
 
+        const removeMember = async (email) => {
+            fetch('/api/workspace/remove', {
+                method: 'DELETE',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (!data.success) return alert(data.message || "Failed to remove member!");
+
+                // Select and remove the element using the data-email attribute
+                document.querySelector(`.member[data-email="${email}"]`)?.remove();
+            })
+            .catch(error => console.error("Error removing member:", error));
+        };
+
         // Accept email string
         const setPendingInviteToDelete = (email) => {
             if (email) {
@@ -459,33 +474,25 @@ document.addEventListener('DOMContentLoaded', async () => {
         const deleteMemberPopup = document.querySelector('.delete-member-popup');
         const inviteSuccessPopup = document.querySelector('.workspace-popup.invite-success-popup');
 
-        // Clear existing members list before populating
         if (membersList) {
             membersList.innerHTML = '';
         }
 
-
         if (workspaceData?.workspace) {
             const workspace = workspaceData.workspace;
             const isOwner = workspace.owner._id === user._id;
-
-            // Combine owner and members into a single list for display
-            // Ensure owner is included even if not in the members array
             const allMembers = [workspace.owner, ...workspace.members.filter(member => member._id !== workspace.owner._id)];
 
 
-            // Display all members (owner included)
             if (allMembers.length > 0) {
-                // Sort members to show owner first (optional, but good practice)
                 allMembers.sort((a, b) => {
                     if (a._id === workspace.owner._id) return -1; // Owner comes first
                     if (b._id === workspace.owner._id) return 1; // Owner comes first
-                    return 0; // Maintain original order for others
+                    return 0;
                 });
 
                 allMembers.forEach(member => {
                     const role = workspace.owner._id === member._id ? 'Owner' : 'Member';
-                    // Pass isOwner (of the current user) to displayMember
                     displayMember(member, membersList, role, isOwner);
                 });
             }
@@ -529,14 +536,14 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         deleteMemberPopup?.querySelector('.cancel-btn')?.addEventListener('click', () => {
             hidePopup(deleteMemberPopup);
-            memberToDeleteEmail = null; // Clear the stored email
+            memberToDeleteEmail = null;
         });
 
         deleteMemberPopup?.querySelector('.confirm-btn')?.addEventListener('click', () => {
             if (memberToDeleteEmail) {
-                removePendingInvite(memberToDeleteEmail); // Call remove with the stored email
+                removePendingInvite(memberToDeleteEmail);
             }
-            memberToDeleteEmail = null; // Clear the stored email
+            memberToDeleteEmail = null;
             hidePopup(deleteMemberPopup);
         });
 

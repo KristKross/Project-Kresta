@@ -15,4 +15,6 @@ router.delete('/invite', workspaceController.removeInvite);
 router.post('/accept', workspaceController.acceptInvite);
 router.post('/decline', workspaceController.declineInvite);
 
+router.post('/remove', workspaceController.removeMember);
+
 module.exports = router;
