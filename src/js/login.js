@@ -1,5 +1,22 @@
+function showMessage(message, isError = true) {
+    const errorDiv = document.getElementById('errorMessage');
+    errorDiv.textContent = message;
+    errorDiv.className = isError ? 'error-message' : 'error-message success';
+    errorDiv.style.display = 'block';
+    
+    // Remove the auto-hide timeout - message will stay until manually hidden
+}
+
+function hideMessage() {
+    const errorDiv = document.getElementById('errorMessage');
+    errorDiv.style.display = 'none';
+}
+
 document.getElementById("loginForm").addEventListener("submit", async (event) => {
     event.preventDefault();
+
+    // Hide any existing messages
+    hideMessage();
 
     const formData = new FormData(event.target);
     const data = Object.fromEntries(formData.entries());
@@ -15,14 +32,16 @@ document.getElementById("loginForm").addEventListener("submit", async (event) =>
         const result = await response.json();
 
         if (result.success) {
-            window.location.href = "/";
-
+            showMessage("Login successful! Redirecting...", false);
+            setTimeout(() => {
+                window.location.href = "/";
+            }, 1000);
         } else {
-            alert(result.message);
+            showMessage(result.message || "Invalid email or password");
         }
 
     } catch (error) {
-        alert("Error submitting form. Please try again.");
+        showMessage("Error submitting form. Please try again.");
         console.error("Error:", error);
     }
 });

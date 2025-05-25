@@ -1,8 +1,42 @@
+function showMessage(message, isError = true) {
+    const errorDiv = document.getElementById('errorMessage');
+    errorDiv.textContent = message;
+    errorDiv.className = isError ? 'error-message' : 'error-message success';
+    errorDiv.style.display = 'block';
+    
+    // Remove the auto-hide timeout - message will stay until manually hidden
+}
+
+function hideMessage() {
+    const errorDiv = document.getElementById('errorMessage');
+    errorDiv.style.display = 'none';
+}
+
+function validatePasswords(password, confirmPassword) {
+    if (password !== confirmPassword) {
+        return "Passwords do not match";
+    }
+    if (password.length < 6) {
+        return "Password must be at least 6 characters long";
+    }
+    return null;
+}
+
 document.getElementById("registerForm").addEventListener("submit", async (event) => {
     event.preventDefault();
 
+    // Hide any existing messages
+    hideMessage();
+
     const formData = new FormData(event.target);
     const data = Object.fromEntries(formData.entries());
+
+    // Client-side validation
+    const passwordError = validatePasswords(data.password, data.confirmPassword);
+    if (passwordError) {
+        showMessage(passwordError);
+        return;
+    }
 
     try {
         // Send a POST request to the server with the form data
@@ -13,14 +47,17 @@ document.getElementById("registerForm").addEventListener("submit", async (event)
         });
 
         const result = await response.json();
+        
         if (result.success) {
-            window.location.href = "/";
-
+            showMessage("Registration successful! Redirecting...", false);
+            setTimeout(() => {
+                window.location.href = "/";
+            }, 1000);
         } else {
-            alert(result.message);
+            showMessage(result.message || "Registration failed. Please try again.");
         }
     } catch (error) {
-        alert("Error submitting form. Please try again.");
+        showMessage("Error submitting form. Please try again.");
         console.error("Error:", error);
     }
 });
