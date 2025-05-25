@@ -6,6 +6,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cardo:ital,wght@0,400;0,700;1,400&family=Red+Hat+Display:wght@400;500&family=Staatliches&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./scss/main.scss">
     <title>Register | Project Kresta</title>
 </head>
 <body class="login-page">
@@ -16,18 +17,20 @@
         <div class="login-container-right">
             <h1>Register</h1>
             <p class="subtitle">New Here! Create your account below!</p>
+            <!-- Error message container -->
+            <div id="errorMessage" class="error-message" style="display: none;"></div>
             <form id="registerForm" class="login-form">
                 <p class="details-title"><img src="./assets/icons/login/email.png" alt="">Email</p>
-                <input name="email" class="form-input"type="email" placeholder="Email" required>
+                <input name="email" class="form-input" type="email" placeholder="Email" required>
 
                 <p class="details-title"><img src="./assets/icons/login/user.png" alt="">Username</p>
-                <input name="username" class="form-input"type="text" placeholder="Username" required>
+                <input name="username" class="form-input" type="text" placeholder="Username" required>
 
                 <p class="details-title"><img src="./assets/icons/login/lock.png" alt="">Password</p>
-                <input name="password" class="form-input"type="password" placeholder="Password" required>
+                <input name="password" class="form-input" type="password" placeholder="Password" required>
 
                 <p class="details-title"><img src="./assets/icons/login/lock.png" alt="">Confirm Password</p>
-                <input name="confirmPassword" class="form-input"type="password" placeholder="Confirm Password" required>
+                <input name="confirmPassword" class="form-input" type="password" placeholder="Confirm Password" required>
 
                 <button type="submit" class="btn">Register</button>
             </form>
@@ -39,5 +42,6 @@
             </div>
         </div>
     </div>
+    <script src="./js/register.js"></script>
 </body>
 </html>

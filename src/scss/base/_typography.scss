@@ -1,19 +1,140 @@
 @use '_breakpoints.scss' as *;
 
-// Font Families
-$font-cardo: 'Cardo', serif;
-$font-red-hat: 'Red Hat Display', sans-serif;
-$font-staatliches: 'Staatliches', sans-serif;
-$font-northwell: 'Northwell', 'Brush Script MT', cursive;
-
-// Add this before the font family variables
+// Font Face Declarations - Local Fallbacks
 @font-face {
-    font-family: 'Northwell';
-    src: url('../assets/fonts/northwell.otf') format('opentype');
-    font-weight: normal;
+    font-family: 'Cardo';
+    src: url('../assets/fonts/Cardo-Regular.ttf') format('truetype');
+    font-weight: 400;
     font-style: normal;
     font-display: swap;
 }
+
+@font-face {
+    font-family: 'Cardo';
+    src: url('../assets/fonts/Cardo-Bold.ttf') format('truetype');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Cardo';
+    src: url('../assets/fonts/Cardo-Italic.ttf') format('truetype');
+    font-weight: 400;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Red Hat Display';
+    src: url('../assets/fonts/RedHatDisplay-Regular.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Red Hat Display';
+    src: url('../assets/fonts/RedHatDisplay-Light.ttf') format('truetype');
+    font-weight: 300;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Red Hat Display';
+    src: url('../assets/fonts/RedHatDisplay-Medium.ttf') format('truetype');
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Red Hat Display';
+    src: url('../assets/fonts/RedHatDisplay-Bold.ttf') format('truetype');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Red Hat Display';
+    src: url('../assets/fonts/RedHatDisplay-ExtraBold.ttf') format('truetype');
+    font-weight: 800;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Red Hat Display';
+    src: url('../assets/fonts/RedHatDisplay-Black.ttf') format('truetype');
+    font-weight: 900;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Red Hat Display';
+    src: url('../assets/fonts/RedHatDisplay-Italic.ttf') format('truetype');
+    font-weight: 400;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Red Hat Display';
+    src: url('../assets/fonts/RedHatDisplay-LightItalic.ttf') format('truetype');
+    font-weight: 300;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Red Hat Display';
+    src: url('../assets/fonts/RedHatDisplay-MediumItalic.ttf') format('truetype');
+    font-weight: 500;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Red Hat Display';
+    src: url('../assets/fonts/RedHatDisplay-BoldItalic.ttf') format('truetype');
+    font-weight: 700;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Red Hat Display';
+    src: url('../assets/fonts/RedHatDisplay-ExtraBoldItalic.ttf') format('truetype');
+    font-weight: 800;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Red Hat Display';
+    src: url('../assets/fonts/RedHatDisplay-BlackItalic.ttf') format('truetype');
+    font-weight: 900;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Northwell';
+    src: url('../assets/fonts/Northwell.otf') format('opentype'),
+         url('../assets/fonts/Northwell-Alt.otf') format('opentype');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+// Font Families with fallbacks
+$font-cardo: 'Cardo', 'Times New Roman', serif;
+$font-red-hat: 'Red Hat Display', 'Arial', sans-serif;
+$font-staatliches: 'Staatliches', 'Impact', sans-serif;
+$font-northwell: 'Northwell', 'Brush Script MT', cursive;
 
 // Display 1
 .display-1 {

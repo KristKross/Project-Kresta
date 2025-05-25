@@ -6,6 +6,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cardo:ital,wght@0,400;0,700;1,400&family=Red+Hat+Display:wght@400;500&family=Staatliches&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./scss/main.scss">
     <title>Login | Project Kresta</title>
 </head>
 <body class="login-page">
@@ -16,11 +17,13 @@
         <div class="login-container-right">
             <h1>Login</h1>
             <p class="subtitle">Welcome back! Please enter your details.</p>
+            <!-- Error message container -->
+            <div id="errorMessage" class="error-message" style="display: none;"></div>
             <form id="loginForm" class="login-form">
                 <p class="details-title"><img src="./assets/icons/login/email.png" alt="">Email</p>
-                <input name="email" class="form-input"type="email" placeholder="Email" required>
+                <input name="email" class="form-input" type="email" placeholder="Email" required>
                 <p class="details-title"><img src="./assets/icons/login/lock.png" alt="">Password</p>
-                <input name="password" class="form-input"type="password" placeholder="Password" required>
+                <input name="password" class="form-input" type="password" placeholder="Password" required>
                 <button type="submit" class="btn">Login</button>
             </form>
             <p class="forgot-password"><a href="#">Forgot Email or Password?</a></p>
@@ -30,5 +33,6 @@
             <button class="btn"><img src="./assets/icons/login/mail-outline.png" alt="">Continue with Email</button>
         </div>
     </div>
+    <script src="./js/login.js"></script>
 </body>
 </html>
