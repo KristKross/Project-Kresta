@@ -28,11 +28,31 @@
             gap: 0.8em;
             margin: 1em 0;
         }
-    </style>
-
-    <title>Project Kresta | Home</title>
+    </style>    <title>Project Kresta | Home</title>
 </head>
 <body class="index-page">
+    <header>
+        <nav>
+            <a href="/home" class="logo"><img src="../assets/images/logo.png" alt="Logo"></a>
+            
+            <ul class="nav-links">
+                <li style="--delay: 1"><a class="nav-link" href="/home">Home</a></li>
+                <span class="nav-separator"></span>
+                <li style="--delay: 2"><a class="nav-link" href="/about">About</a></li>
+                <span class="nav-separator"></span>
+                <li style="--delay: 3"><a class="nav-link" href="/contact">Contact</a></li>
+                <span class="nav-separator"></span>
+                <li style="--delay: 4"><a class="nav-link" href="/pricing">Pricing</a></li>
+            </ul>
+
+            <a href="/login" class="login-btn">Login | Register</a>
+            
+            <button class="nav-btn" aria-label="Toggle navigation">
+                <img src="../assets/icons/menu.png" alt="Menu" class="menu-icon">
+            </button>
+        </nav>
+    </header>
+
     <section class="hero-section-1">
         <div class="hero-content">
             <img class="hero-logo" src="./assets/images/logo.png" alt="Logo">
@@ -181,9 +201,60 @@
             <p>Interested to know about who we are?
             <br>
                 Get to know the team behind Project Kresta!</p>
-            
-            <a href="/about"class="about-us">ABOUT US <img src="./assets/icons/arrow-right.png" alt=""></a>
+              <a href="/about"class="about-us">ABOUT US <img src="./assets/icons/arrow-right.png" alt=""></a>
         </div>
     </section>
+
+    <footer>
+        <div class="container-1">
+            <div class="column column-1">
+                <h1 class="footer-title .h3">Pages</h1>
+            <div class="seperator"></div>
+
+                <a href="/register">Register | Login</a>
+                <a href="/planner">Create</a>
+                <a href="/analytics">Analytics</a>
+                <a href="/tasks">Tasks</a>
+                <a href="/dashboard">Dashboard</a>
+            </div>
+            <div class="column column-2">
+                <h1 class="footer-title">Support</h1>
+            <div class="seperator"></div>
+
+                <a href="#">Help Center</a>
+                <a href="#">Status</a>
+                <a href="#">Change Logs</a>
+                <a href="#">Request a Feature</a>
+                
+            </div>
+
+            <div class="column-3-container">
+                <div class="column column-1">
+                    <h1 class="footer-title">Legal</h1>
+                    <div class="seperator"></div>
+                    <a href="">Terms & Conditions</a>
+                    <a href="">Privacy Policy</a>
+                    
+                </div>
+                <div class="column column-2">   
+                    <h1 class="footer-title">Socials</h1>  
+                    <div class="seperator"></div>
+                    <div class="socials-icons-container">
+                        <a href="https://www.instagram.com/projectkresta.official/" target="_blank" rel="noopener noreferrer"><img src="../../src/assets/icons/footer/instagram.png" alt=""></a>
+                        <a href="https://www.linkedin.com/showcase/project-kresta"><img src="../../src/assets/icons/footer/linkedin.png" alt="" target="_blank" rel="noopener noreferrer"></a>
+                        <a href="mailto:project.kresta@gmail.com"><img src="../../src/assets/icons/footer/mail.png" alt="" target="_blank" rel="noopener noreferrer"></a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="seperator"></div>
+
+        <div class="container-2">
+            <img src="../../src/assets/icons/footer/logo-footer.png" alt="">
+            <p>© 2025 Project Kresta. Developed and maintained by KEA4 DIGITAL.<br>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License. All Rights Reserved.</p>
+        </div>
+    </footer>
 </body>
 </html>
