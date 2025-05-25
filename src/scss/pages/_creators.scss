@@ -1,0 +1,354 @@
+@use '../base/animations' as *;
+@use '../base/typography' as *;
+@use '../base/colors' as *;
+@use '../base/breakpoints' as *;
+
+// Main content area - simplified structure
+.creators-page {
+    background-color: $accent-white;
+    min-height: 100vh;
+    margin-left: 110px; // Offset for sidebar
+    width: calc(100vw - 110px); // Full remaining width
+    overflow-x: hidden; // Prevent horizontal scroll
+
+    @include mobile {
+        margin-left: 0;
+        width: 100vw;
+        margin-bottom: 100px;
+    }
+
+    // Hero Section
+    .creators-hero {
+        background-color: $primary-navy-blue;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 4rem 2rem 3rem;
+        text-align: center;
+        
+        .hero-content {
+            max-width: 800px;
+            color: $accent-white;
+            
+            .display-1 {
+                color: $accent-white;
+                margin-bottom: 1.5rem;
+            }
+            
+            .subtitle {
+                color: $accent-white;
+                margin-bottom: 2rem;
+                opacity: 0.9;
+            }
+            
+            .seperator {
+                width: 80px;
+                height: 3px;
+                background-color: $tertiary-beige;
+                margin: 0 auto;
+            }
+        }
+    }
+    
+    // Categories Section
+    .categories-section {
+        background-color: $accent-white;
+        padding: 3rem 2rem;
+        display: flex;
+        justify-content: center;
+        
+        .categories-container {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            justify-content: center;
+            
+            .category-btn {
+                @extend .button-cta;
+                padding: 10px 20px;
+                background-color: transparent;
+                color: $accent-black;
+                border: 2px solid $ui-border;
+                border-radius: 15px;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                @include hover-lift;
+                
+                &:hover {
+                    background-color: $ui-hover;
+                    border-color: $primary-navy-blue;
+                }
+                
+                &.active {
+                    background-color: $primary-navy-blue;
+                    color: $accent-white;
+                    border-color: $primary-navy-blue;
+                }
+            }
+        }
+    }
+    
+    // Creators Grid Section
+    .creators-grid-section {
+        background-color: $ui-surface;
+        padding: 4rem 2rem;
+        
+        .creators-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+            width: 100%;
+            box-sizing: border-box;
+            
+            .creator-card {
+                background-color: $accent-white;
+                border-radius: 20px;
+                overflow: hidden;
+                box-shadow: 0 4px 20px rgba(20, 61, 96, 0.1);
+                transition: all 0.3s ease;
+                @include hover-lift;
+                
+                &:hover {
+                    transform: translateY(-8px);
+                    box-shadow: 0 8px 30px rgba(20, 61, 96, 0.15);
+                }
+                
+                .creator-info {
+                    padding: 1.5rem;
+                    background-color: $accent-white;
+                    
+                    .creator-name {
+                        @extend .h3;
+                        color: $primary-navy-blue;
+                        margin: 0 0 0.5rem 0;
+                    }
+                    
+                    .creator-category {
+                        @extend .label-tag;
+                        color: $tertiary-beige;
+                        background-color: $primary-navy-blue;
+                        padding: 0.25rem 0.75rem;
+                        border-radius: 20px;
+                        display: inline-block;
+                        margin-bottom: 0.75rem;
+                        font-size: 0.75rem;
+                        text-transform: uppercase;
+                        letter-spacing: 0.5px;
+                    }
+                    
+                    .creator-description {
+                        @extend .body-regular;
+                        color: $accent-black;
+                        margin: 0;
+                        opacity: 0.8;
+                    }
+                }
+                
+                .instagram-embed-placeholder,
+                .instagram-embed-container {
+                    border-radius: 10px;
+                    overflow: hidden;
+                }
+                
+                // Style for placeholders
+                .instagram-embed-placeholder {
+                    height: 300px;
+                    background: linear-gradient(135deg, #833ab4, #fd1d1d, #fcb045);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    position: relative;
+                    
+                    .embed-content {
+                        text-align: center;
+                        color: $accent-white;
+                        
+                        img {
+                            width: 40px;
+                            height: 40px;
+                            margin-bottom: 1rem;
+                            filter: brightness(0) invert(1);
+                        }
+                        
+                        p {
+                            @extend .body-regular;
+                            margin: 0 0 0.5rem 0;
+                            font-weight: 500;
+                        }
+                        
+                        span {
+                            @extend .body-regular;
+                            opacity: 0.8;
+                            font-size: 0.9rem;
+                        }
+                    }
+                }
+                
+                // Style for real Instagram embeds
+                .instagram-embed-container {
+                    .instagram-media {
+                        margin: 0 !important;
+                        border-radius: 10px !important;
+                        max-width: 100% !important;
+                        min-width: auto !important;
+                        width: 100% !important;
+                    }
+                }
+                
+                // Style for YouTube embeds
+                .youtube-embed-container {
+                    iframe {
+                        border-radius: 10px;
+                        width: 100%;
+                        height: 300px;
+                    }
+                }
+                
+                // Style for TikTok embeds
+                .tiktok-embed-container {
+                    .tiktok-embed {
+                        margin: 0 !important;
+                        border-radius: 10px !important;
+                        max-width: 100% !important;
+                        width: 100% !important;
+                    }
+                }
+                
+                // Hide filtered items
+                &.hidden {
+                    display: none;
+                }
+            }
+        }
+    }
+
+    // Call to Action Section
+    .creators-cta {
+        background-color: $tertiary-beige;
+        padding: 5rem 2rem;
+        text-align: center;
+        width: 100%;
+        box-sizing: border-box;
+        
+        .cta-content {
+            max-width: 600px;
+            margin: 0 auto;
+            
+            .display-1 {
+                color: $primary-navy-blue;
+                margin-bottom: 1.5rem;
+            }
+            
+            .subtitle {
+                color: $accent-black;
+                margin-bottom: 2rem;
+                opacity: 0.8;
+            }
+            
+            .back-button {
+                @extend .button-cta;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                padding: 15px 30px;
+                background-color: $primary-navy-blue;
+                color: $accent-white;
+                border-radius: 15px;
+                text-decoration: none;
+                gap: 10px;
+                @include hover-lift;
+                @include button-border-animation($accent-white);
+                
+                img {
+                    width: 20px;
+                    height: 20px;
+                }
+            }
+        }
+    }
+
+    // Loading Section
+    .loading-section {
+        background-color: $ui-surface;
+        padding: 4rem 2rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        
+        .loading-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+            
+            .loading-spinner {
+                width: 40px;
+                height: 40px;
+                border: 3px solid $ui-border;
+                border-top: 3px solid $primary-navy-blue;
+                border-radius: 50%;
+                animation: spin 1s linear infinite;
+            }
+            
+            p {
+                @extend .body-regular;
+                color: $accent-black;
+                opacity: 0.7;
+                margin: 0;
+            }
+        }
+    }
+
+    // Mobile Responsiveness
+    @include mobile {
+        .creators-hero {
+            padding: 6rem 1rem 3rem;
+            
+            .hero-content {
+                .display-1 {
+                    font-size: 2.5rem;
+                }
+            }
+        }
+        
+        .categories-section {
+            padding: 2rem 1rem;
+            
+            .categories-container {
+                gap: 0.5rem;
+                
+                .category-btn {
+                    padding: 8px 16px;
+                    font-size: 0.9rem;
+                }
+            }
+        }
+        
+        .creators-grid-section {
+            padding: 3rem 1rem;
+            
+            .creators-container {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+        }
+        
+        .creators-cta {
+            padding: 4rem 1rem;
+            
+            .cta-content {
+                .display-1 {
+                    font-size: 2rem;
+                }
+            }
+        }
+    }
+    
+    @include tablet {
+        .creators-container {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+}

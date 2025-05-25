@@ -29,8 +29,8 @@
             
             &.transitions-enabled {
                 transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-                           opacity 0.3s ease,
-                           visibility 0s linear 0.3s;
+                        opacity 0.3s ease,
+                        visibility 0s linear 0.3s;
             }
 
             &.active {
