@@ -8,7 +8,10 @@ exports.getNotification = async (req, res) => {
       return res.status(401).json({ success: false, message: "User not authenticated" });
     }
 
-    const notifications = await Notification.find({ user: userId, read: false }).sort({ createdAt: -1 });
+    // Notifications are available to all users (not paywalled)
+    const notifications = await Notification.find({ user: userId, read: false })
+      .populate('workspaceId', 'name')
+      .sort({ createdAt: -1 });
 
     res.json({ success: true, notifications });
   } catch (error) {

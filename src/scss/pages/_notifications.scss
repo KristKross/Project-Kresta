@@ -2,6 +2,7 @@
 @use '../base/typography' as *;
 @use '../base/colors' as *;
 @use '../base/breakpoints' as *;
+@use "sass:color";
 
 .notifications-page {
     height: 100vh;
@@ -76,6 +77,8 @@
                 transition: all 0.2s ease;
                 border: 1px solid rgba($primary-navy-blue, 0.1);
                 cursor: pointer;
+                position: relative;
+                overflow: hidden;
 
                 &:hover {
                     transform: translateX(5px);
@@ -84,6 +87,103 @@
                 &.unread {
                     background: rgba($primary-navy-blue, 0.05);
                     border-left: 3px solid $primary-navy-blue;
+                }
+
+                // Invitation notification specific styles
+                &.invitation-notification {
+                    cursor: default;
+                    
+                    &:hover {
+                        transform: none;
+                    }
+                    
+                    .notification-content {
+                        margin-right: 120px; // Space for action buttons
+                        transition: margin-right 0.3s ease;
+                    }
+                    
+                    .invitation-actions {
+                        position: absolute;
+                        right: 15px;
+                        top: 50%;
+                        transform: translateY(-50%);
+                        display: flex;
+                        gap: 8px;
+                        opacity: 0;
+                        transition: all 0.3s ease;
+                        
+                        .action-btn {
+                            @extend .body-regular;
+                            padding: 8px 16px;
+                            border: none;
+                            border-radius: 6px;
+                            font-size: 0.9em;
+                            font-weight: 500;
+                            cursor: pointer;
+                            transition: all 0.2s ease;
+                            min-width: 80px;
+                            
+                            &.accept-btn {
+                                background: $primary-navy-blue;
+                                color: white;
+                                
+                                &:hover {
+                                    background: color.adjust($primary-navy-blue, $lightness: -10%);
+                                    transform: translateY(-1px);
+                                }
+                            }
+                            
+                            &.decline-btn {
+                                background: rgba($accent-black, 0.1);
+                                color: $accent-black;
+                                
+                                &:hover {
+                                    background: rgba($accent-black, 0.2);
+                                    transform: translateY(-1px);
+                                }
+                            }
+                            
+                            &:disabled {
+                                opacity: 0.6;
+                                cursor: not-allowed;
+                                transform: none !important;
+                            }
+                        }
+                    }
+                    
+                    // Reveal actions on hover
+                    &:hover .invitation-actions {
+                        opacity: 1;
+                    }
+                    
+                    &:hover .notification-content {
+                        margin-right: 180px;
+                    }
+                    
+                    // Mobile styles for invitation actions
+                    @include mobile {
+                        .notification-content {
+                            margin-right: 0;
+                            margin-bottom: 15px;
+                        }
+                        
+                        .invitation-actions {
+                            position: static;
+                            transform: none;
+                            opacity: 1;
+                            justify-content: flex-end;
+                            margin-top: 10px;
+                            
+                            .action-btn {
+                                flex: 1;
+                                max-width: 100px;
+                            }
+                        }
+                        
+                        &:hover .notification-content {
+                            margin-right: 0;
+                        }
+                    }
                 }
 
                 .notification-icon {
@@ -138,6 +238,140 @@
 
         .dynamic-notifications {
             margin-top: 20px;
+        }
+
+        // Premium upgrade notification styles
+        .premium-upgrade-notification {
+            background: linear-gradient(135deg, #f8f9ff 0%, #e8f4fd 100%);
+            border: 2px solid $primary-navy-blue;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            position: relative;
+            overflow: hidden;
+
+            &::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: 4px;
+                background: linear-gradient(90deg, $primary-navy-blue 0%, #6c7ae0 100%);
+            }
+
+            .premium-content {
+                display: flex;
+                align-items: center;
+                gap: 15px;
+
+                .premium-icon {
+                    width: 48px;
+                    height: 48px;
+                    background: $primary-navy-blue;
+                    border-radius: 50%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    flex-shrink: 0;
+
+                    &::before {
+                        content: '⭐';
+                        font-size: 24px;
+                        color: white;
+                    }
+                }
+
+                .premium-text {
+                    flex: 1;
+
+                    .premium-title {
+                        @extend .body-large;
+                        font-weight: 600;
+                        color: $primary-navy-blue;
+                        margin-bottom: 4px;
+                    }
+
+                    .premium-message {
+                        @extend .body-regular;
+                        color: rgba($accent-black, 0.8);
+                        margin-bottom: 8px;
+                    }
+
+                    .premium-links {
+                        display: flex;
+                        gap: 8px;
+                        flex-wrap: wrap;
+
+                        .plan-link {
+                            display: inline-flex;
+                            align-items: center;
+                            gap: 4px;
+                            color: $primary-navy-blue;
+                            text-decoration: underline;
+                            text-decoration-thickness: 2px;
+                            text-underline-offset: 3px;
+                            font-weight: 500;
+                            transition: all 0.2s ease;
+                            cursor: pointer;
+
+                            &:hover {
+                                color: color.adjust($primary-navy-blue, $lightness: -15%);
+                                text-decoration-color: color.adjust($primary-navy-blue, $lightness: -15%);
+                                transform: translateY(-1px);
+                            }
+
+                            &::after {
+                                content: '→';
+                                font-size: 14px;
+                                transition: transform 0.2s ease;
+                            }
+
+                            &:hover::after {
+                                transform: translateX(2px);
+                            }
+                        }
+
+                        .separator {
+                            color: rgba($accent-black, 0.4);
+                            margin: 0 4px;
+                        }
+                    }
+                }
+            }
+
+            @include mobile {
+                padding: 15px;
+
+                .premium-content {
+                    flex-direction: column;
+                    text-align: center;
+                    gap: 12px;
+
+                    .premium-text .premium-links {
+                        justify-content: center;
+                        flex-direction: column;
+                        gap: 12px;
+
+                        .separator {
+                            display: none;
+                        }
+
+                        .plan-link {
+                            padding: 8px 16px;
+                            background: rgba($primary-navy-blue, 0.1);
+                            border-radius: 6px;
+                            text-decoration: none;
+                            justify-content: center;
+
+                            &:hover {
+                                background: rgba($primary-navy-blue, 0.2);
+                                text-decoration: none;
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 }
