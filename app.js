@@ -55,6 +55,10 @@ app.get('/register', (req, res) => {
     res.sendFile(path.join(__dirname, 'dist', 'register.html'));
 });
 
+app.get('/privacy-policy', isAuthenticated, (req, res) => {
+    res.sendFile(path.join(__dirname, 'dist', 'privacyPolicy.html'));
+});
+
 app.get('/401', (req, res) => {
     res.sendFile(path.join(__dirname, 'dist', '401.html'));
 });
