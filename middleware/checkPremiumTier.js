@@ -1,8 +1,19 @@
 const Premium = require("../models/Premium");
+const Workspace = require("../models/Workspace");
 
 module.exports = async function (req, res, next) {
     try {
         const userId = req.session?.userData?.user?._id;
+
+        if (!userId) {
+            return res.status(401).json({ success: false, message: "User not logged in" });
+        }
+
+        const workspace = await Workspace.findOne({ members: userId });
+
+        if (workspace) {
+            return next();
+        }
 
         const premiumInfo = await Premium.findOne({ userId });
         const tier = premiumInfo?.tier || "free";

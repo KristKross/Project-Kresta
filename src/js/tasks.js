@@ -1,4 +1,5 @@
 import trashIconPath from '../assets/icons/tasks/trash.png';
+import defaultProfilePath from '../assets/images/dashboard/user-pfp.png';
 
 document.addEventListener('DOMContentLoaded', () => {
     // Function declarations first to prevent reference errors
@@ -104,7 +105,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 option.className = 'option';
                 option.dataset.value = member._id;
                 option.innerHTML = `
-                    <img src="${member.profilePic || '../src/assets/images/dashboard/user-pfp.png'}" alt="${member.name}">
+                    <img src="${member.profilePic || defaultProfilePath}" alt="${member.name}">
                     <span>${member.name}</span>
                 `;
                 selectOptions.appendChild(option);
@@ -176,7 +177,7 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
             <div class="assignees">
                 <div class="assignee-wrapper">
-                    <img src="${data.assigneeImage}" alt="${data.assignedTo?.username}">
+                    <img src="${data.assigneeImage || defaultProfilePath}" alt="${data.assignedTo?.username}">
                     <div class="assignee-tooltip">Assigned to: ${data.assignedTo?.username}</div>
                 </div>
             </div>

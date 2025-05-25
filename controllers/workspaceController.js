@@ -107,7 +107,10 @@ exports.inviteMember = async (req, res) => {
 // @route DELETE /api/workspace/invite
 exports.removeInvite = async (req, res) => {
     try {
-        const ownerId = req.session?.userData?.user?._id;
+        const workspace = await Workspace.findOne({ owner: req.session?.userData?.user?._id });
+
+        const ownerId = workspace?.owner?.toString();
+
         if (!ownerId) {
             return res.status(401).json({ success: false, message: "User not authenticated" });
         }
@@ -118,8 +121,6 @@ exports.removeInvite = async (req, res) => {
         if (!userToRemove) {
             return res.status(404).json({ success: false, message: "User not found" });
         }
-
-        const workspace = await Workspace.findOne({ owner: ownerId });
 
         if (!workspace) {
             return res.status(404).json({ success: false, message: "Workspace not found" });
