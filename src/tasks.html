@@ -5,7 +5,56 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tasks | Project Kresta</title>
 </head>
-<body class="tasks-page">
+<body class="tasks-page">    <!-- Sidebar Toggle Button - Move this OUTSIDE the sidebar -->
+    <button class="sidebar-btn" aria-label="Toggle sidebar">
+        <img src="./assets/icons/menu.png" alt="Menu" class="menu-icon">
+    </button>
+
+    <!-- Sidebar -->
+    <div id="mySidenav" class="sidenav">
+        <div class="nav-header">
+            <a href="/home" class="logo-link">
+                <img src="./assets/icons/sidebar/sidebar-logo.png" alt="Logo" class="logo">
+            </a>
+        </div>
+        <div class="nav-items">
+            <div class="container" style="--delay: 1">
+                <a href="/dashboard" class="nav-link">
+                    <img src="./assets/icons/sidebar/dashboard.png" alt="Dashboard">
+                    <span>Dashboard</span>
+                </a>
+                <a href="/notification" class="nav-link">
+                    <img src="./assets/icons/sidebar/notif-bell.png" alt="Notification">
+                    <span>Notification</span>
+                </a>
+            </div>
+            <div class="container" style="--delay: 2">
+                <a href="/planner" class="nav-link">
+                    <img src="./assets/icons/sidebar/planner.png" alt="Planner">
+                    <span>Planner</span>
+                </a>
+                <a href="/tasks" class="nav-link">
+                    <img src="./assets/icons/sidebar/tasks.png" alt="Tasks">
+                    <span>Tasks</span>
+                </a>
+                <a href="/analytics" class="nav-link">
+                    <img src="./assets/icons/sidebar/analytics.png" alt="Analytics">
+                    <span>Analytics</span>
+                </a>
+                <a href="/creators.html" class="nav-link">
+                    <img src="./assets/icons/sidebar/creators.png" alt="Creators">
+                    <span>Ideators</span>
+                </a>
+            </div>
+            <div class="container" style="--delay: 3">
+                <a href="/profile" class="nav-link">
+                    <img src="./assets/icons/sidebar/user.png" alt="Profile">
+                    <span>Profile</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
     <div class="title-header">
         <h1 class="title-h1">
             <img src="./assets/icons/tasks/task-checklist.png" alt="">
@@ -68,21 +117,21 @@
                 <label>Assign to</label>
                 <div class="custom-select">
                     <div class="select-header">
-                        <img src="../src/assets/images/dashboard/user-pfp.png" alt="">
+                        <img src="./assets/images/dashboard/user-pfp.png" alt="">
                         <span>Select Assignee</span>
-                        <img src="../src/assets/icons/tasks/arrow-down.png" alt="" class="dropdown-arrow">
+                        <img src="./assets/icons/tasks/arrow-down.png" alt="" class="dropdown-arrow">
                     </div>
                     <div class="select-options">
                         <div class="option" data-value="john">
-                            <img src="../src/assets/images/dashboard/user-pfp.png" alt="">
+                            <img src="./assets/images/dashboard/user-pfp.png" alt="">
                             <span>John Doe</span>
                         </div>
                         <div class="option" data-value="jane">
-                            <img src="../src/assets/images/dashboard/user-pfp.png" alt="">
+                            <img src="./assets/images/dashboard/user-pfp.png" alt="">
                             <span>Jane Smith</span>
                         </div>
                         <div class="option" data-value="mike">
-                            <img src="../src/assets/images/dashboard/user-pfp.png" alt="">
+                            <img src="./assets/images/dashboard/user-pfp.png" alt="">
                             <span>Mike Johnson</span>
                         </div>
                     </div>

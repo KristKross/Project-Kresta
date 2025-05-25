@@ -55,6 +55,10 @@ app.get('/register', (req, res) => {
     res.sendFile(path.join(__dirname, 'dist', 'register.html'));
 });
 
+app.get('/privacy-policy', isAuthenticated, (req, res) => {
+    res.sendFile(path.join(__dirname, 'dist', 'privacyPolicy.html'));
+});
+
 app.get('/401', (req, res) => {
     res.sendFile(path.join(__dirname, 'dist', '401.html'));
 });
@@ -79,7 +83,7 @@ app.get('/tasks', isAuthenticated, checkPremiumTier, (req, res) => {
     res.sendFile(path.join(__dirname, 'dist', 'tasks.html'));
 });
 
-app.get('/planner', isAuthenticated, (req, res) => {
+app.get('/planner', isAuthenticated, checkAccountLink, (req, res) => {
     res.sendFile(path.join(__dirname, 'dist', 'planner.html'));
 });
 
