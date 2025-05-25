@@ -181,289 +181,301 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
         
         const userData = await fetchUserData();
-    const workspaceData = await checkUserPlanAndWorkspace();
+        const workspaceData = await checkUserPlanAndWorkspace();
 
         if (!userData) return;
-    if (workspaceData) {
-        showWorkspaceTemplate('has-workspace')
-    }
+            if (workspaceData) {
+                showWorkspaceTemplate('has-workspace')
+            };
 
         const { user, premium } = userData;
         const usernameInput = document.querySelector('input[type="text"].form-input');
         const emailInput = document.querySelector('input[type="email"].form-input');
 
         const memberSince = new Date(user.createdAt);
+        
+        const profileNameEls = document.querySelectorAll('.profile-name');
+        const profileUsernameEls = document.querySelectorAll('.profile-username');
 
-    const profileNameEls = document.querySelectorAll('.profile-name');
-    const profileUsernameEls = document.querySelectorAll('.profile-username');
-    const memberRoleEls = document.querySelectorAll('.member-role');
-    const accountTypeEl = document.getElementById('account-type');
-    const memberSinceEl = document.getElementById('member-since');
+        const ownerNameEl = document.querySelector(".owner-name");
+        const ownerRoleEl = document.querySelector(".owner-role");
 
-    profileNameEls.forEach(el => el.textContent = user.username);
-    profileUsernameEls.forEach(el => el.textContent = `@${user.username}`);
-    if (workspaceData) {
-        memberRoleEls.forEach(el => {
-            el.textContent = workspaceData.workspace.owner._id === user._id ? 'Owner' : 'Member';
-        });
-    }
+        
+        const memberRoleEls = document.querySelectorAll('.member-role');
 
-    accountTypeEl.textContent = premium?.tier;
-    usernameInput && (usernameInput.value = user.username);
-    emailInput && (emailInput.value = user.email);
+        const accountTypeEl = document.getElementById('account-type');
+        const memberSinceEl = document.getElementById('member-since');
 
-    if (memberSinceEl) {
-        memberSinceEl.textContent = memberSince.toLocaleDateString();
-    }
-
-    const workspaceNameEls = document.querySelectorAll('.workspace-name');
-    if (workspaceData) {
-        workspaceNameEls.forEach(el => el.textContent = workspaceData.workspace.name);
-    }
-
-    // Tab switching
-    const tabButtons = document.querySelectorAll('.tab-button');
-    const tabContents = document.querySelectorAll('.tab-content');
-
-    const urlParams = new URLSearchParams(window.location.search);
-    const selectedTab = urlParams.get('tab');
-
-    if (selectedTab) {
-        const activeTabButton = document.querySelector(`[data-tab="${selectedTab}"]`);
-        const activeTabContent = document.getElementById(selectedTab);
-
-        if (activeTabButton && activeTabContent) {
-            tabButtons.forEach(btn => btn.classList.remove('active'));
-            tabContents.forEach(content => content.classList.remove('active'));
-
-            activeTabButton.classList.add('active');
-            activeTabContent.classList.add('active');
-        }
-    }
-
-    tabButtons.forEach(button => {
-        button.addEventListener('click', () => {
-            if (button.classList.contains('logout-btn')) return;
-            tabButtons.forEach(btn => btn.classList.remove('active'));
-            tabContents.forEach(content => content.classList.remove('active'));
-            button.classList.add('active');
-            document.getElementById(button.dataset.tab)?.classList.add('active');
-        });
-    });
-
-    // Get profile picture
-    const profilePictureInput = document.getElementById('profile-picture-input');
-    const changePictureBtn = document.querySelector('.change-picture-btn');
-
-        if (user.profilePicture) {
-            const imageUrl = await fetchProfileImage(user.profilePicture);
-            if (imageUrl) {
-                document.querySelectorAll('.profile-picture').forEach(img => {
-                    img.src = imageUrl;
-                });
-            }
+        profileNameEls.forEach(el => el.textContent = user.username);
+        profileUsernameEls.forEach(el => el.textContent = `@${user.username}`);
+        
+        if (workspaceData) {
+            ownerNameEl.textContent = workspaceData.workspace.owner.username;
+            ownerRoleEl.textContent = "Owner";
         }
 
-        changePictureBtn?.addEventListener('click', () => profilePictureInput?.click());
-
-    // Upload profile picture
-    profilePictureInput?.addEventListener('change', async (e) => {
-        const file = e.target.files[0];
-        if (!file) return;
-
-            const profilePicture = new FormData();
-            profilePicture.append('imageFile', file);
-            profilePicture.append('resourceType', 'image');
-
-            try {
-                const oldPublicId = user.profilePicture;
-
-                if (oldPublicId) {
-                    await fetch(`/api/delete-media/${oldPublicId}/image`, { method: 'DELETE' });
-                }
-
-                const uploadResponse = await fetch('/api/upload-media', {
-                    method: 'POST',
-                    body: profilePicture
-                });
-
-                const uploadResult = await uploadResponse.json();
-                if (!uploadResponse.ok) {
-                    throw new Error(uploadResult.error || 'Image upload failed');
-                }
-
-                const newPublicId = uploadResult.publicId;
-
-                await fetch('/auth/update', {
-                    method: 'PATCH',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ profilePicturePublicId: newPublicId,  }),
-                });
-
-                alert('Profile picture updated successfully!');
-            } catch (error) {
-                console.error('Error uploading profile picture:', error);
-                alert('Error uploading profile picture.');
-            }
-        });
-
-        // Profile form
-        document.querySelector('.profile-form')?.addEventListener('submit', async (e) => {
-            e.preventDefault();
-
-            const res = await fetch('/auth/update', {
-                method: 'PATCH',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email: emailInput.value, username: usernameInput.value }),
-            });
-
-            const data = await res.json();
-            if (!data.success) return alert('Failed to update profile!');
-            window.location.reload();
-        });
-
-        // Password form
-        document.querySelector('.security-form')?.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const currentPassword = document.getElementById('current-password').value;
-            const newPassword = document.getElementById('new-password').value;
-            const confirmPassword = document.getElementById('confirm-password').value;
-
-            if (newPassword !== confirmPassword) return alert('New password does not match confirm password!');
-
-            try {
-                const response = await fetch('/auth/update-password', {
-                    method: 'PATCH',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ currentPassword, newPassword }),
-                });
-
-                const data = await response.json();
-                data.success ? alert('Password updated successfully!') : alert(data.message || 'Failed to update password!');
-            } catch (err) {
-                console.error('Error updating password:', err);
-                alert('Error updating password');
-            }
-        });
-
-    // Account Deletion
-    document.querySelector('.delete-account-btn')?.addEventListener('click', () => {
-        if (confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
-            fetch('/auth/delete', {
-                method: 'DELETE'
-            })
-            .then(res => res.json())
-            .then(data => {
-                if (!data.success) return alert('Failed to delete account!');
-                window.location.href = '/home';
-            })
-            .catch(err => {
-                console.error('Error deleting account:', err);
-                alert('Error deleting account');
+        if (workspaceData) {
+            memberRoleEls.forEach(el => {
+                el.textContent = workspaceData.workspace.owner._id === user._id ? 'Owner' : 'Member';
             });
         }
-    });
 
-    // Download Data
-    document.querySelector('.download-data-btn')?.addEventListener('click', () => {
-        alert('Your data is being prepared for download...');
-    });
+        accountTypeEl.textContent = premium?.tier;
+        usernameInput && (usernameInput.value = user.username);
+        emailInput && (emailInput.value = user.email);
 
-    // Create Workspace Form
-    document.querySelector('.create-workspace-form')?.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const workspaceName = document.getElementById('workspace-creation').value.trim();
-        if (workspaceName) {
-            try {
-                const response = await fetch('api/workspace', {
-                    method: 'POST',
+        if (memberSinceEl) {
+            memberSinceEl.textContent = memberSince.toLocaleDateString();
+        }
+
+        const workspaceNameEls = document.querySelectorAll('.workspace-name');
+        if (workspaceData) {
+            workspaceNameEls.forEach(el => el.textContent = workspaceData.workspace.name);
+        }
+
+        // Tab switching
+        const tabButtons = document.querySelectorAll('.tab-button');
+        const tabContents = document.querySelectorAll('.tab-content');
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const selectedTab = urlParams.get('tab');
+
+        if (selectedTab) {
+            const activeTabButton = document.querySelector(`[data-tab="${selectedTab}"]`);
+            const activeTabContent = document.getElementById(selectedTab);
+
+            if (activeTabButton && activeTabContent) {
+                tabButtons.forEach(btn => btn.classList.remove('active'));
+                tabContents.forEach(content => content.classList.remove('active'));
+
+                activeTabButton.classList.add('active');
+                activeTabContent.classList.add('active');
+            }
+        }
+
+        tabButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                if (button.classList.contains('logout-btn')) return;
+                tabButtons.forEach(btn => btn.classList.remove('active'));
+                tabContents.forEach(content => content.classList.remove('active'));
+                button.classList.add('active');
+                document.getElementById(button.dataset.tab)?.classList.add('active');
+            });
+        });
+
+        // Get profile picture
+        const profilePictureInput = document.getElementById('profile-picture-input');
+        const changePictureBtn = document.querySelector('.change-picture-btn');
+
+            if (user.profilePicture) {
+                const imageUrl = await fetchProfileImage(user.profilePicture);
+                if (imageUrl) {
+                    document.querySelectorAll('.profile-picture').forEach(img => {
+                        img.src = imageUrl;
+                    });
+                }
+            }
+
+            changePictureBtn?.addEventListener('click', () => profilePictureInput?.click());
+
+        // Upload profile picture
+        profilePictureInput?.addEventListener('change', async (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+
+                const profilePicture = new FormData();
+                profilePicture.append('imageFile', file);
+                profilePicture.append('resourceType', 'image');
+
+                try {
+                    const oldPublicId = user.profilePicture;
+
+                    if (oldPublicId) {
+                        await fetch(`/api/delete-media/${oldPublicId}/image`, { method: 'DELETE' });
+                    }
+
+                    const uploadResponse = await fetch('/api/upload-media', {
+                        method: 'POST',
+                        body: profilePicture
+                    });
+
+                    const uploadResult = await uploadResponse.json();
+                    if (!uploadResponse.ok) {
+                        throw new Error(uploadResult.error || 'Image upload failed');
+                    }
+
+                    const newPublicId = uploadResult.publicId;
+
+                    await fetch('/auth/update', {
+                        method: 'PATCH',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ profilePicture: newPublicId }),
+                    });
+
+                    alert('Profile picture updated successfully!');
+                } catch (error) {
+                    console.error('Error uploading profile picture:', error);
+                    alert('Error uploading profile picture.');
+                }
+            });
+
+            // Profile form
+            document.querySelector('.profile-form')?.addEventListener('submit', async (e) => {
+                e.preventDefault();
+
+                const res = await fetch('/auth/update', {
+                    method: 'PATCH',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ name: workspaceName }),
+                    body: JSON.stringify({ email: emailInput.value, username: usernameInput.value }),
                 });
 
-                const data = await response.json();
-                if (!data.success) return alert(data.message || 'Failed to create workspace!');
-
+                const data = await res.json();
+                if (!data.success) return alert('Failed to update profile!');
                 window.location.reload();
+            });
 
-            } catch (err) {
-                console.error('Error creating workspace:', err);
-                alert('Error creating workspace');
+            // Password form
+            document.querySelector('.security-form')?.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const currentPassword = document.getElementById('current-password').value;
+                const newPassword = document.getElementById('new-password').value;
+                const confirmPassword = document.getElementById('confirm-password').value;
+
+                if (newPassword !== confirmPassword) return alert('New password does not match confirm password!');
+
+                try {
+                    const response = await fetch('/auth/update-password', {
+                        method: 'PATCH',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ currentPassword, newPassword }),
+                    });
+
+                    const data = await response.json();
+                    data.success ? alert('Password updated successfully!') : alert(data.message || 'Failed to update password!');
+                } catch (err) {
+                    console.error('Error updating password:', err);
+                    alert('Error updating password');
+                }
+            });
+
+        // Account Deletion
+        document.querySelector('.delete-account-btn')?.addEventListener('click', () => {
+            if (confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
+                fetch('/auth/delete', {
+                    method: 'DELETE'
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (!data.success) return alert('Failed to delete account!');
+                    window.location.href = '/home';
+                })
+                .catch(err => {
+                    console.error('Error deleting account:', err);
+                    alert('Error deleting account');
+                });
             }
-        }
-    });
-
-    let memberToDeleteEmail = null; // Use email instead of member element
-    const removePendingInvite = async (email) => {
-        fetch('/api/workspace/invite', {
-            method: 'DELETE',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (!data.success) return alert(data.message || "Failed to remove invite!");
-
-            // Select and remove the element using the data-email attribute
-            document.querySelector(`.member[data-email="${email}"]`)?.remove();
-        })
-        .catch(error => console.error("Error removing invite:", error));
-    };
-
-    // Accept email string
-    const setPendingInviteToDelete = (email) => {
-        if (email) {
-            memberToDeleteEmail = email; // Store the email
-        }
-    };
-
-        // Workspace Invite & Member Management
-        const membersList = document.querySelector('.members-list');
-        const deleteMemberPopup = document.querySelector('.delete-member-popup');
-        const inviteSuccessPopup = document.querySelector('.workspace-popup.invite-success-popup');
-
-    if (workspaceData?.workspace?.pendingInvites?.length > 0) {
-        workspaceData.workspace.pendingInvites.forEach(invite => {
-            addMember(invite, membersList, deleteMemberPopup, setPendingInviteToDelete); // Pass the invite object
         });
-    }
 
-    document.querySelector('.invite-form')?.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const emailInput = e.target.querySelector('input[type="email"]');
-        const email = emailInput.value.trim();
-        if (email) {
+        // Download Data
+        document.querySelector('.download-data-btn')?.addEventListener('click', () => {
+            alert('Your data is being prepared for download...');
+        });
+
+        // Create Workspace Form
+        document.querySelector('.create-workspace-form')?.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const workspaceName = document.getElementById('workspace-creation').value.trim();
+            if (workspaceName) {
+                try {
+                    const response = await fetch('api/workspace', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ name: workspaceName }),
+                    });
+
+                    const data = await response.json();
+                    if (!data.success) return alert(data.message || 'Failed to create workspace!');
+
+                    window.location.reload();
+
+                } catch (err) {
+                    console.error('Error creating workspace:', err);
+                    alert('Error creating workspace');
+                }
+            }
+        });
+
+        let memberToDeleteEmail = null; // Use email instead of member element
+        const removePendingInvite = async (email) => {
             fetch('/api/workspace/invite', {
-                method: 'POST',
+                method: 'DELETE',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email }),
+                body: JSON.stringify({ email })
             })
             .then(response => response.json())
             .then(data => {
-                if (!data.success) return alert(data.message || 'Failed to invite user!');
-                addMember(data.user, membersList, deleteMemberPopup, setPendingInviteToDelete);
-                showPopup(inviteSuccessPopup);
-                emailInput.value = '';
+                if (!data.success) return alert(data.message || "Failed to remove invite!");
+
+                // Select and remove the element using the data-email attribute
+                document.querySelector(`.member[data-email="${email}"]`)?.remove();
             })
-            .catch(err => {
-                console.error('Error inviting user:', err);
-                alert('Error inviting user');
+            .catch(error => console.error("Error removing invite:", error));
+        };
+
+        // Accept email string
+        const setPendingInviteToDelete = (email) => {
+            if (email) {
+                memberToDeleteEmail = email; // Store the email
+            }
+        };
+
+            // Workspace Invite & Member Management
+            const membersList = document.querySelector('.members-list');
+            const deleteMemberPopup = document.querySelector('.delete-member-popup');
+            const inviteSuccessPopup = document.querySelector('.workspace-popup.invite-success-popup');
+
+        if (workspaceData?.workspace?.pendingInvites?.length > 0) {
+            workspaceData.workspace.pendingInvites.forEach(invite => {
+                addMember(invite, membersList, deleteMemberPopup, setPendingInviteToDelete); // Pass the invite object
             });
         }
-    });
 
-    deleteMemberPopup?.querySelector('.cancel-btn')?.addEventListener('click', () => {
-        hidePopup(deleteMemberPopup);
-        memberToDeleteEmail = null; // Clear the stored email
-    });
+        document.querySelector('.invite-form')?.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const emailInput = e.target.querySelector('input[type="email"]');
+            const email = emailInput.value.trim();
+            if (email) {
+                fetch('/api/workspace/invite', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email }),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (!data.success) return alert(data.message || 'Failed to invite user!');
+                    addMember(data.user, membersList, deleteMemberPopup, setPendingInviteToDelete);
+                    showPopup(inviteSuccessPopup);
+                    emailInput.value = '';
+                })
+                .catch(err => {
+                    console.error('Error inviting user:', err);
+                    alert('Error inviting user');
+                });
+            }
+        });
 
-    deleteMemberPopup?.querySelector('.confirm-btn')?.addEventListener('click', () => {
-        if (memberToDeleteEmail) {
-            removePendingInvite(memberToDeleteEmail); // Call remove with the stored email
-        }
-        memberToDeleteEmail = null; // Clear the stored email
-        hidePopup(deleteMemberPopup);
-    });
+        deleteMemberPopup?.querySelector('.cancel-btn')?.addEventListener('click', () => {
+            hidePopup(deleteMemberPopup);
+            memberToDeleteEmail = null; // Clear the stored email
+        });
+
+        deleteMemberPopup?.querySelector('.confirm-btn')?.addEventListener('click', () => {
+            if (memberToDeleteEmail) {
+                removePendingInvite(memberToDeleteEmail); // Call remove with the stored email
+            }
+            memberToDeleteEmail = null; // Clear the stored email
+            hidePopup(deleteMemberPopup);
+        });
 
         inviteSuccessPopup?.querySelector('.close-btn')?.addEventListener('click', () => {
             hidePopup(inviteSuccessPopup);

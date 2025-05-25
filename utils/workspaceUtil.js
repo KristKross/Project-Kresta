@@ -5,7 +5,12 @@ const getWorkspace = async (req) => {
     throw new Error("User session is missing or expired");
   }
 
-  const workspace = await Workspace.findOne({ owner: req.session.userData.user._id });
+  const workspace = await Workspace.findOne({
+    $or: [
+      { owner: req.session.userData.user._id },
+      { members: req.session.userData.user._id }
+    ]
+  });
   
   return workspace || null;
 };

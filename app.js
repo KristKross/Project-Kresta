@@ -63,7 +63,7 @@ app.get('/register', (req, res) => {
     res.sendFile(path.join(__dirname, 'dist', 'register.html'));
 });
 
-app.get('/dashboard', isAuthenticated, isAuthenticated, (req, res) => {
+app.get('/dashboard', isAuthenticated, (req, res) => {
     res.sendFile(path.join(__dirname, 'dist', 'dashboard.html'));
 });
 
