@@ -79,8 +79,6 @@ exports.login = async (req, res) => {
             },
         });
 
-        console.log(user)
-
         res.json({ success: true, message: "Login successful" });
 
     } catch (error) {

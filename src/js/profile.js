@@ -94,23 +94,27 @@ function hidePopup(popup) {
     popup.classList.remove('active');
 }
 
-function addMember(email, membersList, deleteMemberPopup, setMemberToDelete) {
+async function addMember(data, membersList, deleteMemberPopup, setPendingInviteToDelete) {
+    const profilePicture = await fetchProfileImage(data.profilePicture);
+
     const memberElement = document.createElement('div');
     memberElement.className = 'member';
+    memberElement.dataset.email = data.email;
     memberElement.innerHTML = `
-        <img src="${defaultAvatarPath}" alt="" class="member-avatar">
+        <img src="${profilePicture || defaultAvatarPath}" alt="" class="member-avatar">
         <div class="member-info">
             <p class="member-name">Pending</p>
-            <p class="member-email">${email}</p>
+            <p class="member-email">${data.email}</p>
         </div>
         <span class="member-role">Pending</span>
-        <button class="remove-member" title="Remove member">
+        <button class="remove-pending" title="Remove member">
             <i class="material-icons">person_remove</i>
         </button>
     `;
 
-    memberElement.querySelector('.remove-member').addEventListener('click', () => {
-        setMemberToDelete(memberElement);
+    memberElement.querySelector('.remove-pending').addEventListener('click', () => {
+        // Pass the email to setPendingInviteToDelete
+        setPendingInviteToDelete(memberElement.dataset.email);
         showPopup(deleteMemberPopup);
     });
 
@@ -158,7 +162,7 @@ async function checkUserPlanAndWorkspace() {
             return showWorkspaceTemplate('no-workspace');
         }
 
-        showWorkspaceTemplate('has-workspace');
+        return data;
 
     } catch (error) {
         console.error('Error fetching workspace:', error);
@@ -177,7 +181,12 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
         
         const userData = await fetchUserData();
+    const workspaceData = await checkUserPlanAndWorkspace();
+
         if (!userData) return;
+    if (workspaceData) {
+        showWorkspaceTemplate('has-workspace')
+    }
 
         const { user, premium } = userData;
         const usernameInput = document.querySelector('input[type="text"].form-input');
@@ -185,24 +194,66 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         const memberSince = new Date(user.createdAt);
 
-        const profileNameEl = document.getElementById('profile-name');
-        const profileUsernameEl = document.getElementById('profile-username');
-        const accountTypeEl = document.getElementById('account-type');
-        const memberSinceEl = document.getElementById('member-since');
+    const profileNameEls = document.querySelectorAll('.profile-name');
+    const profileUsernameEls = document.querySelectorAll('.profile-username');
+    const memberRoleEls = document.querySelectorAll('.member-role');
+    const accountTypeEl = document.getElementById('account-type');
+    const memberSinceEl = document.getElementById('member-since');
 
-        profileNameEl.textContent = user.username;
-        profileUsernameEl.textContent = `@${user.username}`;
-        accountTypeEl.textContent = premium?.tier;
-        usernameInput && (usernameInput.value = user.username);
-        emailInput && (emailInput.value = user.email);
+    profileNameEls.forEach(el => el.textContent = user.username);
+    profileUsernameEls.forEach(el => el.textContent = `@${user.username}`);
+    if (workspaceData) {
+        memberRoleEls.forEach(el => {
+            el.textContent = workspaceData.workspace.owner._id === user._id ? 'Owner' : 'Member';
+        });
+    }
 
-        if (memberSinceEl) {
-            memberSinceEl.textContent = memberSince.toLocaleDateString();
+    accountTypeEl.textContent = premium?.tier;
+    usernameInput && (usernameInput.value = user.username);
+    emailInput && (emailInput.value = user.email);
+
+    if (memberSinceEl) {
+        memberSinceEl.textContent = memberSince.toLocaleDateString();
+    }
+
+    const workspaceNameEls = document.querySelectorAll('.workspace-name');
+    if (workspaceData) {
+        workspaceNameEls.forEach(el => el.textContent = workspaceData.workspace.name);
+    }
+
+    // Tab switching
+    const tabButtons = document.querySelectorAll('.tab-button');
+    const tabContents = document.querySelectorAll('.tab-content');
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const selectedTab = urlParams.get('tab');
+
+    if (selectedTab) {
+        const activeTabButton = document.querySelector(`[data-tab="${selectedTab}"]`);
+        const activeTabContent = document.getElementById(selectedTab);
+
+        if (activeTabButton && activeTabContent) {
+            tabButtons.forEach(btn => btn.classList.remove('active'));
+            tabContents.forEach(content => content.classList.remove('active'));
+
+            activeTabButton.classList.add('active');
+            activeTabContent.classList.add('active');
         }
+    }
 
-        // Profile picture upload
-        const profilePictureInput = document.getElementById('profile-picture-input');
-        const changePictureBtn = document.querySelector('.change-picture-btn');
+    tabButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            if (button.classList.contains('logout-btn')) return;
+            tabButtons.forEach(btn => btn.classList.remove('active'));
+            tabContents.forEach(content => content.classList.remove('active'));
+            button.classList.add('active');
+            document.getElementById(button.dataset.tab)?.classList.add('active');
+        });
+    });
+
+    // Get profile picture
+    const profilePictureInput = document.getElementById('profile-picture-input');
+    const changePictureBtn = document.querySelector('.change-picture-btn');
 
         if (user.profilePicture) {
             const imageUrl = await fetchProfileImage(user.profilePicture);
@@ -215,9 +266,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         changePictureBtn?.addEventListener('click', () => profilePictureInput?.click());
 
-        profilePictureInput?.addEventListener('change', async (e) => {
-            const file = e.target.files[0];
-            if (!file) return;
+    // Upload profile picture
+    profilePictureInput?.addEventListener('change', async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
 
             const profilePicture = new FormData();
             profilePicture.append('imageFile', file);
@@ -294,58 +346,124 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         });
 
-        // Account Deletion
-        document.querySelector('.delete-account-btn')?.addEventListener('click', () => {
-            if (confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
-                fetch('/auth/delete', { 
-                    method: 'DELETE' 
-                })
-                .then(res => res.json())
-                .then(data => {
-                    if (!data.success) return alert('Failed to delete account!');
-                    window.location.href = '/home';
-                })
-                .catch(err => {
-                    console.error('Error deleting account:', err);
-                    alert('Error deleting account');
-                });
-            }
-        });
+    // Account Deletion
+    document.querySelector('.delete-account-btn')?.addEventListener('click', () => {
+        if (confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
+            fetch('/auth/delete', {
+                method: 'DELETE'
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (!data.success) return alert('Failed to delete account!');
+                window.location.href = '/home';
+            })
+            .catch(err => {
+                console.error('Error deleting account:', err);
+                alert('Error deleting account');
+            });
+        }
+    });
 
-        // Download Data
-        document.querySelector('.download-data-btn')?.addEventListener('click', () => {
-            alert('Your data is being prepared for download...');
-        });
+    // Download Data
+    document.querySelector('.download-data-btn')?.addEventListener('click', () => {
+        alert('Your data is being prepared for download...');
+    });
+
+    // Create Workspace Form
+    document.querySelector('.create-workspace-form')?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const workspaceName = document.getElementById('workspace-creation').value.trim();
+        if (workspaceName) {
+            try {
+                const response = await fetch('api/workspace', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name: workspaceName }),
+                });
+
+                const data = await response.json();
+                if (!data.success) return alert(data.message || 'Failed to create workspace!');
+
+                window.location.reload();
+
+            } catch (err) {
+                console.error('Error creating workspace:', err);
+                alert('Error creating workspace');
+            }
+        }
+    });
+
+    let memberToDeleteEmail = null; // Use email instead of member element
+    const removePendingInvite = async (email) => {
+        fetch('/api/workspace/invite', {
+            method: 'DELETE',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (!data.success) return alert(data.message || "Failed to remove invite!");
+
+            // Select and remove the element using the data-email attribute
+            document.querySelector(`.member[data-email="${email}"]`)?.remove();
+        })
+        .catch(error => console.error("Error removing invite:", error));
+    };
+
+    // Accept email string
+    const setPendingInviteToDelete = (email) => {
+        if (email) {
+            memberToDeleteEmail = email; // Store the email
+        }
+    };
 
         // Workspace Invite & Member Management
         const membersList = document.querySelector('.members-list');
         const deleteMemberPopup = document.querySelector('.delete-member-popup');
         const inviteSuccessPopup = document.querySelector('.workspace-popup.invite-success-popup');
 
-        let memberToDelete = null;
-        const setMemberToDelete = (member) => (memberToDelete = member);
+    if (workspaceData?.workspace?.pendingInvites?.length > 0) {
+        workspaceData.workspace.pendingInvites.forEach(invite => {
+            addMember(invite, membersList, deleteMemberPopup, setPendingInviteToDelete); // Pass the invite object
+        });
+    }
 
-        document.querySelector('.invite-form')?.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const emailInput = e.target.querySelector('input[type="email"]');
-            const email = emailInput.value.trim();
-            if (email) {
-                addMember(email, membersList, deleteMemberPopup, setMemberToDelete);
-                emailInput.value = '';
+    document.querySelector('.invite-form')?.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const emailInput = e.target.querySelector('input[type="email"]');
+        const email = emailInput.value.trim();
+        if (email) {
+            fetch('/api/workspace/invite', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (!data.success) return alert(data.message || 'Failed to invite user!');
+                addMember(data.user, membersList, deleteMemberPopup, setPendingInviteToDelete);
                 showPopup(inviteSuccessPopup);
-            }
-        });
+                emailInput.value = '';
+            })
+            .catch(err => {
+                console.error('Error inviting user:', err);
+                alert('Error inviting user');
+            });
+        }
+    });
 
-        deleteMemberPopup?.querySelector('.cancel-btn')?.addEventListener('click', () => {
-            hidePopup(deleteMemberPopup);
-            memberToDelete = null;
-        });
+    deleteMemberPopup?.querySelector('.cancel-btn')?.addEventListener('click', () => {
+        hidePopup(deleteMemberPopup);
+        memberToDeleteEmail = null; // Clear the stored email
+    });
 
-        deleteMemberPopup?.querySelector('.confirm-btn')?.addEventListener('click', () => {
-            memberToDelete?.remove();
-            memberToDelete = null;
-            hidePopup(deleteMemberPopup);
-        });
+    deleteMemberPopup?.querySelector('.confirm-btn')?.addEventListener('click', () => {
+        if (memberToDeleteEmail) {
+            removePendingInvite(memberToDeleteEmail); // Call remove with the stored email
+        }
+        memberToDeleteEmail = null; // Clear the stored email
+        hidePopup(deleteMemberPopup);
+    });
 
         inviteSuccessPopup?.querySelector('.close-btn')?.addEventListener('click', () => {
             hidePopup(inviteSuccessPopup);
@@ -375,27 +493,10 @@ document.addEventListener('DOMContentLoaded', async () => {
                 });
         });
 
-        document.addEventListener('click', (e) => {
-            if (e.target.classList.contains('workspace-popup')) {
-                hidePopup(e.target);
-                memberToDelete = null;
-            }
-        });
-
-        document.addEventListener('keydown', (e) => {
-            // Fix: Added missing opening parenthesis
-            if (e.key === 'Escape') {
-                document.querySelectorAll('.workspace-popup.active').forEach(popup => {
-                    hidePopup(popup);
-                });
-                memberToDelete = null;
-            }
-        });
-
-        await checkUserPlanAndWorkspace();
-    } catch (error) {
-        console.error('Error initializing profile page:', error);
-        // Fallback to ensure basic functionality works even if there are errors
-        setupTabSwitching();
-    }
+    document.addEventListener('click', (e) => {
+        if (e.target.classList.contains('workspace-popup')) {
+            hidePopup(e.target);
+            memberToDelete = null;
+        }
+    });
 });

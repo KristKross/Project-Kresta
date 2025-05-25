@@ -20,8 +20,8 @@
         <div class="profile-sidebar">
             <div class="profile-header">
                 <img src="./assets/images/dashboard/user-pfp.png" alt="Profile Picture" class="profile-picture">
-                <h2 class="h2" id="profile-name"></h2>
-                <p class="subtitle" id="profile-username"></p>
+                <h2 class="h2 profile-name"></h2>
+                <p class="subtitle profile-username"></p>
             </div>
             
             <div class="profile-tabs">
@@ -183,14 +183,20 @@
                     <img src="./assets/icons/workspace/empty-workspace.png" alt="No Workspace">
                     <h3 class="h3">No Workspace Created</h3>
                     <p>Create your first workspace to start collaborating</p>
-                    <button class="create-workspace-btn">Create Workspace</button>
+                    <form class="create-workspace-form">
+                        <div class="form-group">
+                            <label>Workspace Name</label>
+                            <input type="text" class="form-input" id="workspace-creation" required>
+                            <button class="create-workspace-btn" type="submit">Create Workspace</button>
+                        </div>
+                    </form>
                 </div>
 
                 <!-- Existing Workspace Template -->
                 <div class="workspace-template has-workspace">
                     <div class="workspace-section">
                         <div class="workspace-header">
-                            <h3 class="h3">My Workspace</h3>
+                            <h3 class="h3 workspace-name"></h3>
                             <button class="settings-btn">
                                 <i class="material-icons">settings</i>
                             </button>
@@ -202,8 +208,8 @@
                                 <div class="member">
                                     <img src="./assets/images/dashboard/user-pfp.png" alt="Member">
                                     <div class="member-info">
-                                        <p class="member-name">John Doe</p>
-                                        <span class="member-role">Owner</span>
+                                        <p class="member-name profile-name"></p>
+                                        <span class="member-role"></span>
                                     </div>
                                 </div>
                                 <!-- Add more team members here -->

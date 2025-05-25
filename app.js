@@ -114,6 +114,9 @@ app.use('/api/task', isAuthenticated, checkPremiumTier, taskRoutes);
 const uploadRoutes = require("./routes/uploadRoute");
 app.use('/api', uploadRoutes);
 
+const notificationRoutes = require("./routes/notificationRoute");
+app.use('/api/notifications', isAuthenticated, notificationRoutes);
+
 // Start the server
 const PORT = process.env.PORT;
 app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
