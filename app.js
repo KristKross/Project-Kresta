@@ -21,16 +21,6 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 app.use(sessionMiddleware);
 
-// List of protected HTML files
-const protectedHtml = ['/tasks.html', '/planner.html', '/analytics.html', 'dashboard.html'];
-
-app.use((req, res, next) => {
-    if (!req.session.userData?.user && protectedHtml.includes(req.path)) {
-        return res.redirect('/home');
-    }
-    next();
-});
-
 // Serve static files
 app.get('/', (req, res) => {
     if (req.session.userData?.user) {
@@ -79,6 +69,10 @@ app.get('/dashboard', isAuthenticated, (req, res) => {
     res.sendFile(path.join(__dirname, 'dist', 'dashboard.html'));
 });
 
+app.get('/creators', isAuthenticated, (req, res) => {
+    res.sendFile(path.join(__dirname, 'dist', 'creators.html'));
+});
+
 app.get('/tasks', isAuthenticated, checkPremiumTier, (req, res) => {
     res.sendFile(path.join(__dirname, 'dist', 'tasks.html'));
 });
@@ -123,18 +117,18 @@ app.use('/api', uploadRoutes);
 const notificationRoutes = require("./routes/notificationRoute");
 app.use('/api/notifications', isAuthenticated, notificationRoutes);
 
-app.use((req, res, next) => {
+
+app.use((req, res) => {
     res.status(404).sendFile(path.join(__dirname, 'dist', '404.html'));
 });
 
-app.use((req, res, next) => {
-    res.status(401).sendFile(path.join(__dirname, 'dist', '401.html'));
+app.use((req, res) => {
+    return res.status(401).sendFile(path.join(__dirname, 'dist', '401.html'));
 });
 
-app.use((req, res, next) => {
-    res.status(403).sendFile(path.join(__dirname, 'dist', '403.html'));
+app.use((req, res) => {
+    return res.status(403).sendFile(path.join(__dirname, 'dist', '403.html'));
 });
-
 // Start the server
 const PORT = process.env.PORT;
 app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
