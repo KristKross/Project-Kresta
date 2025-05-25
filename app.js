@@ -79,7 +79,7 @@ app.get('/tasks', isAuthenticated, checkPremiumTier, (req, res) => {
     res.sendFile(path.join(__dirname, 'dist', 'tasks.html'));
 });
 
-app.get('/planner', isAuthenticated, (req, res) => {
+app.get('/planner', isAuthenticated, checkAccountLink, (req, res) => {
     res.sendFile(path.join(__dirname, 'dist', 'planner.html'));
 });
 
