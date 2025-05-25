@@ -20,11 +20,11 @@ module.exports = {
         tasks: "./src/js/tasks.js",
         notification: "./src/js/notification.js",
         profile: "./src/js/profile.js",
-        settings: "./src/js/settings.js",
         about: "./src/js/about.js",
         contact: "./src/js/contact.js",
         pricing: "./src/js/pricing.js",
         sidebar: "./src/js/sidebar.js",
+        sidebar: "./src/js/creators.js",
     },
     optimization: {
         splitChunks: {
@@ -110,10 +110,10 @@ module.exports = {
             chunks: ['main', 'profile'],
         }),
         new HtmlWebpackPlugin({
-            filename: 'settings.html',
-            template: './src/settings.html',
+            filename: 'creators.html',
+            template: './src/creators.html',
             inject: 'body',
-            chunks: ['main', 'settings'],
+            chunks: ['main', 'creators'],
         }),
         new HtmlWebpackPlugin({
             filename: 'about.html',

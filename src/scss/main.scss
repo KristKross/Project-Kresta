@@ -27,6 +27,7 @@
 @use 'pages/pricing';
 @use 'pages/settings';
 @use 'pages/sidebar';
+@use 'pages/creators';
 
 //RESPONSIVE STYLES
 @use 'responsive-styles/navbar-breakpoints';
@@ -41,3 +42,4 @@
 @use 'responsive-styles/sidebar-breakpoints';
 @use 'responsive-styles/analytics-breakpoints';
 @use 'responsive-styles/profile-breakpoints';
+@use 'responsive-styles/creators-breakpoints';
