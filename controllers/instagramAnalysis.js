@@ -14,8 +14,7 @@ exports.getInstagramAccountAnalytics = async (req, res) => {
         const response = await axios.get(
             `https://graph.facebook.com/v22.0/${instagramAccountId}/insights`, {
                 params: {
-                    metric:
-                        "accounts_engaged,follows_and_unfollows,comments,likes,reach,replies,shares,total_interactions,views",
+                    metric: "accounts_engaged,follows_and_unfollows,comments,likes,reach,replies,shares,total_interactions,views",
                     metric_type: "total_value",
                     period: "day",
                     access_token: accessToken,

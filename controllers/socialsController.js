@@ -6,19 +6,16 @@ const FACEBOOK_APP_ID = process.env.FACEBOOK_APP_ID;
 const FACEBOOK_APP_SECRET = process.env.FACEBOOK_APP_SECRET;
 const REDIRECT_URI = process.env.REDIRECT_URI;
 
-// Step 1: Redirect User to Facebook Login
-// @route GET /api/auth/facebook
+// @route GET /api/social/facebook
 exports.facebookLogin = (req, res) => {
     const facebookAuthUrl = `https://www.facebook.com/v17.0/dialog/oauth?client_id=${FACEBOOK_APP_ID}&redirect_uri=${REDIRECT_URI}&scope=pages_show_list,business_management,email`;
     res.redirect(facebookAuthUrl);
 };
 
-// Step 2: Handle Callback & Exchange Code for Tokens
 exports.facebookCallback = async (req, res) => {
   const { code } = req.query;
 
   try {
-    // Exchange Code for Short-Lived Token
     const tokenResponse = await axios.get(`https://graph.facebook.com/v17.0/oauth/access_token`, {
         params: {
             client_id: FACEBOOK_APP_ID,
