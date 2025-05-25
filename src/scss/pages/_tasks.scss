@@ -243,21 +243,32 @@ label {
         visibility: hidden;
         pointer-events: none;
         transform: translateX(100%);
-        // Add transition to base state so it applies when closing too
-        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-                    opacity 0.3s ease,
-                    visibility 0s linear 0.3s; // Delay visibility change
+        
+        /* Add these properties to prevent initial flash */
+        backface-visibility: hidden;
+        perspective: 1000px;
         will-change: transform, opacity, visibility;
+        
+        /* Disable transitions initially - will be enabled by JS after page load */
+        transition: none;
+        
+        &.transitions-enabled {
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                        opacity 0.3s ease,
+                        visibility 0s linear 0.3s;
+        }
 
         &.active {
             opacity: 1;
             visibility: visible;
             pointer-events: all;
             transform: translateX(0);
-            // Update transition when active - remove visibility delay
-            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-                        opacity 0.3s ease,
-                        visibility 0s linear 0s;
+            
+            &.transitions-enabled {
+                transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                            opacity 0.3s ease,
+                            visibility 0s linear 0s;
+            }
         }
 
         .panel-content {
@@ -452,10 +463,11 @@ label {
                 opacity: 1;
             }
 
-            // Make sure mobile transitions work too
-            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-                        opacity 0.3s ease,
-                        visibility 0s linear 0.3s;
+            &.transitions-enabled {
+                transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                            opacity 0.3s ease,
+                            visibility 0s linear 0.3s;
+            }
         }
     }
 

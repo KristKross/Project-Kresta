@@ -2,6 +2,59 @@ import defaultAvatarPath from '../assets/images/dashboard/user-pfp.png';
 import creatorBusinessPath from '../assets/icons/workspace/creator-business.png';
 import emptyWorkspacePath from '../assets/icons/workspace/empty-workspace.png';
 
+// Move tab switching functionality to the beginning and make it independent 
+// of other operations to ensure it works regardless of data loading
+function setupTabSwitching() {
+    console.log('Setting up tab switching...');
+    const tabButtons = document.querySelectorAll('.tab-button');
+    const tabContents = document.querySelectorAll('.tab-content');
+    
+    console.log(`Found ${tabButtons.length} tab buttons and ${tabContents.length} tab contents`);
+
+    function activateTab(tabId) {
+        console.log(`Activating tab: ${tabId}`);
+        
+        // First deactivate all tabs
+        tabButtons.forEach(btn => btn.classList.remove('active'));
+        tabContents.forEach(content => content.classList.remove('active'));
+        
+        // Then activate the selected tab
+        const activeTabButton = document.querySelector(`.tab-button[data-tab="${tabId}"]`);
+        const activeTabContent = document.getElementById(tabId);
+        
+        console.log('Active tab button:', activeTabButton);
+        console.log('Active tab content:', activeTabContent);
+        
+        if (activeTabButton && activeTabContent) {
+            activeTabButton.classList.add('active');
+            activeTabContent.classList.add('active');
+            // Update URL without refreshing page
+            history.replaceState(null, '', `?tab=${tabId}`);
+        }
+    }
+
+    // Add click handlers to tab buttons
+    tabButtons.forEach(button => {
+        if (button.classList.contains('logout-btn')) return;
+        
+        button.addEventListener('click', () => {
+            const tabId = button.getAttribute('data-tab');
+            console.log(`Tab button clicked: ${tabId}`);
+            if (tabId) {
+                activateTab(tabId);
+            }
+        });
+    });
+
+    // Check URL for tab parameter
+    const urlParams = new URLSearchParams(window.location.search);
+    const selectedTab = urlParams.get('tab');
+
+    if (selectedTab) {
+        activateTab(selectedTab);
+    }
+}
+
 async function fetchUserData() {
     try {
         const response = await fetch('/auth/user');
@@ -118,19 +171,28 @@ async function checkUserPlanAndWorkspace() {
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
-    const userData = await fetchUserData();
+    try {
+        // Setup tab switching first, before doing anything else
+        setupTabSwitching();
+        
+        // Clear any popups that might be active from a previous session
+        document.querySelectorAll('.workspace-popup').forEach(popup => {
+            popup.classList.remove('active');
+        });
+        
+        const userData = await fetchUserData();
     const workspaceData = await checkUserPlanAndWorkspace();
 
-    if (!userData) return;
+        if (!userData) return;
     if (workspaceData) {
         showWorkspaceTemplate('has-workspace')
     }
 
-    const { user, premium } = userData;
-    const usernameInput = document.querySelector('input[type="text"].form-input');
-    const emailInput = document.querySelector('input[type="email"].form-input');
+        const { user, premium } = userData;
+        const usernameInput = document.querySelector('input[type="text"].form-input');
+        const emailInput = document.querySelector('input[type="email"].form-input');
 
-    const memberSince = new Date(user.createdAt);
+        const memberSince = new Date(user.createdAt);
 
     const profileNameEls = document.querySelectorAll('.profile-name');
     const profileUsernameEls = document.querySelectorAll('.profile-username');
@@ -193,96 +255,96 @@ document.addEventListener('DOMContentLoaded', async () => {
     const profilePictureInput = document.getElementById('profile-picture-input');
     const changePictureBtn = document.querySelector('.change-picture-btn');
 
-    if (user.profilePicture) {
-        const imageUrl = await fetchProfileImage(user.profilePicture);
-        if (imageUrl) {
-            document.querySelectorAll('.profile-picture').forEach(img => {
-                img.src = imageUrl;
-            });
+        if (user.profilePicture) {
+            const imageUrl = await fetchProfileImage(user.profilePicture);
+            if (imageUrl) {
+                document.querySelectorAll('.profile-picture').forEach(img => {
+                    img.src = imageUrl;
+                });
+            }
         }
-    }
 
-    changePictureBtn?.addEventListener('click', () => profilePictureInput?.click());
+        changePictureBtn?.addEventListener('click', () => profilePictureInput?.click());
 
     // Upload profile picture
     profilePictureInput?.addEventListener('change', async (e) => {
         const file = e.target.files[0];
         if (!file) return;
 
-        const profilePicture = new FormData();
-        profilePicture.append('imageFile', file);
-        profilePicture.append('resourceType', 'image');
+            const profilePicture = new FormData();
+            profilePicture.append('imageFile', file);
+            profilePicture.append('resourceType', 'image');
 
-        try {
-            const oldPublicId = user.profilePicture;
+            try {
+                const oldPublicId = user.profilePicture;
 
-            if (oldPublicId) {
-                await fetch(`/api/delete-media/${oldPublicId}/image`, { method: 'DELETE' });
+                if (oldPublicId) {
+                    await fetch(`/api/delete-media/${oldPublicId}/image`, { method: 'DELETE' });
+                }
+
+                const uploadResponse = await fetch('/api/upload-media', {
+                    method: 'POST',
+                    body: profilePicture
+                });
+
+                const uploadResult = await uploadResponse.json();
+                if (!uploadResponse.ok) {
+                    throw new Error(uploadResult.error || 'Image upload failed');
+                }
+
+                const newPublicId = uploadResult.publicId;
+
+                await fetch('/auth/update', {
+                    method: 'PATCH',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ profilePicturePublicId: newPublicId,  }),
+                });
+
+                alert('Profile picture updated successfully!');
+            } catch (error) {
+                console.error('Error uploading profile picture:', error);
+                alert('Error uploading profile picture.');
             }
-
-            const uploadResponse = await fetch('/api/upload-media', {
-                method: 'POST',
-                body: profilePicture
-            });
-
-            const uploadResult = await uploadResponse.json();
-            if (!uploadResponse.ok) {
-                throw new Error(uploadResult.error || 'Image upload failed');
-            }
-
-            const newPublicId = uploadResult.publicId;
-
-            await fetch('/auth/update', {
-                method: 'PATCH',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ profilePicturePublicId: newPublicId,  }),
-            });
-
-            alert('Profile picture updated successfully!');
-        } catch (error) {
-            console.error('Error uploading profile picture:', error);
-            alert('Error uploading profile picture.');
-        }
-    });
-
-    // Profile form
-    document.querySelector('.profile-form')?.addEventListener('submit', async (e) => {
-        e.preventDefault();
-
-        const res = await fetch('/auth/update', {
-            method: 'PATCH',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email: emailInput.value, username: usernameInput.value }),
         });
 
-        const data = await res.json();
-        if (!data.success) return alert('Failed to update profile!');
-        window.location.reload();
-    });
+        // Profile form
+        document.querySelector('.profile-form')?.addEventListener('submit', async (e) => {
+            e.preventDefault();
 
-    // Password form
-    document.querySelector('.security-form')?.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const currentPassword = document.getElementById('current-password').value;
-        const newPassword = document.getElementById('new-password').value;
-        const confirmPassword = document.getElementById('confirm-password').value;
-
-        if (newPassword !== confirmPassword) return alert('New password does not match confirm password!');
-
-        try {
-            const response = await fetch('/auth/update-password', {
+            const res = await fetch('/auth/update', {
                 method: 'PATCH',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ currentPassword, newPassword }),
+                body: JSON.stringify({ email: emailInput.value, username: usernameInput.value }),
             });
 
-            const data = await response.json();
-            data.success ? alert('Password updated successfully!') : alert(data.message || 'Failed to update password!');
-        } catch (err) {
-            console.error('Error updating password:', err);
-            alert('Error updating password');
-        }
-    });
+            const data = await res.json();
+            if (!data.success) return alert('Failed to update profile!');
+            window.location.reload();
+        });
+
+        // Password form
+        document.querySelector('.security-form')?.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const currentPassword = document.getElementById('current-password').value;
+            const newPassword = document.getElementById('new-password').value;
+            const confirmPassword = document.getElementById('confirm-password').value;
+
+            if (newPassword !== confirmPassword) return alert('New password does not match confirm password!');
+
+            try {
+                const response = await fetch('/auth/update-password', {
+                    method: 'PATCH',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ currentPassword, newPassword }),
+                });
+
+                const data = await response.json();
+                data.success ? alert('Password updated successfully!') : alert(data.message || 'Failed to update password!');
+            } catch (err) {
+                console.error('Error updating password:', err);
+                alert('Error updating password');
+            }
+        });
 
     // Account Deletion
     document.querySelector('.delete-account-btn')?.addEventListener('click', () => {
@@ -355,10 +417,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     };
 
-    // Workspace Invite & Member Management
-    const membersList = document.querySelector('.members-list');
-    const deleteMemberPopup = document.querySelector('.delete-member-popup');
-    const inviteSuccessPopup = document.querySelector('.workspace-popup.invite-success-popup');
+        // Workspace Invite & Member Management
+        const membersList = document.querySelector('.members-list');
+        const deleteMemberPopup = document.querySelector('.delete-member-popup');
+        const inviteSuccessPopup = document.querySelector('.workspace-popup.invite-success-popup');
 
     if (workspaceData?.workspace?.pendingInvites?.length > 0) {
         workspaceData.workspace.pendingInvites.forEach(invite => {
@@ -403,38 +465,39 @@ document.addEventListener('DOMContentLoaded', async () => {
         hidePopup(deleteMemberPopup);
     });
 
-    inviteSuccessPopup?.querySelector('.close-btn')?.addEventListener('click', () => {
-        hidePopup(inviteSuccessPopup);
-    });
+        inviteSuccessPopup?.querySelector('.close-btn')?.addEventListener('click', () => {
+            hidePopup(inviteSuccessPopup);
+        });
 
-    // Logout
-    const logoutPopup = document.querySelector('.logout-popup');
-    document.querySelector('.logout-btn')?.addEventListener('click', () => {
-        showPopup(logoutPopup);
-    });
+        // Logout
+        const logoutPopup = document.querySelector('.logout-popup');
+        document.querySelector('.logout-btn')?.addEventListener('click', () => {
+            showPopup(logoutPopup);
+        });
 
-    logoutPopup?.querySelector('.cancel-btn')?.addEventListener('click', () => {
-        hidePopup(logoutPopup);
-    });
+        logoutPopup?.querySelector('.cancel-btn')?.addEventListener('click', () => {
+            hidePopup(logoutPopup);
+        });        logoutPopup?.querySelector('.confirm-btn')?.addEventListener('click', () => {
+            fetch('/auth/logout', { method: 'POST' })
+                .then(res => res.json())
+                .then(data => {
+                    if (!data.success) return alert('Error logging out');
+                    hidePopup(logoutPopup);
+                    window.location.href = '/login';
+                })
+                .catch(err => {
+                    console.error('Logout error:', err);
+                    alert('Error logging out');
+                });
+        });
 
-    logoutPopup?.querySelector('.confirm-btn')?.addEventListener('click', () => {
-        fetch('/auth/logout', { method: 'POST' })
-            .then(res => res.json())
-            .then(data => {
-                if (!data.success) return alert('Error logging out');
-                hidePopup(logoutPopup);
-                window.location.href = '/login';
-            })
-            .catch(err => {
-                console.error('Logout error:', err);
-                alert('Error logging out');
-            });
-    });
-
-    document.addEventListener('click', (e) => {
-        if (e.target.classList.contains('workspace-popup')) {
-            hidePopup(e.target);
-            memberToDelete = null;
-        }
-    });
+        document.addEventListener('click', (e) => {
+            if (e.target.classList.contains('workspace-popup')) {
+                hidePopup(e.target);
+                memberToDeleteEmail = null;
+            }
+        });
+    } catch (error) {
+        console.error('Error initializing profile page:', error);
+    }
 });

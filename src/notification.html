@@ -6,7 +6,6 @@
     <link rel="stylesheet" href="./scss/main.scss">
     <title>Notifications | Project Kresta</title>
 </head>
-<script defer src="./js/notification.js"></script>
 <body class="notifications-page">
     <div class="title-header">
         <h1 class="title-h1">
@@ -22,7 +21,27 @@
         </div>
 
         <div class="notifications-list">
-            <!-- Notifications will be dynamically added here -->
+            <div class="notification-item unread">
+                <div class="notification-icon">
+                    <img src="./assets/icons/notifications/invite-accepted.png" alt="post">
+                </div>
+                <div class="notification-content">
+                    <div class="notification-title">Invite has been accepted</div>
+                    <div class="notification-text">User has accepted your invite</div>
+                    <div class="notification-time">2 minutes ago</div>
+                </div>
+            </div>
+
+            <div class="notification-item unread">
+                <div class="notification-icon">
+                    <img src="./assets/icons/notifications/task-complete.png" alt="analytics">
+                </div>
+                <div class="notification-content">
+                    <div class="notification-title">Task has been completed!</div>
+                    <div class="notification-text">A task you assigned to User 1 has been completed!</div>
+                    <div class="notification-time">1 hour ago</div>
+                </div>
+            </div>
         </div>
     </div>
 </body>
