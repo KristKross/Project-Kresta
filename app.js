@@ -6,6 +6,7 @@ const cors = require("cors");
 const sessionMiddleware = require("./config/session");
 const isAuthenticated = require("./middleware/sessionAuth");
 const checkPremiumTier = require("./middleware/checkPremiumTier");
+const checkAccountLink = require("./middleware/checkAccountLink");
 
 const app = express();
 
@@ -42,6 +43,18 @@ app.get('/home', (req, res) => {
     return res.sendFile(path.join(__dirname, 'dist', 'index.html'));
 });
 
+app.get('/about', (req, res) => {
+    res.sendFile(path.join(__dirname, 'dist', 'about.html'));
+});
+
+app.get('/contact', (req, res) => {
+    res.sendFile(path.join(__dirname, 'dist', 'contact.html'));
+});
+
+app.get('/pricing', (req, res) => {
+    res.sendFile(path.join(__dirname, 'dist', 'pricing.html'));
+});
+
 app.get('/login', (req, res) => {
     res.sendFile(path.join(__dirname, 'dist', 'login.html'));
 });
@@ -50,48 +63,29 @@ app.get('/register', (req, res) => {
     res.sendFile(path.join(__dirname, 'dist', 'register.html'));
 });
 
-app.get('/dashboard', (req, res) => {
-    if (!req.session.userData?.user) {
-        return res.redirect('/login');
-    }
+app.get('/dashboard', isAuthenticated, isAuthenticated, (req, res) => {
     res.sendFile(path.join(__dirname, 'dist', 'dashboard.html'));
 });
 
-app.get('/tasks', checkPremiumTier, (req, res) => {
-    if (!req.session.userData?.user) {
-        return res.redirect('/login');
-    }
+app.get('/tasks', isAuthenticated, checkPremiumTier, (req, res) => {
     res.sendFile(path.join(__dirname, 'dist', 'tasks.html'));
 });
 
-app.get('/planner', (req, res) => {
-    if (!req.session.userData?.user) {
-        return res.redirect('/login');
-    }
+app.get('/planner', isAuthenticated, (req, res) => {
     res.sendFile(path.join(__dirname, 'dist', 'planner.html'));
 });
 
-app.get('/analytics', (req, res) => {
-    if (!req.session.userData?.user) {
-        return res.redirect('/login');
-    }
+app.get('/analytics', isAuthenticated, checkAccountLink, (req, res) => {
     res.sendFile(path.join(__dirname, 'dist', 'analytics.html'));
 });
 
-app.get('/pricing', (req, res) => {
-    if (!req.session.userData?.user) {
-        return res.redirect('/login');
-    }
-    res.sendFile(path.join(__dirname, 'dist', 'pricing.html'));
-});
-
-app.get('/profile', (req, res) => {
-    if (!req.session.userData?.user) {
-        return res.redirect('/login');
-    }
+app.get('/profile', isAuthenticated, (req, res) => {
     res.sendFile(path.join(__dirname, 'dist', 'profile.html'));
 });
 
+app.get('/notification', isAuthenticated, (req, res) => {
+    res.sendFile(path.join(__dirname, 'dist', 'notification.html'));
+});
 
 app.use(express.static(path.join(__dirname, 'dist')));
 
