@@ -133,6 +133,24 @@ module.exports = {
             inject: 'body',
             chunks: ['main', 'pricing'],
         }),
+        new HtmlWebpackPlugin({
+            filename: '404.html',
+            template: './src/404.html',
+            inject: 'body',
+            chunks: ['main'],
+        }),
+        new HtmlWebpackPlugin({
+            filename: '403.html',
+            template: './src/403.html',
+            inject: 'body',
+            chunks: ['main'],
+        }),
+        new HtmlWebpackPlugin({
+            filename: '401.html',
+            template: './src/401.html',
+            inject: 'body',
+            chunks: ['main'],
+        }),
         ...(MODE === 'production' ? [
             new MiniCssExtractPlugin({
                 filename: "css/[name].[contenthash].css",

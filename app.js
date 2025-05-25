@@ -26,7 +26,7 @@ const protectedHtml = ['/tasks.html', '/planner.html', '/analytics.html', 'dashb
 
 app.use((req, res, next) => {
     if (!req.session.userData?.user && protectedHtml.includes(req.path)) {
-        return res.redirect('/login');
+        return res.redirect('/home');
     }
     next();
 });
@@ -61,6 +61,18 @@ app.get('/login', (req, res) => {
 
 app.get('/register', (req, res) => {
     res.sendFile(path.join(__dirname, 'dist', 'register.html'));
+});
+
+app.get('/401', (req, res) => {
+    res.sendFile(path.join(__dirname, 'dist', '401.html'));
+});
+
+app.get('/403', (req, res) => {
+    res.sendFile(path.join(__dirname, 'dist', '403.html'));
+});
+
+app.get('/404', (req, res) => {
+    res.sendFile(path.join(__dirname, 'dist', '404.html'));
 });
 
 app.get('/dashboard', isAuthenticated, (req, res) => {
@@ -110,6 +122,18 @@ app.use('/api', uploadRoutes);
 
 const notificationRoutes = require("./routes/notificationRoute");
 app.use('/api/notifications', isAuthenticated, notificationRoutes);
+
+app.use((req, res, next) => {
+    res.status(404).sendFile(path.join(__dirname, 'dist', '404.html'));
+});
+
+app.use((req, res, next) => {
+    res.status(401).sendFile(path.join(__dirname, 'dist', '401.html'));
+});
+
+app.use((req, res, next) => {
+    res.status(403).sendFile(path.join(__dirname, 'dist', '403.html'));
+});
 
 // Start the server
 const PORT = process.env.PORT;

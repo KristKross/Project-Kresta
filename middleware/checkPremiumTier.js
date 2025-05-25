@@ -27,7 +27,7 @@ module.exports = async function (req, res, next) {
             if (isApiRequest) {
                 return res.status(403).json({ success: false, message: "Pro or Business plan required" });
             } else {
-                return res.redirect("/home");
+                return res.redirect("/403");
             }
         }
 

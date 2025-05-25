@@ -5,7 +5,7 @@ module.exports = async (req, res, next) => {
         const sessionUser = req.session?.userData?.user;
 
         if (!sessionUser) {
-            return res.redirect("/login");
+            return res.redirect("/401");
         }
 
         const social = await Social.findOne({ userId: sessionUser._id });

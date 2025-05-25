@@ -17,12 +17,9 @@ async function fetchUserData() {
         if (response.ok) {
             const res = await response.json();
             userData = res
-        } else {
-            window.location.href = "/login";
         }
     } catch (err) {
         console.error("Error fetching user", err);
-        window.location.href = "/login";
     }
 }
 
