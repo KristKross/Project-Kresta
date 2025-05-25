@@ -106,10 +106,10 @@ const instagramRoutes = require("./routes/instagramRoute");
 app.use('/api/instagram', isAuthenticated, instagramRoutes);
 
 const workspaceRoutes = require("./routes/workspaceRoute");
-app.use('/api/workspace', checkPremiumTier, isAuthenticated, workspaceRoutes);
+app.use('/api/workspace', isAuthenticated, checkPremiumTier, workspaceRoutes);
 
 const taskRoutes = require("./routes/taskRoute");
-app.use('/api/task', checkPremiumTier, isAuthenticated, taskRoutes);
+app.use('/api/task', isAuthenticated, checkPremiumTier, taskRoutes);
 
 const uploadRoutes = require("./routes/uploadRoute");
 app.use('/api', uploadRoutes);
