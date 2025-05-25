@@ -92,9 +92,6 @@ exports.inviteMember = async (req, res) => {
       user: userToInvite._id,
       type: "invite",
       message: `You have been invited to join ${workspace.name}.`,
-      workspaceId: workspace._id,
-      workspaceName: workspace.name,
-      ownerEmail: req.session.userData.user.email
     });
 
     res.json({ success: true, user: userToInvite, message: "Invitation sent. Awaiting acceptance." });
