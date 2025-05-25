@@ -12,6 +12,7 @@ const ignorePages = [
     '/404',
     '/500',
     '/creators',
+    '/creators.html'
 ];
 
 // Pages where we want to show the sidebar
