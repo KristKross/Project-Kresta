@@ -1,4 +1,4 @@
-    @use '../base/animations' as *;
+@use '../base/animations' as *;
 @use '../base/typography' as *;
 @use '../base/colors' as *;
 @use '../base/breakpoints' as *;
@@ -71,6 +71,10 @@ body.dragging-post {
     visibility: hidden;
     pointer-events: none;
     will-change: transform, opacity, visibility;
+    // Add transition to base state so it applies when closing too
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                opacity 0.3s ease,
+                visibility 0s linear 0.3s; // Delay visibility change
 
     @include mobile {
         width: 100%;
@@ -86,9 +90,10 @@ body.dragging-post {
         opacity: 1;
         visibility: visible;
         pointer-events: all;
+        // Update transition when active - remove visibility delay
         transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
                     opacity 0.3s ease,
-                    visibility 0.3s ease;
+                    visibility 0s linear 0s; 
 
         @include mobile {
             transform: translateY(0);
@@ -224,7 +229,9 @@ body.dragging-post {
                         }
                     }
                 }
-            }            .planner-grid {
+            }            
+            
+            .planner-grid {
                 display: flex;
                 flex-direction: column;
                 gap: 8px;

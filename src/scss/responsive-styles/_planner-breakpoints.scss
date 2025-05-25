@@ -1,143 +1,465 @@
 @use '../base/breakpoints' as *;
 @use '../base/colors' as *;
 
-// For screens up to 600px (Mobile First)
+// For screens up to 600px (Mobile)
 @include mobile {
     .planner-page {
-        margin-bottom: 100px; // Add bottom margin for sidebar button
-    }
+        margin-left: 0;
+        width: 100%;
+        margin-bottom: 100px; // Space for bottom navigation
+        overflow-x: hidden;
+        .planner-container {
+            flex-direction: column;
+            padding: 10px;
+            gap: 15px; // Reduce gap between elements
 
-    .planner-container {
-        flex-direction: column;
-        padding: 10px;
-        margin-bottom: 100px; // Add bottom margin for sidebar button
-        
-        .planner-sidebar {
-            width: 100% !important;
-            max-width: none !important;
-            padding: 15px !important;
-            gap: 20px !important;
-            display: flex !important;
-            flex-direction: column !important; // Changed from row to column
-
-            .platform-selector {
-                display: grid !important;
-                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)) !important;
-                gap: 15px !important;
-                width: 100% !important;
-                
-                .platform-checkbox {
-                    padding: 12px !important;
+            .planner-content{
+                .planner-grid{
+                    .planner-column{
+                        height: calc(20% - 40px); // Adjust total height accounting for padding
+                    }
                 }
             }
-
-            .action-buttons {
-                display: grid !important;
-                grid-template-columns: 1fr 1fr !important;
-                gap: 12px !important;
-                width: 100% !important;
+            
+            .planner-sidebar {
+                width: 100% !important; 
+                max-width: none !important;
+                padding: 15px !important;
+                border-radius: 10px;
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+                
+                // Better layout for platform selector 
+                .platform-selector {
+                    .h2 {
+                        margin-bottom: 10px;
+                    }
+                    
+                    // Horizontal scrolling platform options
+                    .platform-options {
+                        display: flex !important;
+                        overflow-x: auto;
+                        white-space: nowrap;
+                        padding-bottom: 10px;
+                        
+                        .platform-checkbox {
+                            flex-shrink: 0;
+                            margin-right: 10px;
+                            padding: 8px 12px !important;
+                        }
+                    }
+                }
+                
+                // Quick actions in a horizontal row
+                .quick-actions {
+                    .h2 {
+                        margin-bottom: 10px;
+                    }
+                    
+                    // Put buttons side by side
+                    display: flex !important;
+                    flex-direction: column !important;
+                    gap: 10px !important;
+                    
+                    .action-btn {
+                        padding: 12px !important; // Larger touch target
+                    }
+                }
             }
-        }
-
-        .planner-content {
-            width: 100%;
+    
+            .planner-content {
+                width: 100%;
+                
+                // Better header controls layout
+                .planner-header {
+                    .header-controls {
+                        flex-direction: column;
+                        align-items: flex-start;
+                        gap: 15px;
+                        
+                        // Wider view toggle buttons
+                        .view-toggle {
+                            width: 100%;
+                            justify-content: center;
+                            
+                            .view-btn {
+                                flex: 1;
+                                text-align: center;
+                                padding: 10px 0; // Larger touch target
+                            }
+                        }
+                        
+                        // Wider date navigation
+                        .date-nav {
+                            width: 100%;
+                            justify-content: space-between;
+                            
+                            .nav-btn {
+                                padding: 8px; // Larger touch target
+                                
+                                img {
+                                    width: 28px; // Larger icons
+                                    height: 28px;
+                                }
+                            }
+                        }
+                    }
+                }
+                
+                // Mobile-friendly grid
+                .planner-grid {
+                    height: auto !important;
+                    
+                    .day-labels {
+                        display: none !important; // Hide day labels on mobile
+                    }
+                    
+                    // Calendar grid for mobile
+                    .calendar-grid {
+                        &.week-view {
+                            display: block !important; // Stack days vertically
+                            
+                            .planner-column {
+                                margin-bottom: 12px; // Reduce margin between columns
+                                min-height: 50px !important; // Reduced from 150px
+                                max-height: none !important;
+                                
+                                .date-header {
+                                    font-size: 1.1em !important; // Slightly smaller font
+                                    padding: 8px 0 !important; // Reduced padding
+                                }
+                                
+                                // Make the posts more compact
+                                .posts-container {
+                                    .post-card {
+                                        padding: 4px !important;
+                                        margin-bottom: 4px !important;
+                                        min-height: 0 !important;
+                                    }
+                                }
+                            }
+                        }
+                        
+                        &.month-view {
+                            grid-template-columns: repeat(7, 1fr);
+                            grid-auto-rows: minmax(40px, auto);
+                            
+                            .planner-column {
+                                min-height: 40px !important;
+                                padding: 4px !important;
+                                
+                                .date-header {
+                                    font-size: 0.8em !important;
+                                    margin-bottom: 4px !important;
+                                }
+                                
+                                .posts-container {
+                                    max-height: 60px !important;
+                                    overflow-y: hidden !important;
+                                    
+                                    .post-card {
+                                        height: 20px !important;
+                                        padding: 2px !important;
+                                        margin-bottom: 2px !important;
+                                        
+                                        // Simplify mobile post card
+                                        .post-info p, .post-time, .edit-btn {
+                                            display: none !important;
+                                        }
+                                        
+                                        // Just show a colored dot
+                                        &::before {
+                                            content: '';
+                                            display: block;
+                                            width: 8px;
+                                            height: 8px;
+                                            border-radius: 50%;
+                                            margin: 0 auto;
+                                        }
+                                        
+                                        &.draft::before {
+                                            background-color: $status-draft;
+                                        }
+                                        
+                                        &.scheduled::before {
+                                            background-color: $status-scheduled;
+                                        }
+                                        
+                                        &.posted::before {
+                                            background-color: $status-success;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 
+
+    // Full-screen post creator on mobile
     .post-creator-panel {
         width: 100% !important;
-        height: 90vh !important;
-        top: auto !important;
-        right: 0 !important;
-        bottom: 0 !important;
-        left: 0 !important;
+        height: 100vh !important; // Use viewport height to ensure full screen
+        top: 0 !important;
+        bottom: auto !important;
         transform: translateY(100%) !important;
-        border-radius: 20px 20px 0 0;
-
+        display: flex !important; // Add flex display
+        flex-direction: column !important; // Stack content vertically
+    
         &.active {
             transform: translateY(0) !important;
+        }
+        
+        // Panel header styles if you have them
+        .panel-header {
+            flex-shrink: 0; // Don't let header shrink
+        }
+        
+        .panel-content {
+            padding: 15px !important;
+            padding-bottom: 80px !important; // Add space for fixed buttons
+            overflow-y: auto !important; // Enable scrolling
+            flex: 1 !important; // Take up available space
+            -webkit-overflow-scrolling: touch !important; // Smooth scrolling on iOS
+            
+            .form-group {
+                margin-bottom: 15px !important;
+            }
+            
+            // Bigger form controls for touch
+            input, textarea, select {
+                padding: 12px !important;
+                font-size: 16px !important; // Prevent zoom on iOS
+            }
+            
+            .action-buttons {
+                // position: fixed !important; // Fix at bottom
+                left: 0 !important;
+                right: 0 !important;
+                bottom: 0 !important;
+                padding: 15px !important;
+                background: white !important;
+                box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1) !important;
+                z-index: 10 !important; // Keep above other content
+                
+                button {
+                    width: 100%;
+                    padding: 15px !important;
+                }
+            }
         }
     }
 }
 
-// For screens between 601px and 1024px
+// For screens between 601px and 1024px (Tablet)
 @include tablet {
     .planner-page {
         height: auto;
         overflow: visible;
+        margin-left: 0;
+        width: calc(100% - 110px);
+        margin-bottom: 50px; // Less bottom space than mobile
+        margin-left: 110px;
         
         .planner-container {
-            height: auto;
-        }
-        
-        .planner-grid {
-            height: auto;
-            min-height: auto;
-        }
-        
-        .calendar-grid {
-            height: auto;
-            overflow: visible;
+            flex-direction: column;
+            padding: 15px;
+            gap: 20px;
 
-            &.month-view {
-                display: grid;
-                grid-template-columns: repeat(7, 1fr);
-                gap: 4px;
-                width: 100%;
-
-                .planner-column {
-                    position: relative;
-                    width: 100%;
-                    padding-top: 100%;
-                    min-height: unset;
-                    aspect-ratio: unset;
-
-                    &::after {
-                        content: '';
-                        display: block;
-                        padding-bottom: 100%;
+            
+            .planner-content{
+                .planner-grid{
+                    .planner-column{
+                        height: calc(20% - 40px); // Adjust total height accounting for padding
                     }
-
-                    .column-content {
-                        position: absolute;
-                        top: 0;
-                        left: 0;
-                        right: 0;
-                        bottom: 0;
-                        padding: 8px;
-                        display: flex;
+                }
+            }
+            
+            .planner-sidebar {
+                width: 100% !important;
+                max-width: none !important;
+                padding: 15px !important;
+                border-radius: 10px;
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+                
+                // Use mobile-style horizontal scrolling platform options
+                .platform-selector {
+                    .h2 {
+                        margin-bottom: 10px;
+                    }
+                    
+                    .platform-options {
+                        display: flex !important;
+                        overflow-x: auto;
+                        white-space: nowrap;
+                        padding-bottom: 10px;
+                        
+                        .platform-checkbox {
+                            flex-shrink: 0;
+                            margin-right: 10px;
+                            padding: 8px 12px !important;
+                        }
+                    }
+                }
+                
+                // Match mobile quick actions layout
+                .quick-actions {
+                    .h2 {
+                        margin-bottom: 10px;
+                    }
+                    
+                    display: flex !important;
+                    flex-direction: column !important;
+                    gap: 10px !important;
+                    
+                    .action-btn {
+                        padding: 12px !important;
+                    }
+                }
+            }
+            
+            .planner-content {
+                width: 100%;
+                
+                // Match mobile header controls layout
+                .planner-header {
+                    .header-controls {
                         flex-direction: column;
+                        align-items: flex-start;
+                        gap: 15px;
+                        
+                        .view-toggle {
+                            width: 100%;
+                            justify-content: center;
+                            
+                            .view-btn {
+                                flex: 1;
+                                text-align: center;
+                                padding: 10px 0;
+                            }
+                        }
+                        
+                        .date-nav {
+                            width: 100%;
+                            justify-content: space-between;
+                            
+                            .nav-btn {
+                                padding: 8px;
+                                
+                                img {
+                                    width: 28px;
+                                    height: 28px;
+                                }
+                            }
+                        }
+                    }
+                }
+                
+                // Match mobile grid layout
+                .planner-grid {
+                    height: auto !important;
+                    
+                    .day-labels {
+                        display: none !important;
+                    }
+                    
+                    .calendar-grid {
+                        &.week-view {
+                            display: block !important; // Stack days vertically
+                            
+                            .planner-column {
+                                margin-bottom: 12px;
+                                min-height: 50px !important; // Use mobile height
+                                max-height: none !important;
+                                
+                                .date-header {
+                                    font-size: 1.1em !important;
+                                    padding: 8px 0 !important;
+                                }
+                                
+                                .posts-container {
+                                    .post-card {
+                                        padding: 4px !important;
+                                        margin-bottom: 4px !important;
+                                        min-height: 0 !important;
+                                    }
+                                }
+                            }
+                        }
+                        
+                        &.month-view {
+                            grid-template-columns: repeat(7, 1fr);
+                            grid-auto-rows: minmax(40px, auto);
+                            
+                            .planner-column {
+                                min-height: 40px !important;
+                                padding: 4px !important;
+                                
+                                .date-header {
+                                    font-size: 0.8em !important;
+                                    margin-bottom: 4px !important;
+                                }
+                                
+                                .posts-container {
+                                    max-height: 60px !important;
+                                    overflow-y: hidden !important;
+                                    
+                                    .post-card {
+                                        height: 20px !important;
+                                        padding: 2px !important;
+                                        margin-bottom: 2px !important;
+                                        
+                                        // Simplify post card just like mobile
+                                        .post-info p, .post-time, .edit-btn {
+                                            display: none !important;
+                                        }
+                                        
+                                        // Use the same colored dot approach
+                                        &::before {
+                                            content: '';
+                                            display: block;
+                                            width: 8px;
+                                            height: 8px;
+                                            border-radius: 50%;
+                                            margin: 0 auto;
+                                        }
+                                        
+                                        &.draft::before {
+                                            background-color: $status-draft;
+                                        }
+                                        
+                                        &.scheduled::before {
+                                            background-color: $status-scheduled;
+                                        }
+                                        
+                                        &.posted::before {
+                                            background-color: $status-success;
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
         }
     }
-
+    
+    // Keep the existing tablet-specific panel styles
     .post-creator-panel {
-        position: fixed !important;
-        bottom: 0 !important;
-        right: 0 !important;
-        left: 0 !important;
-        width: 100% !important;
-        height: 85vh !important;
+        width: 80% !important;
+        height: fit-content !important;
+        left: 10% !important;
+        right: 10% !important;
+        top: 5vh !important;
+        bottom: auto !important;
         transform: translateY(100%) !important;
-        border-radius: 20px 20px 0 0;
+        border-radius: 15px !important;
         
         &.active {
             transform: translateY(0) !important;
-        }
-    }
-}
-
-// For screens 1025px and above
-@include desktop {
-    .post-creator-panel {
-        width: 40vw !important;
-        right: 0 !important;
-        transform: translateX(100%) !important;
-
-        &.active {
-            transform: translateX(0) !important;
         }
     }
 }
