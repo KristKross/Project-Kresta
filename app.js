@@ -45,6 +45,10 @@ app.get('/pricing', (req, res) => {
     res.sendFile(path.join(__dirname, 'dist', 'pricing.html'));
 });
 
+app.get('/privacy-policy', (req, res) => {
+    res.sendFile(path.join(__dirname, 'dist', 'privacyPolicy.html'));
+});
+
 app.get('/login', (req, res) => {
     if (req.session.userData?.user) return res.redirect('/dashboard');
     res.sendFile(path.join(__dirname, 'dist', 'login.html'));
@@ -53,10 +57,6 @@ app.get('/login', (req, res) => {
 app.get('/register', (req, res) => {
     if (req.session.userData?.user) return res.redirect('/dashboard');
     res.sendFile(path.join(__dirname, 'dist', 'register.html'));
-});
-
-app.get('/privacy-policy', isAuthenticated, (req, res) => {
-    res.sendFile(path.join(__dirname, 'dist', 'privacyPolicy.html'));
 });
 
 app.get('/401', (req, res) => {
