@@ -12,7 +12,7 @@ const cloudinary = require("../config/cloudinary");
 exports.register = async (req, res) => {
     try {
         const { username, email, password, confirmPassword } = req.body;
-
+        
         // Check if password and confirmPassword match
         if (password !== confirmPassword) {
             return res.status(400).json({ success: false, message: "Passwords do not match" });
@@ -28,6 +28,11 @@ exports.register = async (req, res) => {
         const usernameExists = await User.findOne({ username });
         if (usernameExists) {
             return res.status(400).json({ success: false, message: "Username already taken" });
+        }
+
+        // Check if password length is at least 6 characters
+        if (password.length < 6) {
+            return res.status(400).json({ success: false, message: "Password must be at least 6 characters long" });
         }
 
         // Uses bcrypt to hash the password before saving it to the database
@@ -243,6 +248,38 @@ exports.deleteAccount = async (req, res) => {
     } catch (error) {
         console.error("Error deleting user account:", error);
         res.status(500).json({ success: false, message: "Error deleting user account" });
+    }
+};
+
+// @route   PATCH /auth/update-pricing
+exports.updatePricing = async (req, res) => {
+    try {
+        const { newTier } = req.body;
+        const validTiers = ["free", "pro", "business"];
+
+        if (!validTiers.includes(newTier)) {
+            return res.status(400).json({ success: false, message: "Invalid tier option" });
+        }
+
+        const sessionUser = req.session?.userData?.user;
+        if (!sessionUser) {
+            return res.status(401).json({ success: false, message: "User not logged in" });
+        }
+
+        const premiumData = await Premium.findOneAndUpdate(
+            { userId: sessionUser._id },
+            { tier: newTier },
+        );
+
+        if (!premiumData) {
+            return res.status(404).json({ success: false, message: "Premium data not found" });
+        }
+
+        res.json({ success: true, message: "Pricing updated successfully", premium: premiumData });
+
+    } catch (error) {
+        console.error("Error updating pricing:", error);
+        res.status(500).json({ success: false, message: "Error updating pricing" });
     }
 };
 

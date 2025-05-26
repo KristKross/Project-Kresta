@@ -21,4 +21,7 @@ router.delete("/delete", authController.deleteAccount);
 // Profile Picture
 router.get('/profile-picture/:folderName/:publicId', authController.getProfilePicture);
 
+// Update Pricing
+router.patch('/update-pricing', authController.updatePricing);
+
 module.exports = router;
