@@ -249,11 +249,12 @@ document.addEventListener('DOMContentLoaded', () => {
             const cloudinaryPublicId = uploadResult.publicId;
 
             const postFormData = {
-                title: postForm.querySelector('.post-title').value,
                 caption: postForm.querySelector('.post-description').value,
                 mediaPublicId: cloudinaryPublicId,
                 resourceType: fileType,
             };
+
+            console.log('Post Form Data:', postFormData);
 
             const postResponse = await fetch('/api/instagram/publish', {
                 method: 'POST',
