@@ -35,11 +35,16 @@ document.addEventListener('DOMContentLoaded', async function () {
             success: '#6B8E6B',
             warning: '#D4A418',
             error: '#C44536'
-        };
-
-        const commonOptions = {
+        };        const commonOptions = {
             responsive: true,
-            maintainAspectRatio: false,
+            maintainAspectRatio: true,
+            aspectRatio: 1.5,
+            onResize: function(chart, size) {
+                // This ensures the chart maintains proper aspect ratio when resized
+                setTimeout(() => {
+                    chart.resize();
+                }, 0);
+            },
             plugins: {
                 legend: {
                     position: 'bottom',
@@ -107,7 +112,10 @@ function initializeEngagementChart(analytics, colors, options) {
                     ...options.plugins.legend,
                     position: 'right'
                 }
-            }
+            },
+            maintainAspectRatio: true,
+            responsive: true,
+            aspectRatio: 1.5
         }
     });
 }
@@ -134,6 +142,9 @@ function initializeContentChart(analytics, colors, options) {
         },
         options: {
             ...options,
+            maintainAspectRatio: true,
+            responsive: true,
+            aspectRatio: 1.5,
             scales: {
                 y: {
                     beginAtZero: true,
@@ -199,6 +210,9 @@ function initializeRadarChart(analytics, colors, options) {
         },
         options: {
             ...options,
+            maintainAspectRatio: true,
+            responsive: true,
+            aspectRatio: 2,
             scales: {
                 r: {
                     beginAtZero: true,

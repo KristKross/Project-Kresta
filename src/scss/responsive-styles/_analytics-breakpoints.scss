@@ -36,29 +36,23 @@
                         font-size: 1.5em !important;
                     }
                 }
-            }
-
-            .charts-container {
+            }            .charts-container {
                 grid-template-columns: 1fr !important;
-                grid-template-rows: repeat(3, 300px);
+                grid-template-rows: repeat(3, 320px);
                 gap: 15px;
                 min-height: auto;
 
                 .chart-wrapper {
                     padding: 16px !important;
-                    height: 300px !important;
 
                     .chart-header h3 {
                         font-size: 1em;
                     }
 
-                    canvas {
-                        top: 60px !important;
-                        left: 16px !important;
-                        right: 16px !important;
-                        bottom: 16px !important;
-                        width: calc(100% - 32px) !important;
-                        height: calc(100% - 76px) !important;
+                    .chart-container {
+                        min-height: 240px;
+                    }                    canvas {
+                        width: 100% !important;
                     }
 
                     &.wide {
