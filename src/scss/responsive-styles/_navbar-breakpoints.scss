@@ -85,29 +85,73 @@ nav {
             justify-content: center;
             align-items: center;
         }
-    }
-
-    @include tablet {
+    }    @include tablet {
         padding: 1rem 2rem;
 
-        .nav-links {
-            gap: 1.5rem;
-            transform: none;
-            opacity: 1;
-            pointer-events: all;
-            position: relative;
-            height: auto;
-            padding: 0;
-            flex-direction: row;
+        .nav-btn {
+            display: flex !important;
+            justify-content: center;
+            align-items: center;
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            transition: transform 0.3s ease;
+            z-index: 9999;
+
+            &.active {
+                transform: translateX(-50%) rotate(90deg);
+            }
+        }        .nav-links {
+            display: flex !important;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: fixed;
+            top: 80px;
+            left: 0;
+            right: 0;
+            height: calc(100vh - 80px);
+            padding: 2rem;
+            background-color: rgba($primary-navy-blue, 0.95);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            transform: translateY(100%);
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            
+            &.active {
+                transform: translateY(0);
+                opacity: 1;
+                pointer-events: all;
+            }
+
+            li {
+                opacity: 0;
+                transform: translateY(20px);
+                transition: all 0.3s ease;
+                transition-delay: calc(var(--delay) * 0.1s);
+            }
+
+            &.active li {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .logo {
             width: 70px;
             height: 70px;
+            position: relative;
+            left: 0;
+            transform: none;
+            margin-right: auto;
         }
 
-        .nav-btn {
-            display: none !important; // Force hide on tablet and above
+        .login-btn {
+            margin: 0;
+            padding: 0.75rem 1.25rem;
         }
     }
 
