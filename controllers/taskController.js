@@ -42,6 +42,10 @@ exports.createTask = async (req, res) => {
 exports.getAllTasks = async (req, res) => {
     const workspace = await getWorkspace(req);
 
+    if (!workspace) {
+        return res.status(404).json({ error: 'Workspace not found' });
+    }
+
     try {
         const tasks = await Task.find({ workspace: workspace._id })
             .populate('assignedTo', 'username profilePicture');

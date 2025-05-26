@@ -132,7 +132,7 @@ async function fetchTasks() {
             method: 'GET',
             credentials: 'include'
         });
-
+        
         if (response.status === 403) {
             throw new Error('Forbidden');
         }
@@ -274,6 +274,16 @@ async function updateTaskSection() {
             <h3>No Premium Plan</h3>
             <p>Upgrade to premium or join a workspace to add tasks</p>
             <a href="/pricing"><button class="create-task-btn">Upgrade Now</button></a>
+        `;
+        return;
+    }
+
+    if (result.error === 'Failed to fetch tasks') {
+        tasksContainer.innerHTML = `
+            <img src="${taskImagePath}" alt="No tasks">
+            <h3>No Workspace Found</h3>
+            <p>Create a workspace first to create tasks</p>
+            <a href="/profile?tab=workspace"><button class="create-task-btn">Create Workspace</button></a>
         `;
         return;
     }
