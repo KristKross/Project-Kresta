@@ -83,11 +83,6 @@ async function updatePricing(event) {
         if (res.ok) {
             // Show success notification instead of reloading
             showPlanSwitchNotification(planName);
-            
-            // Optional: Still reload after showing notification for a moment
-            setTimeout(() => {
-                location.reload();
-            }, 2000);
         } else {
             // Show error notification using the same system but with error styling
             showErrorNotification(data.message || 'Failed to update plan');

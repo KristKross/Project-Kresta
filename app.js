@@ -29,6 +29,10 @@ app.get('/', (req, res) => {
     return res.redirect('/home');
 });
 
+app.get(/\.html$/, (req, res) => {
+    return res.redirect(req.url.replace('.html', ''));
+});
+
 app.get('/home', (req, res) => {
     return res.sendFile(path.join(__dirname, 'dist', 'index.html'));
 });
@@ -79,7 +83,12 @@ app.get('/creators', isAuthenticated, (req, res) => {
     res.sendFile(path.join(__dirname, 'dist', 'creators.html'));
 });
 
-app.get('/tasks', isAuthenticated, checkPremiumTier, (req, res) => {
+const { getWorkspace } = require('./utils/workspaceUtil');
+app.get('/tasks', isAuthenticated, checkPremiumTier, async (req, res) => {
+    const workspace = await getWorkspace(req);
+    if (!workspace) {
+        return res.redirect('/profile?tab=workspace');
+    }
     res.sendFile(path.join(__dirname, 'dist', 'tasks.html'));
 });
 
