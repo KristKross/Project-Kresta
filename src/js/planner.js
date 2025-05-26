@@ -626,8 +626,7 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error("Error loading tasks into planner:", error);
         }
     }
-    
-    // Modify the updatePlannerGrid function to call loadTasksIntoPlanner after grid is created
+      // Modify the updatePlannerGrid function to call loadTasksIntoPlanner after grid is created
     const originalUpdatePlannerGrid = updatePlannerGrid;
     updatePlannerGrid = function() {
         originalUpdatePlannerGrid();
@@ -635,7 +634,49 @@ document.addEventListener('DOMContentLoaded', () => {
         loadTasksIntoPlanner();
     };
     
-    // Initialize the planner (existing code)
+    // Set up view toggle buttons
+    const viewButtons = document.querySelectorAll('.view-btn');
+    viewButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const view = button.dataset.view;
+            if (view && view !== currentView) {
+                currentView = view;
+                viewButtons.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+                updatePlannerGrid();
+            }
+        });
+    });
+    
+    // Set up month navigation buttons
+    const prevMonthBtn = document.querySelector('.prev-month');
+    const nextMonthBtn = document.querySelector('.next-month');
+    
+    prevMonthBtn?.addEventListener('click', () => {
+        if (currentView === 'week') {
+            // Move back one week
+            currentDate.setDate(currentDate.getDate() - 7);
+        } else {
+            // Move back one month
+            currentDate.setMonth(currentDate.getMonth() - 1);
+        }
+        updateCurrentMonth();
+        updatePlannerGrid();
+    });
+    
+    nextMonthBtn?.addEventListener('click', () => {
+        if (currentView === 'week') {
+            // Move forward one week
+            currentDate.setDate(currentDate.getDate() + 7);
+        } else {
+            // Move forward one month
+            currentDate.setMonth(currentDate.getMonth() + 1);
+        }
+        updateCurrentMonth();
+        updatePlannerGrid();
+    });
+    
+    // Initialize the planner
     updateCurrentMonth();
     updatePlannerGrid();
 });

@@ -2,6 +2,7 @@
 @use '../base/typography' as *;
 @use '../base/colors' as *;
 @use '../base/breakpoints' as *;
+@use 'sass:color';
 
 // Custom analytics colors
 $engagement-primary: $primary-navy-blue;
@@ -228,9 +229,7 @@ $engagement-error: #C44536;
                     }
                 }
             }
-        }
-
-        // Error state styling
+        }        // Error state styling
         .error-state-container {
             display: flex;
             flex-direction: column;
@@ -246,19 +245,21 @@ $engagement-error: #C44536;
             }
             
             .error-icon-wrapper {
-                width: 100px;
-                height: 100px;
+                width: 150px;
+                height: 150px;
                 border-radius: 50%;
-                background-color: rgba($primary-navy-blue, 0.08);
+                background-color: $accent-black;
                 display: flex;
                 align-items: center;
                 justify-content: center;
                 margin: 0 auto 24px;
                 
-                img {
+                .analytics-icon {
                     width: 60px;
                     height: 60px;
-                    opacity: 0.7;
+                    background: url('../assets/icons/analytics/analytics-logo.png') no-repeat center center;
+                    background-size: contain;
+                    // opacity: 0.7;
                     animation: pulse 2s infinite ease-in-out;
                 }
             }
@@ -291,15 +292,16 @@ $engagement-error: #C44536;
                 margin: 0 auto;
                 transition: all 0.2s ease;
                 
-                img {
+                .refresh-icon {
                     width: 18px;
                     height: 18px;
+                    background: url('../assets/icons/analytics/refresh.png') no-repeat center center;
+                    background-size: contain;
                     margin-right: 8px;
-                    filter: brightness(0) invert(1);
+                    // filter: brightness(0) invert(1); // Makes the icon white
                 }
-                
-                &:hover {
-                    background-color: darken($primary-navy-blue, 10%);
+                  &:hover {
+                    background-color: color.adjust($primary-navy-blue, $lightness: -10%);
                     transform: translateY(-2px);
                 }
                 
