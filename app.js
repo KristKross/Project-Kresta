@@ -55,6 +55,10 @@ app.get('/register', (req, res) => {
     res.sendFile(path.join(__dirname, 'dist', 'register.html'));
 });
 
+app.get('/privacy-policy', isAuthenticated, (req, res) => {
+    res.sendFile(path.join(__dirname, 'dist', 'privacyPolicy.html'));
+});
+
 app.get('/401', (req, res) => {
     res.sendFile(path.join(__dirname, 'dist', '401.html'));
 });
@@ -79,7 +83,7 @@ app.get('/tasks', isAuthenticated, checkPremiumTier, (req, res) => {
     res.sendFile(path.join(__dirname, 'dist', 'tasks.html'));
 });
 
-app.get('/planner', isAuthenticated, (req, res) => {
+app.get('/planner', isAuthenticated, checkAccountLink, (req, res) => {
     res.sendFile(path.join(__dirname, 'dist', 'planner.html'));
 });
 
@@ -108,7 +112,7 @@ const instagramRoutes = require("./routes/instagramRoute");
 app.use('/api/instagram', isAuthenticated, instagramRoutes);
 
 const workspaceRoutes = require("./routes/workspaceRoute");
-app.use('/api/workspace', isAuthenticated, checkPremiumTier, workspaceRoutes);
+app.use('/api/workspace', isAuthenticated, workspaceRoutes);
 
 const taskRoutes = require("./routes/taskRoute");
 app.use('/api/task', isAuthenticated, checkPremiumTier, taskRoutes);

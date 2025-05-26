@@ -130,7 +130,6 @@ label {
                     min-width: 200px;
 
                     .task-lines {
-                        white-space: pre-wrap;       /* CSS3 */
                         word-wrap: break-word;       /* IE */
                         overflow-wrap: break-word;   /* Modern browsers */
                         max-width: 100%;            /* Ensure content doesn't overflow container */

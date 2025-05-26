@@ -1,130 +1,99 @@
 import '../scss/main.scss';
-import { initializeSidebar } from './sidebar.js';
 
-// Pages where we don't want any header/footer/sidebar
-const ignorePages = [
-    '/login.html',
-    '/register.html',
-    '/404.html',
-    '/500.html',
-    '/login',
-    '/register',
-    '/404',
-    '/500',
-    // '/creators',
-    // '/creators.html'
-];
+function openNav() {
+    const sidenav = document.getElementById("mySidenav");
+    const mainContent = document.querySelector("main");
+    const openNavBtn = document.getElementById("openNav");
 
-// Pages where we want to show the sidebar
-const sidebarPages = [
-    '/dashboard',
-    '/dashboard.html',
-    '/planner',
-    '/planner.html',
-    '/tasks',
-    '/tasks.html',
-    '/analytics',
-    '/analytics.html',
-    '/profile',
-    '/profile.html',
-    '/settings',
-    '/settings.html',
-    '/notification',
-    '/notification.html',
-    '/creators',
-    '/creators.html',
-];
+    if (sidenav && mainContent) {
+        sidenav.style.display = "block"; // Ensure sidebar is visible
+        sidenav.classList.add("expanded");
+        mainContent.classList.add("shifted");
 
-document.addEventListener('DOMContentLoaded', () => {
-    // Get the full path and just the filename
-    const fullPath = window.location.pathname;
-    const filename = fullPath.split('/').pop();
-    
-    // If it's a page that should be ignored, don't add anything
-    if (ignorePages.includes(filename) || ignorePages.includes(fullPath)) return;
-    
-    // Check if current page is the index page
-    const isIndexPage = filename === 'index.html' || filename === '' || fullPath.endsWith('/');
-    
-    // Check if current page is a sidebar page
-    const isSidebarPage = !isIndexPage && sidebarPages.some(page => 
-        fullPath.endsWith(page) || filename === page
-    );
-    
-    if (isSidebarPage) {
-        addSidebar();
-    } else {
-        // For index and other pages, add navbar and footer
-        addNavbar();
-        addFooter();
+        // Force reflow to ensure transition applies
+        void sidenav.offsetWidth;
+
+        if (openNavBtn) {
+            openNavBtn.style.display = "none";
+        }
+
+        sidenav.setAttribute("aria-expanded", "true");
     }
-});
-
-// Function to add navbar
-function addNavbar() {
-    const header = document.createElement('header');
-    fetch('../templates/navbar.html')   
-        .then(response => response.text())
-        .then(data => {
-            header.innerHTML = data;
-            document.body.insertBefore(header, document.body.firstChild);
-            initializeNavigation();
-        })
-        .catch(error => console.error('Error fetching navbar:', error));
 }
 
-// Navigation initialization function
-function initializeNavigation() {
-    const nav = document.querySelector('nav');
-    const navBtn = document.querySelector('.nav-btn');
-    const navLinks = nav?.querySelector('.nav-links');
+function closeNav() {
+    const sidenav = document.getElementById("mySidenav");
+    const mainContent = document.querySelector("main");
+    const openNavBtn = document.getElementById("openNav");
+
+    if (sidenav && mainContent) {
+        sidenav.classList.remove("expanded");
+        mainContent.classList.remove("shifted");
+
+        setTimeout(() => {
+            if (openNavBtn) {
+                openNavBtn.style.display = "inline-block";
+            }
+            if (window.innerWidth <= 600) {
+                sidenav.style.display = "none";
+            }
+        }, 300); // Match CSS transition duration
+
+        sidenav.setAttribute("aria-expanded", "false");
+    }
+}
+
+function toggleNav() {
+    const sidenav = document.getElementById("mySidenav");
+    if (sidenav && sidenav.classList.contains("expanded")) {
+        closeNav();
+    } else {
+        openNav();
+    }
+}
+
+// Sidebar toggle functionality
+function initializeSidebar() {
+    const sidenav = document.getElementById("mySidenav");
+    const sidebarBtn = document.querySelector(".sidebar-btn");
+    const navItems = document.querySelector(".nav-items");
     let isMenuOpen = false;
 
-    function toggleMenu() {
+    function toggleSidebar() {
         isMenuOpen = !isMenuOpen;
-        navBtn?.classList.toggle('active', isMenuOpen);
-        navLinks?.classList.toggle('active', isMenuOpen);
-        document.body.style.overflow = isMenuOpen ? 'hidden' : '';
+        sidenav?.classList.toggle("active", isMenuOpen);
+        sidebarBtn?.classList.toggle("active", isMenuOpen);
+        document.body.style.overflow = isMenuOpen ? "hidden" : "";
     }
 
-    navBtn?.addEventListener('click', (e) => {
+    sidebarBtn?.addEventListener("click", (e) => {
         e.preventDefault();
         e.stopPropagation();
-        toggleMenu();
+        toggleSidebar();
     });
 
-    document.addEventListener('click', (e) => {
-        if (isMenuOpen && !navLinks?.contains(e.target) && !navBtn?.contains(e.target)) {
-            toggleMenu();
+    document.addEventListener("click", (e) => {
+        if (isMenuOpen && !sidenav?.contains(e.target) && !sidebarBtn?.contains(e.target)) {
+            toggleSidebar();
         }
     });
 
-    navLinks?.querySelectorAll('.nav-link').forEach(link => {
-        link.addEventListener('click', () => {
-            if (isMenuOpen) toggleMenu();
+    const navLinks = document.querySelectorAll(".nav-link");
+    navLinks.forEach((link) => {
+        link.addEventListener("click", () => {
+            if (window.innerWidth <= 600 && isMenuOpen) {
+                toggleSidebar();
+            }
         });
+    });
+
+    document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape" && isMenuOpen) {
+            toggleSidebar();
+        }
     });
 }
 
-// Function to add footer
-function addFooter() {
-    const footer = document.createElement('footer');
-    fetch('../templates/footer.html')   
-        .then(response => response.text())
-        .then(data => {
-            footer.innerHTML = data;
-            document.body.appendChild(footer);
-        })
-        .catch(error => console.error('Error fetching footer:', error));
-}
+// Run the initialization function once the DOM is loaded
+document.addEventListener("DOMContentLoaded", initializeSidebar);
 
-// Function to add sidebar - now calls initializeSidebar after loading
-function addSidebar() {
-    fetch('../templates/sidebar.html')   
-        .then(response => response.text())
-        .then(data => {
-            document.body.insertAdjacentHTML('afterbegin', data);
-            initializeSidebar(); // Initialize sidebar functionality after HTML is loaded
-        })
-        .catch(error => console.error('Error fetching sidebar:', error));
-}

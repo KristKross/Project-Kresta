@@ -16,13 +16,6 @@ module.exports = async function (req, res, next) {
             return next();
         }
 
-        // Check if user has a pending invite
-        const hasInvite = await Workspace.findOne({ pendingInvites: { $in: [userId] } });
-
-        if (hasInvite) {
-            return next();
-        }
-
         // Check premium tier
         const premiumInfo = await Premium.findOne({ userId });
         const tier = premiumInfo?.tier || "free";

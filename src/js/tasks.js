@@ -1,6 +1,26 @@
 import trashIconPath from '../assets/icons/tasks/trash.png';
 import defaultProfilePath from '../assets/images/dashboard/user-pfp.png';
 
+async function fetchProfileImage(publicId) {
+    if (!publicId) {
+        return defaultProfilePath;
+    }
+    try {
+        const res = await fetch(`/auth/profile-picture/${publicId}`);
+        const data = await res.json();
+
+        if (!res.ok || !data.success) {
+            console.warn('Failed to retrieve profile picture, using default.');
+            return defaultProfilePath ; // Return default on failure
+        }
+
+        return data.imageUrl;
+    } catch (error) {
+        console.error('Error fetching profile picture:', error);
+        return defaultProfilePath ; // Return default on error
+    }
+};
+
 document.addEventListener('DOMContentLoaded', () => {
     // Function declarations first to prevent reference errors
     function isMobileView() {
@@ -25,8 +45,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function cleanupPanelStyles(panel) {
-        // Reset any inline styles
-        panel.style.cssText = '';
         
         // Apply the required styles based on view
         if (isMobileView()) {
@@ -93,23 +111,41 @@ document.addEventListener('DOMContentLoaded', () => {
                         _id: member._id,
                         email: member.email,
                         name: member.username,
-                        profilePic: null,
+                        profilePicture: member.profilePicture,
                     });
                 });
             }
 
             selectOptions.innerHTML = '';
 
-            membersList.forEach(member => {
-                const option = document.createElement('div');
-                option.className = 'option';
-                option.dataset.value = member._id;
-                option.innerHTML = `
-                    <img src="${member.profilePic || defaultProfilePath}" alt="${member.name}">
-                    <span>${member.name}</span>
-                `;
-                selectOptions.appendChild(option);
-            });
+            // Add the owner to the list of options
+            const ownerOption = document.createElement('div');
+            ownerOption.className = 'option';
+            ownerOption.dataset.value = workspace.owner._id;
+            ownerOption.innerHTML = `
+                <img src="${workspace.owner.profilePic || defaultProfilePath}" alt="${workspace.owner.username}">
+                <span>${workspace.owner.username}</span>
+            `;
+            selectOptions.appendChild(ownerOption);
+
+            const loadProfilePictures = async () => {
+                const promises = membersList.map(async (member) => {
+                    const profilePictureUrl = await fetchProfileImage(member.profilePicture);
+                    
+                    const option = document.createElement("div");
+                    option.className = "option";
+                    option.dataset.value = member._id;
+                    option.innerHTML = `
+                        <img src="${profilePictureUrl || defaultProfilePath}" alt="${member.name}">
+                        <span>${member.name}</span>
+                    `;
+                    selectOptions.appendChild(option);
+                });
+
+                await Promise.all(promises);
+            };
+
+            await loadProfilePictures();
 
             // Add click handlers to newly created options
             const options = selectOptions.querySelectorAll('.option');
@@ -147,9 +183,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const bulletEditor = document.querySelector('.bullet-editor');
 
     function formatTaskText(text) {
-        const lines = text.split('\n')
-            .map(line => line.trim())
-            .filter(line => line !== '');
+        const lines = text.split('\n').map(line => line.trim()).filter(line => line !== '');
 
         if (lines.length === 0) return '';
 
@@ -158,48 +192,52 @@ document.addEventListener('DOMContentLoaded', () => {
         </div>`;
     }
 
-    function createTaskCard(data) {
-        const taskCard = document.createElement('div');
-        taskCard.className = 'task-card';
-        taskCard.id = `task-${data._id}`; 
+    async function createTaskCard(data) {
+    const taskCard = document.createElement("div");
+    taskCard.className = "task-card";
+    taskCard.id = `task-${data._id}`;
 
-        taskCard.innerHTML = `
-            <div class="task-header">
-                <h3 class="task-title">${data.title}</h3>
-                <span class="priority ${data.priority.toLowerCase()}">${data.priority}</span>
+    // Fetch profile picture asynchronously
+    const profilePictureUrl = await fetchProfileImage(data.assignedTo?.profilePicture);
+
+    taskCard.innerHTML = `
+        <div class="task-header">
+            <h3 class="task-title">${data.title}</h3>
+            <span class="priority ${data.priority.toLowerCase()}">${data.priority}</span>
+        </div>
+        <div class="task-meta">
+            <span class="status ${data.status.toLowerCase()}">${data.status}</span>
+            <span class="date">${new Date(data.dueDate).toLocaleDateString()}</span>
+        </div>
+        <div class="task-preview">
+            ${formatTaskText(data.details)}
+        </div>
+        <div class="assignees">
+            <div class="assignee-wrapper">
+                <img src="${profilePictureUrl || defaultProfilePath}" alt="${data.assignedTo?.username}">
+                <div class="assignee-tooltip">Assigned to: ${data.assignedTo?.username}</div>
             </div>
-            <div class="task-meta">
-                <span class="status ${data.status.toLowerCase()}">${data.status}</span>
-                <span class="date">${new Date(data.dueDate).toLocaleDateString()}</span>
-            </div>
-            <div class="task-preview">
-                ${formatTaskText(data.details)}
-            </div>
-            <div class="assignees">
-                <div class="assignee-wrapper">
-                    <img src="${data.assigneeImage || defaultProfilePath}" alt="${data.assignedTo?.username}">
-                    <div class="assignee-tooltip">Assigned to: ${data.assignedTo?.username}</div>
-                </div>
-            </div>
-            <button class="delete-task">
-                <img src="${trashIconPath}" alt="">
-                <span>Delete Task</span>
-            </button>
-        `;
+        </div>
+        <button class="delete-task">
+            <img src="${trashIconPath}" alt="">
+            <span>Delete Task</span>
+        </button>
+    `;
 
-        const deleteDialog = document.querySelector('.delete-confirmation-dialog');
+    const deleteDialog = document.querySelector(".delete-confirmation-dialog");
 
-        taskCard.querySelector('.delete-task').addEventListener('click', () => {
-            deleteDialog.classList.add('active');
-            deleteDialog.dataset.targetTaskId = data._id;
+    taskCard.querySelector(".delete-task").addEventListener("click", () => {
+        deleteDialog.classList.add("active");
+        deleteDialog.dataset.targetTaskId = data._id;
 
-            deleteDialog.querySelector('.cancel-delete').onclick = () => {
-                deleteDialog.classList.remove('active');
-            };
-        });
+        deleteDialog.querySelector(".cancel-delete").onclick = () => {
+            deleteDialog.classList.remove("active");
+        };
+    });
 
-        return taskCard;
-    }
+    return taskCard;
+}
+
 
     const deleteDialog = document.querySelector('.delete-confirmation-dialog');
     deleteDialog.querySelector('.confirm-delete').addEventListener('click', async () => {
@@ -224,17 +262,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
     async function loadTasks() {
         try {
-            const response = await fetch('api/task/get');
-            if (!response.ok) throw new Error('Failed to load tasks');
+            const response = await fetch("api/task/get");
+            if (!response.ok) throw new Error("Failed to load tasks");
+
             const tasks = await response.json();
-            tasks.forEach(data => {
-                const taskCard = createTaskCard(data);
+
+            for (const data of tasks) {
+                const taskCard = await createTaskCard(data);
                 tasksList.appendChild(taskCard);
-            });
+            }
         } catch (error) {
-            console.error('Error loading tasks:', error);
+            console.error("Error loading tasks:", error);
         }
     }
+
 
     loadTasks();
 
@@ -271,7 +312,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const createdTask = await res.json();
 
-            const newTask = createTaskCard(createdTask);
+            const newTask = await createTaskCard(createdTask);
             tasksList.insertBefore(newTask, tasksList.querySelector('.task-card'));
 
             taskForm.reset();

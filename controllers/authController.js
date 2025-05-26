@@ -1,6 +1,9 @@
 const User = require("../models/User");
 const Social = require("../models/Social");
 const Premium = require("../models/Premium");
+const Task = require("../models/Task");
+const Notification = require("../models/Notification");
+const Workspace = require("../models/Workspace");
 const { initializeSession } = require("../utils/sessionUtil");
 const bcrypt = require("bcrypt");
 const cloudinary = require("../config/cloudinary");
@@ -225,6 +228,9 @@ exports.deleteAccount = async (req, res) => {
 
         await Social.findOneAndDelete({ userId: user._id });
         await Premium.findOneAndDelete({ userId: user._id });
+        await Notification.deleteMany({ user: user._id });
+        await Task.deleteMany({ createdBy: user._id });
+        await Workspace.deleteMany({ owner: user._id });
 
         req.session.destroy(err => {
             if (err) {

@@ -23,8 +23,7 @@ module.exports = {
         about: "./src/js/about.js",
         contact: "./src/js/contact.js",
         pricing: "./src/js/pricing.js",
-        sidebar: "./src/js/sidebar.js",
-        sidebar: "./src/js/creators.js",
+        privacyPolicy: "./src/js/privacyPolicy.js",
     },
     optimization: {
         splitChunks: {
@@ -37,24 +36,6 @@ module.exports = {
         publicPath: '/', 
     },
     plugins: [
-        new HtmlWebpackPlugin({
-            filename: 'templates/navbar.html',
-            template: './src/templates/navbar.html',
-            inject: false,
-            chunks: ['main'],
-        }),
-        new HtmlWebpackPlugin({
-            filename: 'templates/footer.html',
-            template: './src/templates/footer.html',
-            inject: false,
-            chunks: ['main'],
-        }),
-        new HtmlWebpackPlugin({
-            filename: 'templates/sidebar.html',
-            template: './src/templates/sidebar.html',
-            inject: false,
-            chunks: ['main'],
-        }),
         new HtmlWebpackPlugin({
             filename: 'index.html', 
             template: './src/index.html',
@@ -132,6 +113,12 @@ module.exports = {
             template: './src/pricing.html',
             inject: 'body',
             chunks: ['main', 'pricing'],
+        }),
+        new HtmlWebpackPlugin({
+            filename: 'privacyPolicy.html',
+            template: './src/privacyPolicy.html',
+            inject: 'body',
+            chunks: ['main', 'privacyPolicy'],
         }),
         new HtmlWebpackPlugin({
             filename: '404.html',
