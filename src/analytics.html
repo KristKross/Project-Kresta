@@ -4,7 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Analytics | Project Kresta</title>
+    <link rel="icon" type="image/png" href="./assets/favicon-logo.png">
+    <link rel="stylesheet" href="./scss/main.scss">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script type="module" src="./js/analytics.js"></script>
 </head>
 <body class="analytics-page">    <!-- Sidebar Toggle Button - Move this OUTSIDE the sidebar -->
     <button class="sidebar-btn" aria-label="Toggle sidebar">
@@ -61,64 +64,126 @@
             <img src="./assets/icons/analytics/analytics-logo.png" alt="">
             Analytics
         </h1>
-    </div>
-
+    </div>    
     <div class="analytics-container">
+        <!-- Key Metrics Overview -->
         <div class="metrics-overview">
-            <div class="metric-group engagement">
-                <h2>Engagement Metrics</h2>
-                <div class="metric-cards">
-                    <div class="metric-card">
-                        <div class="metric-icon">
-                            <img src="./assets/icons/dashboard/like.png" alt="">
-                        </div>
-                        <div class="metric-data">
-                            <span id="engagement-metric-value" class="metric-value"></span>
-                        </div>
+            <div class="metric-card primary">
+                <div class="metric-header">
+                    <div class="metric-icon">
+                        <img src="./assets/icons/dashboard/like.png" alt="Engagement">
                     </div>
-                    <!-- Repeat for Comments, Replies, Interactions -->
+                    <h3>Total Engagement</h3>
+                </div>
+                <div class="metric-value" id="engagement-metric-value">0</div>
+                <div class="metric-subtitle">Accounts Engaged</div>
+            </div>
+
+            <div class="metric-card secondary">
+                <div class="metric-header">
+                    <div class="metric-icon">
+                        <img src="./assets/icons/dashboard/interactions.png" alt="Reach">
+                    </div>
+                    <h3>Total Reach</h3>
+                </div>
+                <div class="metric-value" id="reach-metric-value">0</div>
+                <div class="metric-subtitle">Unique Accounts</div>
+            </div>
+
+            <div class="metric-card tertiary">
+                <div class="metric-header">
+                    <div class="metric-icon">
+                        <img src="./assets/icons/dashboard/interactions.png" alt="Interactions">
+                    </div>
+                    <h3>Total Interactions</h3>
+                </div>
+                <div class="metric-value" id="total-interactions-value">0</div>
+                <div class="metric-subtitle">All Engagements</div>
+            </div>
+
+            <div class="metric-card accent">
+                <div class="metric-header">
+                    <div class="metric-icon">
+                        <img src="./assets/icons/dashboard/interactions.png" alt="Followers">
+                    </div>
+                    <h3>Follower Growth</h3>
+                </div>
+                <div class="metric-value" id="audience-metric-value">0</div>
+                <div class="metric-subtitle">Follows & Unfollows</div>
+            </div>
+        </div>
+
+        <!-- Detailed Analytics Charts -->
+        <div class="charts-container">            <!-- Engagement Breakdown -->
+            <div class="chart-wrapper">
+                <div class="chart-header">
+                    <h3>Engagement Breakdown</h3>
+                    <span class="chart-subtitle">Individual engagement metrics</span>
+                </div>
+                <div class="chart-container">
+                    <canvas id="engagementChart"></canvas>
                 </div>
             </div>
 
-            <div class="metric-group audience">
-                <h2>Audience Metrics</h2>
-                <div class="metric-cards">
-                    <div class="metric-card">
-                        <div class="metric-icon">
-                            <img src="./assets/icons/dashboard/interactions.png" alt="">
-                        </div>
-                        <div class="metric-data">
-                            <span id="audience-metric-value" class="metric-value"></span>
-                            <span class="metric-label">Followers</span>
-                            <span id="audience-metric-trend" class="metric-trend positive"></span>
-                        </div>
-                    </div>
-                    <!-- Repeat for Views -->
+            <!-- Content Performance -->
+            <div class="chart-wrapper">
+                <div class="chart-header">
+                    <h3>Content Performance</h3>
+                    <span class="chart-subtitle">Views vs interactions</span>
+                </div>
+                <div class="chart-container">
+                    <canvas id="contentChart"></canvas>
                 </div>
             </div>
 
-            <div class="metric-group distribution">
-                <h2>Distribution Metrics</h2>
-                <div class="metric-cards">
-                    <!-- Reach and Shares cards -->
+            <!-- Audience Engagement Radar -->
+            <div class="chart-wrapper wide">
+                <div class="chart-header">
+                    <h3>Audience Engagement Overview</h3>
+                    <span class="chart-subtitle">Multi-dimensional performance analysis</span>
+                </div>
+                <div class="chart-container">
+                    <canvas id="radarChart"></canvas>
                 </div>
             </div>
         </div>
 
-        <div class="charts-container">
-            <div class="chart-wrapper">
-                <h3>Performance Overview</h3>
-                <canvas id="groupedBarChart"></canvas>
+        <!-- Additional Insights -->
+        <div class="insights-container">
+            <div class="insight-card">
+                <h4>Engagement Details</h4>
+                <div class="insight-metrics">
+                    <div class="insight-item">
+                        <span class="insight-label">Likes</span>
+                        <span class="insight-value" id="likes-value">0</span>
+                    </div>
+                    <div class="insight-item">
+                        <span class="insight-label">Comments</span>
+                        <span class="insight-value" id="comments-value">0</span>
+                    </div>
+                    <div class="insight-item">
+                        <span class="insight-label">Shares</span>
+                        <span class="insight-value" id="shares-value">0</span>
+                    </div>
+                    <div class="insight-item">
+                        <span class="insight-label">Replies</span>
+                        <span class="insight-value" id="replies-value">0</span>
+                    </div>
+                </div>
             </div>
 
-            <div class="chart-wrapper">
-                <h3>Metric Distribution</h3>
-                <canvas id="radarChart"></canvas>
-            </div>
-
-            <div class="chart-wrapper wide">
-                <h3>Trends Over Time</h3>
-                <canvas id="stackedAreaChart"></canvas>
+            <div class="insight-card">
+                <h4>Content Metrics</h4>
+                <div class="insight-metrics">
+                    <div class="insight-item">
+                        <span class="insight-label">Total Views</span>
+                        <span class="insight-value" id="views-value">0</span>
+                    </div>
+                    <div class="insight-item">
+                        <span class="insight-label">Engagement Rate</span>
+                        <span class="insight-value" id="engagement-rate">0%</span>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

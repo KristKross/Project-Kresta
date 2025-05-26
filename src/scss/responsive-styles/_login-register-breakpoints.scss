@@ -51,13 +51,20 @@
 @include tablet {
     .login-page {
         .login-container {
+            height: 100vh; /* Ensure container takes full viewport height */
+            
             .login-container-left {
+                width: 50%; /* Make it take half the width */
+                height: 100%; /* Ensure it takes full height */
+                
                 .login-logo {
                     width: 300px;
                 }
             }
 
             .login-container-right {
+                width: 50%; /* Make it take half the width */
+                height: 100%; /* Ensure it takes full height */
                 padding: 2rem;
 
                 .login-form, 

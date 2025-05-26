@@ -35,24 +35,24 @@ module.exports = {
         path: path.resolve(__dirname, 'dist'), 
         publicPath: '/', 
     },
-    plugins: [
-        new HtmlWebpackPlugin({
+    plugins: [        new HtmlWebpackPlugin({
             filename: 'index.html', 
             template: './src/index.html',
             inject: 'body',
             chunks: ['main', 'index'],
-        }),
-        new HtmlWebpackPlugin({
+            favicon: './src/assets/favicon-logo.ico',
+        }),new HtmlWebpackPlugin({
             filename: 'login.html',
             template: './src/login.html',
             inject: 'body',
             chunks: ['main', 'login'],
-        }),
-        new HtmlWebpackPlugin({
+            favicon: './src/assets/favicon-logo.ico',
+        }),        new HtmlWebpackPlugin({
             filename: 'register.html',
             template: './src/register.html',
             inject: 'body',
             chunks: ['main', 'register'],
+            favicon: './src/assets/favicon-logo.ico',
         }),        
         new HtmlWebpackPlugin({
             filename: 'dashboard.html',
@@ -186,9 +186,8 @@ module.exports = {
                     'css-loader', 
                     'sass-loader', 
                 ],
-            },
-            {
-                test: /\.(png|jpg|jpeg|gif|svg)$/i,
+            },            {
+                test: /\.(png|jpg|jpeg|gif|svg|ico)$/i,
                 type: 'asset/resource',
                 generator: {
                     filename: 'assets/[name].[hash][ext]', 

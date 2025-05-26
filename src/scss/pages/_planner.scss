@@ -563,3 +563,119 @@ body.dragging-post {
         }
     }
 }
+
+// Add these styles to your existing planner styles
+
+// Task container in planner
+.tasks-container {
+    margin-top: 12px;
+    padding-top: 8px;
+    border-top: 1px solid $ui-border;
+}
+
+.tasks-label {
+    font-family: $font-staatliches;
+    font-size: 16px;
+    color: $primary-navy-blue;
+    margin-bottom: 8px;
+}
+
+// Task card styling for planner
+.planner-column .task-card {
+    background-color: rgba($ui-background, 0.9);
+    border-radius: 6px;
+    padding: 8px;
+    margin-bottom: 8px;
+    border-left: 4px solid transparent;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    
+    &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+    }
+    
+    &.high {
+        border-left-color: #C44536; // Priority high color
+    }
+    
+    &.medium {
+        border-left-color: #D4A418; // Priority medium color
+    }
+    
+    &.low {
+        border-left-color: #6B8E6B; // Priority low color
+    }
+    
+    .task-info {
+        .task-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 4px;
+            
+            .task-title {
+                font-weight: 600;
+                font-size: 14px;
+                color: $accent-black;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                max-width: 70%;
+            }
+            
+            .priority {
+                font-size: 10px;
+                padding: 2px 5px;
+                border-radius: 4px;
+                font-weight: 600;
+                color: white;
+                
+                &.high {
+                    background-color: #C44536;
+                }
+                
+                &.medium {
+                    background-color: #D4A418;
+                }
+                
+                &.low {
+                    background-color: #6B8E6B;
+                }
+            }
+        }
+        
+        .task-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            
+            .assignee {
+                color: $accent-black;
+                opacity: 0.7;
+            }
+            
+            .status {
+                font-size: 10px;
+                padding: 1px 4px;
+                border-radius: 3px;
+                
+                &.pending {
+                    background-color: #F1F3F5;
+                    color: $accent-black;
+                }
+                
+                &.in.progress {
+                    background-color: $primary-navy-blue;
+                    color: white;
+                }
+                
+                &.completed {
+                    background-color: #6B8E6B;
+                    color: white;
+                }
+            }
+        }
+    }
+}

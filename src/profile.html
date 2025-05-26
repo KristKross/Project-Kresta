@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
+<head>    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profile | Project Kresta</title>
+    <link rel="icon" type="image/png" href="./assets/favicon-logo.png">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
@@ -122,7 +122,7 @@
                         <input type="email" class="form-input" id="email-input">
                     </div>
                     <div class="form-group">
-                        <label>Linked Accounts</label>
+                        <!-- <label>Linked Accounts</label>
                         <div class="linked-accounts">
                             <button type="button" class="platform-link">
                                 <img src="./assets/icons/footer/instagram.png" alt="Instagram">
@@ -132,7 +132,7 @@
                                 <img src="./assets/icons/footer/facebook.png" alt="Facebook">
                                 <span>Connected to Facebook</span>
                             </button>
-                        </div>
+                        </div> -->
                     </div>
                     <button type="submit" class="save-changes-btn">Save Changes</button>
                 </form>
@@ -150,13 +150,13 @@
                         <label>Member Since</label>
                         <p id="member-since"></p>
                     </div>
-                    <div class="info-group">
+                    <!-- <div class="info-group">
                         <label>Connected Platforms</label>
                         <div class="platform-badges">
                             <span class="platform-badge">Instagram</span>
                             <span class="platform-badge">Facebook</span>
                         </div>
-                    </div>
+                    </div> -->
                 </div>
             </div>
 
@@ -302,9 +302,7 @@
             <p>Team member has been invited successfully!</p>
             <button class="close-btn">Close</button>
         </div>
-    </div>
-
-    <!-- Popup for logout confirmation -->
+    </div>    <!-- Popup for logout confirmation -->
     <div class="workspace-popup logout-popup">
         <div class="popup-content">
             <i class="material-icons warning-icon">warning</i>
@@ -316,5 +314,8 @@
             </div>
         </div>
     </div>
+
+    <!-- Error/Success Notification -->
+    <div class="notification-container" id="notification-container"></div>
 </body>
 </html>
