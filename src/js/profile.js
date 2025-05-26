@@ -152,6 +152,28 @@ async function fetchProfileImage(publicId) {
     }
 };
 
+async function removeMember(email) {
+    fetch('/api/workspace/remove', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email })
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log(data);
+        if (!data.success) {
+            showProfileNotification(data.message || "Failed to remove member!", "error");
+            return;
+        }
+        document.querySelector(`.member[data-email="${email}"]`)?.remove();
+        showProfileNotification("Member removed.", "success");
+    })
+    .catch(error => {
+        console.error("Error removing member:", error);
+        showProfileNotification("Error removing member.", "error");
+    });
+};
+
 function showPopup(popup) {
     popup.classList.add('active');
 }
@@ -160,11 +182,11 @@ function hidePopup(popup) {
     popup.classList.remove('active');
 }
 
-// Function to add a pending invite member element
-// Added isOwner parameter
 async function addPendingInvite(data, membersList, deleteMemberPopup, setPendingInviteToDelete, isOwner) {
-    // Fetch profile picture using the user's profilePicture publicId
+    console.log("Adding pending invite data:", data.profilePicture);
     const profilePicture = await fetchProfileImage(data.profilePicture);
+
+    console.log("Adding pending invite:", profilePicture);
 
     const memberElement = document.createElement('div');
     memberElement.className = 'member';
@@ -177,13 +199,12 @@ async function addPendingInvite(data, membersList, deleteMemberPopup, setPending
         </div>
         <span class="member-role">Pending</span>
         ${isOwner ? `
-        <button class="remove-pending" title="Remove member">
+        <button class="remove-pending" title="Remove pending invite">
             <i class="material-icons">person_remove</i>
         </button>
         ` : ''}
     `;
 
-    // Only add event listener if the button exists (i.e., if isOwner is true)
     if (isOwner) {
         memberElement.querySelector('.remove-pending').addEventListener('click', () => {
             setPendingInviteToDelete(memberElement.dataset.email);
@@ -194,15 +215,12 @@ async function addPendingInvite(data, membersList, deleteMemberPopup, setPending
     membersList.appendChild(memberElement);
 }
 
-// New function to display an existing workspace member
-// Added isOwner parameter
 async function displayMember(memberData, membersList, role, isOwner) {
-    // Fetch profile picture using the member's profilePicture publicId
     const profilePicture = await fetchProfileImage(memberData.profilePicture);
 
     const memberElement = document.createElement('div');
     memberElement.className = 'member';
-    memberElement.dataset.email = memberData.email; // Still useful for identification
+    memberElement.dataset.email = memberData.email
     memberElement.innerHTML = `
         <img src="${profilePicture || defaultAvatarPath}" alt="" class="member-avatar">
         <div class="member-info">
@@ -218,15 +236,15 @@ async function displayMember(memberData, membersList, role, isOwner) {
     `;
 
     if (isOwner && role !== 'Owner') {
-         memberElement.querySelector('.remove-member')?.addEventListener('click', () => {
-
-         });
+        memberElement.querySelector('.remove-member')?.addEventListener('click', () => {
+            if (confirm(`Remove ${memberData.username} from workspace?`)) {
+                removeMember(memberData.email);
+            }
+        });
     }
-
 
     membersList.appendChild(memberElement);
 }
-
 
 function showWorkspaceTemplate(type) {
     const templates = document.querySelectorAll('.workspace-template');
@@ -307,7 +325,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         const ownerNameEl = document.querySelector(".owner-name");
         const ownerRoleEl = document.querySelector(".owner-role");
 
-
         const memberRoleEls = document.querySelectorAll('.member-role');
 
         const accountTypeEl = document.getElementById('account-type');
@@ -343,10 +360,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (workspaceData) {
             workspaceNameEls.forEach(el => el.textContent = workspaceData.workspace.name);
         }
-
-        // Tab switching logic is now handled by setupTabSwitching() at the beginning
-        // Remove the duplicate tab switching code here
-
 
         // Get profile picture
         const profilePictureInput = document.getElementById('profile-picture-input');
@@ -398,18 +411,18 @@ document.addEventListener('DOMContentLoaded', async () => {
                     body: JSON.stringify({ profilePicture: newPublicId }),
                 });
 
-                alert('Profile picture updated successfully!');
+                showProfileNotification('Profile picture updated successfully!', 'success');
                 // Update the displayed profile pictures immediately after successful upload
-                 const newImageUrl = await fetchProfileImage(newPublicId);
-                 if(newImageUrl) {
-                     document.querySelectorAll('.profile-picture').forEach(img => {
-                         img.src = newImageUrl;
-                     });
-                 }
+                const newImageUrl = await fetchProfileImage(newPublicId);
+                if(newImageUrl) {
+                    document.querySelectorAll('.profile-picture').forEach(img => {
+                        img.src = newImageUrl;
+                    });
+                }
 
             } catch (error) {
                 console.error('Error uploading profile picture:', error);
-                alert('Error uploading profile picture.');
+                showProfileNotification('Error uploading profile picture.', 'error');
             }
         });
 
@@ -424,7 +437,10 @@ document.addEventListener('DOMContentLoaded', async () => {
             });
 
             const data = await res.json();
-            if (!data.success) return alert('Failed to update profile!');
+            if (!data.success) {
+                showProfileNotification('Failed to update profile!', 'error');
+                return;
+            }
             window.location.reload();
         });
 
@@ -435,7 +451,10 @@ document.addEventListener('DOMContentLoaded', async () => {
             const newPassword = document.getElementById('new-password').value;
             const confirmPassword = document.getElementById('confirm-password').value;
 
-            if (newPassword !== confirmPassword) return alert('New password does not match confirm password!');
+            if (newPassword !== confirmPassword) {
+                showProfileNotification('New password does not match confirm password!', 'error');
+                return;
+            }
 
             try {
                 const response = await fetch('/auth/update-password', {
@@ -445,10 +464,14 @@ document.addEventListener('DOMContentLoaded', async () => {
                 });
 
                 const data = await response.json();
-                data.success ? alert('Password updated successfully!') : alert(data.message || 'Failed to update password!');
+                if (data.success) {
+                    showProfileNotification('Password updated successfully!', 'success');
+                } else {
+                    showProfileNotification(data.message || 'Failed to update password!', 'error');
+                }
             } catch (err) {
                 console.error('Error updating password:', err);
-                alert('Error updating password');
+                showProfileNotification('Error updating password', 'error');
             }
         });
 
@@ -460,19 +483,22 @@ document.addEventListener('DOMContentLoaded', async () => {
                 })
                 .then(res => res.json())
                 .then(data => {
-                    if (!data.success) return alert('Failed to delete account!');
+                    if (!data.success) {
+                        showProfileNotification('Failed to delete account!', 'error');
+                        return;
+                    }
                     window.location.href = '/home';
                 })
                 .catch(err => {
                     console.error('Error deleting account:', err);
-                    alert('Error deleting account');
+                    showProfileNotification('Error deleting account', 'error');
                 });
             }
         });
 
         // Download Data
         document.querySelector('.download-data-btn')?.addEventListener('click', () => {
-            alert('Your data is being prepared for download...');
+            showProfileNotification('Your data is being prepared for download...', 'info');
         });
 
         // Create Workspace Form
@@ -488,17 +514,21 @@ document.addEventListener('DOMContentLoaded', async () => {
                     });
 
                     const data = await response.json();
-                    if (!data.success) return alert(data.message || 'Failed to create workspace!');
+                    if (!data.success) {
+                        showProfileNotification(data.message || 'Failed to create workspace!', 'error');
+                        return;
+                    }
 
                     window.location.reload();
 
                 } catch (err) {
                     console.error('Error creating workspace:', err);
-                    alert('Error creating workspace');
+                    showProfileNotification('Error creating workspace', 'error');
                 }
             }
         });
 
+        // --- Remove Pending Invite ---
         const removePendingInvite = async (email) => {
             fetch('/api/workspace/invite', {
                 method: 'DELETE',
@@ -507,34 +537,23 @@ document.addEventListener('DOMContentLoaded', async () => {
             })
             .then(response => response.json())
             .then(data => {
-                if (!data.success) return alert(data.message || "Failed to remove invite!");
-
-                // Select and remove the element using the data-email attribute
+                if (!data.success) {
+                    showProfileNotification(data.message || "Failed to remove invite!", "error");
+                    return;
+                }
                 document.querySelector(`.member[data-email="${email}"]`)?.remove();
+                showProfileNotification("Invite removed.", "success");
             })
-            .catch(error => console.error("Error removing invite:", error));
+            .catch(error => {
+                console.error("Error removing invite:", error);
+                showProfileNotification("Error removing invite.", "error");
+            });
         };
 
-        const removeMember = async (email) => {
-            fetch('/api/workspace/remove', {
-                method: 'DELETE',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (!data.success) return alert(data.message || "Failed to remove member!");
-
-                // Select and remove the element using the data-email attribute
-                document.querySelector(`.member[data-email="${email}"]`)?.remove();
-            })
-            .catch(error => console.error("Error removing member:", error));
-        };
-
-        // Accept email string
+        let memberToDeleteEmail = null;
         const setPendingInviteToDelete = (email) => {
             if (email) {
-                memberToDeleteEmail = email; // Store the email
+                memberToDeleteEmail = email;
             }
         };
 
@@ -552,11 +571,10 @@ document.addEventListener('DOMContentLoaded', async () => {
             const isOwner = workspace.owner._id === user._id;
             const allMembers = [workspace.owner, ...workspace.members.filter(member => member._id !== workspace.owner._id)];
 
-
             if (allMembers.length > 0) {
                 allMembers.sort((a, b) => {
-                    if (a._id === workspace.owner._id) return -1; // Owner comes first
-                    if (b._id === workspace.owner._id) return 1; // Owner comes first
+                    if (a._id === workspace.owner._id) return -1;
+                    if (b._id === workspace.owner._id) return 1;
                     return 0;
                 });
 
@@ -566,20 +584,19 @@ document.addEventListener('DOMContentLoaded', async () => {
                 });
             }
 
-            // Display pending invites
             if (workspace.pendingInvites?.length > 0) {
                 workspace.pendingInvites.forEach(invite => {
-                    // Pass isOwner (of the current user) to addPendingInvite
                     addPendingInvite(invite, membersList, deleteMemberPopup, setPendingInviteToDelete, isOwner);
                 });
             }
         }
 
-
         document.querySelector('.invite-form')?.addEventListener('submit', (e) => {
             e.preventDefault();
+
             const emailInput = e.target.querySelector('input[type="email"]');
             const email = emailInput.value.trim();
+
             if (email) {
                 fetch('/api/workspace/invite', {
                     method: 'POST',
@@ -588,9 +605,10 @@ document.addEventListener('DOMContentLoaded', async () => {
                 })
                 .then(response => response.json())
                 .then(data => {
-                    if (!data.success) return alert(data.message || 'Failed to invite user!');
-                    // Use addPendingInvite for new invites, pass isOwner
-                    // isOwner status is based on the current user, which doesn't change here
+                    if (!data.success) {
+                        showProfileNotification(data.message || 'Failed to invite user!', 'error');
+                        return;
+                    }
                     const isOwnerCurrent = workspaceData?.workspace?.owner?._id === user._id;
                     addPendingInvite(data.user, membersList, deleteMemberPopup, setPendingInviteToDelete, isOwnerCurrent);
                     showPopup(inviteSuccessPopup);
@@ -598,7 +616,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 })
                 .catch(err => {
                     console.error('Error inviting user:', err);
-                    alert('Error inviting user');
+                    showProfileNotification('Error inviting user', 'error');
                 });
             }
         });
@@ -628,17 +646,21 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         logoutPopup?.querySelector('.cancel-btn')?.addEventListener('click', () => {
             hidePopup(logoutPopup);
-        });        logoutPopup?.querySelector('.confirm-btn')?.addEventListener('click', () => {
+        });
+        logoutPopup?.querySelector('.confirm-btn')?.addEventListener('click', () => {
             fetch('/auth/logout', { method: 'POST' })
                 .then(res => res.json())
                 .then(data => {
-                    if (!data.success) return alert('Error logging out');
+                    if (!data.success) {
+                        showProfileNotification('Error logging out', 'error');
+                        return;
+                    }
                     hidePopup(logoutPopup);
                     window.location.href = '/login';
                 })
                 .catch(err => {
                     console.error('Logout error:', err);
-                    alert('Error logging out');
+                    showProfileNotification('Error logging out', 'error');
                 });
         });
 
@@ -652,3 +674,4 @@ document.addEventListener('DOMContentLoaded', async () => {
         console.error('Error initializing profile page:', error);
     }
 });
+

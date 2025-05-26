@@ -67,23 +67,21 @@ exports.getMyWorkspace = async (req, res) => {
 exports.inviteMember = async (req, res) => {
   try {
     const { email } = req.body;
-    const ownerId = req.session?.userData?.user?._id;
+
+    const workspace = await Workspace.findOne({ owner: req.session?.userData?.user?._id });
+
+    const ownerId = workspace?.owner?.toString();
 
     if (!ownerId) {
       return res.status(401).json({ success: false, message: "User not authenticated" });
     }
 
-    const workspace = await Workspace.findOne({ owner: ownerId });
-    if (!workspace) {
-      return res.status(404).json({ success: false, message: "Workspace not found" });
-    }
-
     const userToInvite = await User.findOne({ email });
+
     if (!userToInvite) {
       return res.status(404).json({ success: false, message: "User not found" });
     }
 
-    // Check if the user is already in the workspace or if they are in any workspace
     const isUserInWorkspace = workspace.members.includes(userToInvite._id) ||
       await Workspace.findOne({ members: userToInvite._id });
 
@@ -251,8 +249,14 @@ exports.removeMember = async (req, res) => {
             return res.status(401).json({ success: false, message: "User not authenticated" });
         }
 
-        const { workspaceId, email } = req.body;
-        const workspace = await Workspace.findById(workspaceId);
+        const { email } = req.body;
+        const workspace = await Workspace.findOne({
+            $or: [
+                { owner: userId },
+                { members: userId }
+            ]
+        });
+
         if (!workspace) {
             return res.status(404).json({ success: false, message: "Workspace not found" });
         }
@@ -276,3 +280,4 @@ exports.removeMember = async (req, res) => {
         res.status(500).json({ success: false, message: "Error removing user from workspace" });
     }
 };
+

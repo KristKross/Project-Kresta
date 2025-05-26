@@ -16,6 +16,6 @@ router.delete('/invite', checkPremiumTier, workspaceController.removeInvite);
 router.post('/accept', workspaceController.acceptInvite);
 router.post('/decline', workspaceController.declineInvite);
 
-router.post('/remove', checkPremiumTier, workspaceController.removeMember);
+router.delete('/remove', checkPremiumTier, workspaceController.removeMember);
 
 module.exports = router;

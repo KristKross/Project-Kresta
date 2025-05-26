@@ -11,8 +11,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             const response = await fetch("/api/notifications/get");
             const data = await response.json();
 
-            console.log(data);
-
             if (data.success) {
                 return data.notifications.map(notification => ({
                     id: notification._id,
@@ -174,7 +172,16 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
 
         try {
-            await fetch("/api/notifications/mark-read", { method: "PUT" });
+            const notifications = Array.from(document.querySelectorAll('.notification-item'))
+                .map(item => ({ _id: item.dataset.id, user: item.dataset.userId }));;
+
+            await fetch("/api/notifications/mark-read", {
+                method: "PUT",
+                headers: {  
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ notificationId: notifications })
+            });
         } catch (error) {
             console.error("Error marking notifications as read:", error);
         }
