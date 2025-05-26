@@ -2,6 +2,75 @@ import defaultAvatarPath from '../assets/images/dashboard/user-pfp.png';
 import creatorBusinessPath from '../assets/icons/workspace/creator-business.png';
 import emptyWorkspacePath from '../assets/icons/workspace/empty-workspace.png';
 
+// Notification system for profile page
+function showProfileNotification(message, type = 'error', title = null) {
+    const container = document.getElementById('notification-container');
+    if (!container) return;
+
+    // Create notification element
+    const notification = document.createElement('div');
+    notification.className = `profile-notification ${type}`;
+    
+    // Determine icon based on type
+    const iconMap = {
+        success: 'check_circle',
+        error: 'error',
+        warning: 'warning',
+        info: 'info'
+    };
+    
+    // Determine title based on type if not provided
+    const defaultTitles = {
+        success: 'Success',
+        error: 'Error',
+        warning: 'Warning',
+        info: 'Information'
+    };
+    
+    const notificationTitle = title || defaultTitles[type] || 'Notification';
+    const iconName = iconMap[type] || 'info';
+    
+    notification.innerHTML = `
+        <i class="material-icons notification-icon">${iconName}</i>
+        <div class="notification-content">
+            <div class="notification-title">${notificationTitle}</div>
+            <div class="notification-message">${message}</div>
+        </div>
+        <button class="notification-close" type="button">
+            <i class="material-icons">close</i>
+        </button>
+    `;
+    
+    // Add close functionality
+    const closeBtn = notification.querySelector('.notification-close');
+    closeBtn.addEventListener('click', () => {
+        hideNotification(notification);
+    });
+    
+    // Add to container
+    container.appendChild(notification);
+    
+    // Trigger animation
+    setTimeout(() => {
+        notification.classList.add('show');
+    }, 100);
+    
+    // Auto-hide after 5 seconds for success/info, 7 seconds for error/warning
+    const autoHideDelay = (type === 'success' || type === 'info') ? 5000 : 7000;
+    setTimeout(() => {
+        hideNotification(notification);
+    }, autoHideDelay);
+}
+
+function hideNotification(notification) {
+    notification.classList.remove('show');
+    setTimeout(() => {
+        if (notification.parentElement) {
+            notification.parentElement.removeChild(notification);
+        }
+    }, 400);
+}
+
 // Move tab switching functionality to the beginning and make it independent
 // of other operations to ensure it works regardless of data loading
 function setupTabSwitching() {
