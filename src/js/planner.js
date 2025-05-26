@@ -253,9 +253,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 caption: postForm.querySelector('.post-description').value,
                 mediaPublicId: cloudinaryPublicId,
                 resourceType: fileType,
-                scheduled: scheduleToggle.checked,
-                scheduledTime: scheduleToggle.checked ? postForm.querySelector('.schedule-time').value : null,
-                status: scheduleToggle.checked ? 'scheduled' : 'posted'
             };
 
             const postResponse = await fetch('/api/instagram/publish', {

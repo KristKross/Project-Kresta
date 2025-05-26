@@ -1,5 +1,11 @@
 import '../scss/main.scss';
 
+window.addEventListener('load', () => {
+    if (window.location.hash === '#_=_') {
+        window.history.replaceState(null, document.title, window.location.pathname + window.location.search);
+    }
+});
+
 function openNav() {
     const sidenav = document.getElementById("mySidenav");
     const mainContent = document.querySelector("main");
