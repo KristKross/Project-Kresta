@@ -323,6 +323,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         const ownerNameEl = document.querySelector(".owner-name");
         const ownerRoleEl = document.querySelector(".owner-role");
+        const ownerAvatarEl = document.querySelector(".owner-avatar");
 
         const memberRoleEls = document.querySelectorAll('.member-role');
 
@@ -571,16 +572,13 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             if (ownerNameEl) ownerNameEl.textContent = workspace.owner.username;
             if (ownerRoleEl) ownerRoleEl.textContent = "Owner";
+            if (ownerAvatarEl) ownerAvatarEl.src = await fetchProfileImage(workspace.owner.profilePicture) || defaultAvatarPath;
 
-            const allMembers = [
-                workspace.owner,
-                ...workspace.members.filter(member => member._id !== workspace.owner._id)
-            ];
+            const nonOwnerMembers = workspace.members.filter(member => member._id !== workspace.owner._id);
 
             if (membersList) membersList.innerHTML = '';
-            allMembers.forEach(member => {
-                const role = member._id === workspace.owner._id ? 'Owner' : 'Member';
-                displayMember(member, membersList, role, isOwner);
+            nonOwnerMembers.forEach(member => {
+                displayMember(member, membersList, 'Member', isOwner);
             });
 
             if (workspace.pendingInvites?.length > 0) {
