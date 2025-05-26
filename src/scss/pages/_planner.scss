@@ -616,6 +616,7 @@ body.dragging-post {
             margin-bottom: 4px;
             
             .task-title {
+                @extend .body-large;
                 font-weight: 600;
                 font-size: 14px;
                 color: $accent-black;
