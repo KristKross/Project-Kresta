@@ -16,7 +16,7 @@
             .planner-content{
                 .planner-grid{
                     .planner-column{
-                        height: calc(20% - 40px); // Adjust total height accounting for padding
+                        height: calc(50% - 40px); // Adjust total height accounting for padding
                     }
                 }
             }
@@ -122,8 +122,7 @@
                                 margin-bottom: 12px; // Reduce margin between columns
                                 min-height: 50px !important; // Reduced from 150px
                                 max-height: none !important;
-                                
-                                .date-header {
+                                  .date-header {
                                     font-size: 1.1em !important; // Slightly smaller font
                                     padding: 8px 0 !important; // Reduced padding
                                 }
@@ -135,6 +134,32 @@
                                         margin-bottom: 4px !important;
                                         min-height: 0 !important;
                                     }
+                                }
+                                
+                                // Enhanced task container and cards
+                                .tasks-container {
+                                    margin-top: 16px !important;
+                                    padding-top: 12px !important;
+                                    border-top: 2px solid rgba($primary-navy-blue, 0.2) !important;
+                                    
+                                    .tasks-label {
+                                        font-size: 16px !important;
+                                        margin-bottom: 10px !important;
+                                        font-weight: bold !important;
+                                        background-color: rgba($primary-navy-blue, 0.1) !important;
+                                        padding: 4px 8px !important;
+                                        border-radius: 4px !important;
+                                        display: inline-block !important;
+                                    }
+                                }
+                                
+                                .task-card {
+                                    padding: 8px 10px !important;
+                                    min-height: 45px !important; 
+                                    margin-bottom: 10px !important;
+                                    border-left-width: 6px !important;
+                                    background-color: white !important;
+                                    box-shadow: 0 2px 6px rgba(0,0,0,0.15) !important;
                                 }
                             }
                         }
@@ -186,6 +211,50 @@
                                         
                                         &.posted::before {
                                             background-color: $status-success;
+                                        }
+                                    }
+                                }
+                                
+                                // Enhanced task container and cards for month view
+                                .tasks-container {
+                                    margin-top: 4px !important;
+                                    padding-top: 4px !important;
+                                    border-top: 1px solid rgba($primary-navy-blue, 0.2) !important;
+                                    
+                                    .tasks-label {
+                                        font-size: 10px !important;
+                                        margin: 0 0 2px 0 !important;
+                                        font-weight: bold !important;
+                                        color: $primary-navy-blue !important;
+                                        text-align: center !important;
+                                    }
+                                }
+                                
+                                .task-card {
+                                    height: 16px !important;
+                                    padding: 1px 2px !important;
+                                    margin-bottom: 2px !important;
+                                    border-left-width: 4px !important;
+                                    background-color: white !important;
+                                    
+                                    // Hide content but keep a visual indicator
+                                    .task-info {
+                                        height: 100% !important;
+                                        display: flex !important;
+                                        align-items: center !important;
+                                        justify-content: flex-end !important;
+                                        
+                                        .task-header .task-title,
+                                        .task-meta {
+                                            display: none !important;
+                                        }
+                                        
+                                        .task-header .priority {
+                                            width: 8px !important;
+                                            height: 8px !important;
+                                            border-radius: 50% !important;
+                                            padding: 0 !important;
+                                            margin-right: 2px !important;
                                         }
                                     }
                                 }
@@ -439,6 +508,50 @@
                                         }
                                     }
                                 }
+                                
+                                // Enhanced task container and cards for month view
+                                .tasks-container {
+                                    margin-top: 4px !important;
+                                    padding-top: 4px !important;
+                                    border-top: 1px solid rgba($primary-navy-blue, 0.2) !important;
+                                    
+                                    .tasks-label {
+                                        font-size: 10px !important;
+                                        margin: 0 0 2px 0 !important;
+                                        font-weight: bold !important;
+                                        color: $primary-navy-blue !important;
+                                        text-align: center !important;
+                                    }
+                                }
+                                
+                                .task-card {
+                                    height: 16px !important;
+                                    padding: 1px 2px !important;
+                                    margin-bottom: 2px !important;
+                                    border-left-width: 4px !important;
+                                    background-color: white !important;
+                                    
+                                    // Hide content but keep a visual indicator
+                                    .task-info {
+                                        height: 100% !important;
+                                        display: flex !important;
+                                        align-items: center !important;
+                                        justify-content: flex-end !important;
+                                        
+                                        .task-header .task-title,
+                                        .task-meta {
+                                            display: none !important;
+                                        }
+                                        
+                                        .task-header .priority {
+                                            width: 8px !important;
+                                            height: 8px !important;
+                                            border-radius: 50% !important;
+                                            padding: 0 !important;
+                                            margin-right: 2px !important;
+                                        }
+                                    }
+                                }
                             }
                         }
                     }
@@ -460,6 +573,84 @@
         
         &.active {
             transform: translateY(0) !important;
+        }
+    }
+    
+    // Enhanced task container and cards for tablet view
+    .planner-page .planner-container .planner-content .planner-grid .calendar-grid {
+        // Week view task styles
+        &.week-view .planner-column {
+            .tasks-container {
+                margin-top: 16px !important;
+                padding-top: 12px !important;
+                border-top: 2px solid rgba($primary-navy-blue, 0.2) !important;
+                background-color: rgba($ui-background, 0.4) !important;
+                padding: 8px !important;
+                border-radius: 6px !important;
+                
+                .tasks-label {
+                    font-size: 16px !important;
+                    margin-bottom: 10px !important;
+                    font-weight: bold !important;
+                    background-color: rgba($primary-navy-blue, 0.1) !important;
+                    padding: 4px 8px !important;
+                    border-radius: 4px !important;
+                    display: inline-block !important;
+                }
+            }
+            
+            .task-card {
+                padding: 10px 12px !important;
+                min-height: 50px !important;
+                margin-bottom: 12px !important;
+                border-left-width: 6px !important;
+                background-color: white !important;
+                box-shadow: 0 2px 6px rgba(0,0,0,0.15) !important;
+            }
+        }
+        
+        // Month view task styles
+        &.month-view .planner-column {
+            .tasks-container {
+                margin-top: 4px !important;
+                padding: 2px !important;
+                background-color: rgba($ui-background, 0.3) !important;
+                border-radius: 4px !important;
+                
+                .tasks-label {
+                    font-size: 9px !important;
+                    margin-bottom: 2px !important;
+                    text-align: center !important;
+                    color: $primary-navy-blue !important;
+                    font-weight: bold !important;
+                }
+            }
+            
+            .task-card {
+                margin-bottom: 2px !important;
+                height: 16px !important;
+                padding: 1px !important;
+                border-left-width: 4px !important;
+                background-color: white !important;
+                
+                .task-info {
+                    display: flex !important;
+                    justify-content: center !important;
+                    align-items: center !important;
+                    
+                    .task-meta, 
+                    .task-header .task-title {
+                        display: none !important;
+                    }
+                    
+                    .task-header .priority {
+                        width: 8px !important;
+                        height: 8px !important;
+                        border-radius: 50% !important;
+                        padding: 0 !important;
+                    }
+                }
+            }
         }
     }
 }

@@ -253,12 +253,12 @@ function showErrorState() {
             <div class="error-state-container">
                 <div class="error-state-content">
                     <div class="error-icon-wrapper">
-                        <img src="./assets/icons/analytics/analytics-logo.png" alt="Analytics">
+                        <div class="analytics-icon"></div>
                     </div>
                     <h3 class="error-title">Unable to load analytics data</h3>
                     <p class="error-message">Please check your connection and try again.</p>
                     <button class="retry-button">
-                        <img src="./assets/icons/analytics/refresh.png" alt="Retry">
+                        <div class="refresh-icon"></div>
                         Retry
                     </button>
                 </div>
