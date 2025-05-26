@@ -533,14 +533,13 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         grid.appendChild(calendarGrid);
-    }
-
-    // Function to create task card for planner view
+    }    // Function to create task card for planner view
     function createTaskCardForPlanner(task) {
         const taskCard = document.createElement('div');
         taskCard.className = `task-card ${task.priority.toLowerCase()}`;
         taskCard.dataset.taskId = task._id;
         
+        // Enhanced task card with more visible structure
         taskCard.innerHTML = `
             <div class="task-info">
                 <div class="task-header">
@@ -599,13 +598,44 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (!tasksContainer) {
                         // Create tasks container if it doesn't exist
                         tasksContainer = document.createElement('div');
-                        tasksContainer.className = 'tasks-container';
-                        
-                        // Add a label for the tasks section
+                        tasksContainer.className = 'tasks-container';                        // Add a label for the tasks section with enhanced visibility
                         const tasksLabel = document.createElement('div');
                         tasksLabel.className = 'tasks-label';
-                        tasksLabel.textContent = 'Tasks';
+                        
+                        // Adjust label styling based on view and device
+                        if (currentView === 'month') {
+                            tasksLabel.textContent = 'Tasks';
+                        } else {
+                            // Add a small icon for tasks in week view
+                            const taskIcon = document.createElement('span');
+                            taskIcon.innerHTML = '●';
+                            taskIcon.style.marginRight = '5px';
+                            tasksLabel.appendChild(taskIcon);
+                            tasksLabel.appendChild(document.createTextNode('Tasks'));
+                        }
+                        
                         tasksContainer.appendChild(tasksLabel);
+                        
+                        // For mobile/tablet, add a small badge with task count
+                        if (window.innerWidth <= 1024) {
+                            const taskCount = document.createElement('span');
+                            taskCount.className = 'task-count';
+                            taskCount.textContent = '1';
+                            taskCount.style.marginLeft = '5px';
+                            taskCount.style.backgroundColor = currentView === 'month' ? '#293241' : '#E5E9F0';
+                            taskCount.style.color = currentView === 'month' ? '#fff' : '#293241';
+                            taskCount.style.borderRadius = '50%';
+                            taskCount.style.padding = currentView === 'month' ? '1px 4px' : '1px 6px';
+                            taskCount.style.fontSize = currentView === 'month' ? '8px' : '11px';
+                            taskCount.style.fontWeight = 'bold';
+                            tasksLabel.appendChild(taskCount);
+                            
+                            // Add some emphasis to the container in month view
+                            if (currentView === 'month') {
+                                tasksContainer.style.backgroundColor = 'rgba(41, 50, 65, 0.05)';
+                                tasksContainer.style.borderRadius = '3px';
+                            }
+                        }
                         
                         // Find the posts-container and insert tasks after it
                         const postsContainer = targetColumn.querySelector('.posts-container');
@@ -625,16 +655,13 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (error) {
             console.error("Error loading tasks into planner:", error);
         }
-    }
-      // Modify the updatePlannerGrid function to call loadTasksIntoPlanner after grid is created
-    const originalUpdatePlannerGrid = updatePlannerGrid;
-    updatePlannerGrid = function() {
-        originalUpdatePlannerGrid();
+    }    // Modify the updatePlannerGrid function to call loadTasksIntoPlanner after grid is created
+    function updatePlannerGridWithTasks() {
+        updatePlannerGrid();
         // After grid is created, load tasks into it
         loadTasksIntoPlanner();
     };
-    
-    // Set up view toggle buttons
+      // Set up view toggle buttons
     const viewButtons = document.querySelectorAll('.view-btn');
     viewButtons.forEach(button => {
         button.addEventListener('click', () => {
@@ -643,7 +670,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 currentView = view;
                 viewButtons.forEach(btn => btn.classList.remove('active'));
                 button.classList.add('active');
-                updatePlannerGrid();
+                updatePlannerGridWithTasks();
             }
         });
     });
@@ -651,8 +678,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Set up month navigation buttons
     const prevMonthBtn = document.querySelector('.prev-month');
     const nextMonthBtn = document.querySelector('.next-month');
-    
-    prevMonthBtn?.addEventListener('click', () => {
+      prevMonthBtn?.addEventListener('click', () => {
         if (currentView === 'week') {
             // Move back one week
             currentDate.setDate(currentDate.getDate() - 7);
@@ -661,10 +687,9 @@ document.addEventListener('DOMContentLoaded', () => {
             currentDate.setMonth(currentDate.getMonth() - 1);
         }
         updateCurrentMonth();
-        updatePlannerGrid();
+        updatePlannerGridWithTasks();
     });
-    
-    nextMonthBtn?.addEventListener('click', () => {
+      nextMonthBtn?.addEventListener('click', () => {
         if (currentView === 'week') {
             // Move forward one week
             currentDate.setDate(currentDate.getDate() + 7);
@@ -673,10 +698,9 @@ document.addEventListener('DOMContentLoaded', () => {
             currentDate.setMonth(currentDate.getMonth() + 1);
         }
         updateCurrentMonth();
-        updatePlannerGrid();
+        updatePlannerGridWithTasks();
     });
-    
-    // Initialize the planner
+      // Initialize the planner
     updateCurrentMonth();
-    updatePlannerGrid();
+    updatePlannerGridWithTasks();
 });
