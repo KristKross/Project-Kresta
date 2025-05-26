@@ -132,7 +132,6 @@ async function fetchUserData() {
 }
 
 async function fetchProfileImage(publicId) {
-    // If publicId is not available, return default path immediately
     if (!publicId) {
         return defaultAvatarPath;
     }
@@ -142,13 +141,13 @@ async function fetchProfileImage(publicId) {
 
         if (!res.ok || !data.success) {
             console.warn('Failed to retrieve profile picture, using default.');
-            return defaultAvatarPath; // Return default on failure
+            return defaultAvatarPath;
         }
 
         return data.imageUrl;
     } catch (error) {
         console.error('Error fetching profile picture:', error);
-        return defaultAvatarPath; // Return default on error
+        return defaultAvatarPath;
     }
 };
 
@@ -569,20 +568,20 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (workspaceData?.workspace) {
             const workspace = workspaceData.workspace;
             const isOwner = workspace.owner._id === user._id;
-            const allMembers = [workspace.owner, ...workspace.members.filter(member => member._id !== workspace.owner._id)];
 
-            if (allMembers.length > 0) {
-                allMembers.sort((a, b) => {
-                    if (a._id === workspace.owner._id) return -1;
-                    if (b._id === workspace.owner._id) return 1;
-                    return 0;
-                });
+            if (ownerNameEl) ownerNameEl.textContent = workspace.owner.username;
+            if (ownerRoleEl) ownerRoleEl.textContent = "Owner";
 
-                allMembers.forEach(member => {
-                    const role = workspace.owner._id === member._id ? 'Owner' : 'Member';
-                    displayMember(member, membersList, role, isOwner);
-                });
-            }
+            const allMembers = [
+                workspace.owner,
+                ...workspace.members.filter(member => member._id !== workspace.owner._id)
+            ];
+
+            if (membersList) membersList.innerHTML = '';
+            allMembers.forEach(member => {
+                const role = member._id === workspace.owner._id ? 'Owner' : 'Member';
+                displayMember(member, membersList, role, isOwner);
+            });
 
             if (workspace.pendingInvites?.length > 0) {
                 workspace.pendingInvites.forEach(invite => {
