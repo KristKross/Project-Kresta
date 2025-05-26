@@ -68,11 +68,10 @@
             border-radius: 20px;
             @include hover-lift;
         }
-    }
-
-    .team-section {
+    }    .team-section {
         background-color: $primary-navy-blue;
         padding: 5em 2em;
+        text-align: center;
 
         .section-header {
             text-align: center;
@@ -93,23 +92,26 @@
                 background-color: $tertiary-beige;
                 border-radius: 10px;
             }
-        }
-
-        .team-grid {
+        }        .team-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 3em;
             max-width: 1400px;
             margin: 0 auto;
             padding: 0 2em;
-
-            .team-member {
+            justify-items: center;            .team-member {
                 background-color: $accent-white;
                 border-radius: 20px;
                 padding: 2em;
                 text-align: center;
                 @include hover-lift;  // Keep this for the card
                 transition: transform 0.3s ease;  // Add smooth transition
+                min-width: 320px;
+                max-width: 400px;
+                height: 620px;
+                width: 100%;
+                display: flex;
+                flex-direction: column;
 
                 &:hover {
                     transform: translateY(-10px);
@@ -138,13 +140,19 @@
                 h3 {
                     color: $primary-navy-blue;
                     margin-bottom: 0.5em;
-                }
-
-                .role {
+                }                .role {
                     @extend .body-large;
                     color: $accent-black;
                     margin-bottom: 1em;
                     font-weight: 500;
+                }
+
+                .body-regular {
+                    flex: 1;
+                    display: flex;
+                    align-items: center;
+                    color: $accent-black;
+                    line-height: 1.6;
                 }
 
                 .social-links {

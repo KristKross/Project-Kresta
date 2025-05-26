@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy Policy | Project Kresta</title>
+    <link rel="stylesheet" href="./scss/main.scss">
+</head>
+<body class="privacy-policy-page">
+    <header>
+        <nav>
+            <a href="/home" class="logo"><img src="./assets/images/logo.png" alt="Logo"></a>
+            
+            <ul class="nav-links">
+                <li style="--delay: 1"><a class="nav-link" href="/home">Home</a></li>
+                <span class="nav-separator"></span>
+                <li style="--delay: 2"><a class="nav-link" href="/about">About</a></li>
+                <span class="nav-separator"></span>
+                <li style="--delay: 3"><a class="nav-link" href="/contact">Contact</a></li>
+                <span class="nav-separator"></span>
+                <li style="--delay: 4"><a class="nav-link" href="/pricing">Pricing</a></li>
+            </ul>
+
+            <a href="/login" class="login-btn">Login | Register</a>
+            
+            <button class="nav-btn" aria-label="Toggle navigation">
+                <img src="./assets/icons/menu.png" alt="Menu" class="menu-icon">
+            </button>
+        </nav>
+    </header>        <!-- Privacy Policy Content -->
+        <div class="privacy-policy-container">
+            <div class="title-header">
+                <h1 class="display-1">Privacy Policy</h1>
+                <div class="seperator"></div>
+                <p class="subtitle">Last updated: May 26, 2025</p>
+            </div>
+
+            <div class="policy-content">
+                <div class="policy-section">
+                    <h2 class="section-title">Introduction</h2>
+                    <p class="section-text">
+                        Welcome to Kresta, a university project designed to demonstrate social media management capabilities. 
+                        This Privacy Policy explains how we collect, use, and protect your information when you use our 
+                        educational platform. As this is a university project, data handling practices are implemented 
+                        for demonstration and learning purposes.
+                    </p>
+                </div>
+
+                <div class="policy-section">
+                    <h2 class="section-title">Information We Collect</h2>
+                    
+                    <h3 class="subsection-title">Personal Information</h3>
+                    <ul class="policy-list">
+                        <li>Username and email address (for account creation)</li>
+                        <li>Password (encrypted using bcrypt hashing)</li>
+                        <li>Profile pictures (stored via Cloudinary)</li>
+                        <li>Account creation date and activity timestamps</li>
+                    </ul>
+
+                    <h3 class="subsection-title">Social Media Data</h3>
+                    <ul class="policy-list">
+                        <li>Instagram account information (when you connect your account)</li>
+                        <li>Facebook page data (for Instagram business account access)</li>
+                        <li>Instagram posts, comments, and engagement metrics</li>
+                        <li>Media content uploaded for social media publishing</li>
+                        <li>Access tokens (encrypted and stored securely)</li>
+                    </ul>
+
+                    <h3 class="subsection-title">Usage Data</h3>
+                    <ul class="policy-list">
+                        <li>Session information and login activity</li>
+                        <li>Workspace and task management data</li>
+                        <li>Analytics and performance metrics</li>
+                        <li>Notification preferences and history</li>
+                    </ul>
+                </div>
+
+                <div class="policy-section">
+                    <h2 class="section-title">How We Use Your Information</h2>
+                    <p class="section-text">We use your information for the following educational and demonstration purposes:</p>
+                    <ul class="policy-list">
+                        <li>Providing access to the Kresta platform features</li>
+                        <li>Managing user accounts and authentication</li>
+                        <li>Enabling social media content publishing and analytics</li>
+                        <li>Facilitating workspace collaboration and task management</li>
+                        <li>Demonstrating social media management capabilities</li>
+                        <li>Generating educational insights and analytics</li>
+                    </ul>
+                </div>
+
+                <div class="policy-section">
+                    <h2 class="section-title">Third-Party Services</h2>
+                    <p class="section-text">Kresta integrates with the following third-party services:</p>
+                    
+                    <div class="service-card">
+                        <h4>Instagram Basic Display API & Graph API</h4>
+                        <p>Used for accessing Instagram account data, publishing content, and retrieving analytics. 
+                        Your Instagram access tokens are encrypted before storage.</p>
+                    </div>
+
+                    <div class="service-card">
+                        <h4>Facebook Graph API</h4>
+                        <p>Used for OAuth authentication and accessing Instagram business accounts through 
+                        Facebook pages. Data is handled according to Facebook's privacy standards.</p>
+                    </div>
+
+                    <div class="service-card">
+                        <h4>Cloudinary</h4>
+                        <p>Used for secure media storage and management. Profile pictures and uploaded media 
+                        files are stored on Cloudinary's secure servers.</p>
+                    </div>
+
+                    <div class="service-card">
+                        <h4>MongoDB</h4>
+                        <p>Used as our primary database for storing user information, preferences, and 
+                        application data in a secure, encrypted format.</p>
+                    </div>
+                </div>
+
+                <div class="policy-section">
+                    <h2 class="section-title">Data Security</h2>
+                    <p class="section-text">We implement several security measures to protect your data:</p>
+                    <ul class="policy-list">
+                        <li><strong>Password Security:</strong> All passwords are hashed using bcrypt encryption</li>
+                        <li><strong>Token Encryption:</strong> Social media access tokens are encrypted using AES encryption via Crypto-JS</li>
+                        <li><strong>Secure Sessions:</strong> User sessions are managed securely with MongoDB session storage</li>
+                        <li><strong>HTTPS:</strong> All data transmission is secured with HTTPS encryption</li>
+                        <li><strong>Access Control:</strong> Role-based access control for workspace and premium features</li>
+                        <li><strong>Data Validation:</strong> Input validation and sanitization to prevent security vulnerabilities</li>
+                    </ul>
+                </div>
+
+                <div class="policy-section">
+                    <h2 class="section-title">Your Rights</h2>
+                    <p class="section-text">As a user of this educational platform, you have the following rights:</p>
+                    <ul class="policy-list">
+                        <li><strong>Access:</strong> View your personal data stored in your profile</li>
+                        <li><strong>Update:</strong> Modify your username, email, and profile information</li>
+                        <li><strong>Delete:</strong> Request account deletion (removes all associated data)</li>
+                        <li><strong>Disconnect:</strong> Unlink social media accounts at any time</li>
+                        <li><strong>Export:</strong> Download your data (feature available in profile settings)</li>
+                        <li><strong>Opt-out:</strong> Manage notification preferences</li>
+                    </ul>
+                </div>
+
+                <div class="policy-section">
+                    <h2 class="section-title">Data Retention</h2>
+                    <p class="section-text">
+                        As this is a university project, data retention policies are designed for educational purposes:
+                    </p>
+                    <ul class="policy-list">
+                        <li>User accounts and data are retained until manually deleted by the user</li>
+                        <li>Session data expires after 1 hour of inactivity</li>
+                        <li>Social media tokens are refreshed as needed for continued access</li>
+                        <li>Uploaded media files are stored securely on Cloudinary</li>
+                        <li>Analytics data is aggregated for demonstration purposes</li>
+                    </ul>
+                </div>
+
+                <div class="policy-section">
+                    <h2 class="section-title">Educational Purpose Disclaimer</h2>
+                    <div class="disclaimer-box">
+                        <h4>Important Notice</h4>
+                        <p>
+                            Kresta is developed as a university project for educational and demonstration purposes. 
+                            While we implement industry-standard security practices, this platform is not intended 
+                            for commercial use. Users should be aware that this is an academic project and should 
+                            use appropriate discretion when sharing sensitive information.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="policy-section">
+                    <h2 class="section-title">Cookie Policy</h2>
+                    <p class="section-text">We use cookies and similar technologies for:</p>
+                    <ul class="policy-list">
+                        <li>Session management and user authentication</li>
+                        <li>Maintaining user preferences and settings</li>
+                        <li>Ensuring platform functionality and security</li>
+                        <li>Analytics and performance monitoring</li>
+                    </ul>
+                </div>
+
+                <div class="policy-section">
+                    <h2 class="section-title">Changes to This Policy</h2>
+                    <p class="section-text">
+                        We may update this Privacy Policy as the project evolves. Any changes will be posted on this page 
+                        with an updated "Last updated" date. Continued use of the platform after changes constitutes 
+                        acceptance of the updated policy.
+                    </p>
+                </div>
+
+                <div class="policy-section">
+                    <h2 class="section-title">Contact Information</h2>
+                    <p class="section-text">
+                        For questions about this Privacy Policy or your data, please contact us through:
+                    </p>
+                    <ul class="policy-list">
+                        <li>University project supervisor or instructor</li>
+                        <li>Project documentation and repository</li>
+                        <li>Platform feedback features</li>
+                    </ul>
+                </div>
+
+                <div class="policy-section">
+                    <h2 class="section-title">Technical Implementation</h2>
+                    <p class="section-text">
+                        This platform is built using modern web technologies including Node.js, Express, MongoDB, 
+                        and integrates with Instagram and Facebook APIs. All code is developed following security 
+                        best practices appropriate for an educational project.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>    <footer>
+        <div class="container-1">
+            <div class="column column-1">
+                <h1 class="footer-title .h3">Pages</h1>
+                <div class="seperator"></div>
+                <a href="/register">Register | Login</a>
+                <a href="/planner">Create</a>
+                <a href="/analytics">Analytics</a>
+                <a href="/tasks">Tasks</a>
+                <a href="/dashboard">Dashboard</a>
+            </div>
+            <div class="column column-2">
+                <h1 class="footer-title">Support</h1>
+                <div class="seperator"></div>
+                <a href="#">Help Center</a>
+                <a href="#">Status</a>
+                <a href="#">Change Logs</a>
+                <a href="#">Request a Feature</a>
+            </div>
+
+            <div class="column-3-container">
+                <div class="column column-1">                    <h1 class="footer-title">Legal</h1>
+                    <div class="seperator"></div>
+                    <a href="#">Terms & Conditions</a>
+                    <a href="/privacy-policy">Privacy Policy</a>
+                </div>
+                <div class="column column-2">   
+                    <h1 class="footer-title">Socials</h1>  
+                    <div class="seperator"></div>
+                    <div class="socials-icons-container">
+                        <a href="https://www.instagram.com/projectkresta.official/" target="_blank" rel="noopener noreferrer"><img src="./assets/icons/footer/instagram.png" alt=""></a>
+                        <a href="https://www.linkedin.com/showcase/project-kresta"><img src="./assets/icons/footer/linkedin.png" alt="" target="_blank" rel="noopener noreferrer"></a>
+                        <a href="mailto:project.kresta@gmail.com"><img src="./assets/icons/footer/mail.png" alt="" target="_blank" rel="noopener noreferrer"></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="seperator"></div>
+
+        <div class="container-2">
+            <img src="./assets/icons/footer/logo-footer.png" alt="">
+            <p>© 2025 Project Kresta. Developed and maintained by KEA4 DIGITAL.<br>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <script src="./js/privacyPolicy.js"></script>
+</body>
+</html>

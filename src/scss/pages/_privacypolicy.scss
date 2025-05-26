@@ -1,0 +1,431 @@
+@use '../base/colors' as *;
+@use '../base/typography' as *;
+@use '../base/breakpoints' as *;
+@use 'sass:color';
+
+// Privacy Policy Page Styles
+.privacy-policy-container {
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+    font-family: 'Red Hat Display', sans-serif;
+
+    .title-header {
+        margin-bottom: 40px;
+        text-align: center;
+
+        .title-h1 {
+            @extend .h1;
+            color: $primary-navy-blue;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 10px;
+
+            img {
+                width: 40px;
+                height: 40px;
+            }
+        }        .subtitle {
+            @extend .body-regular;
+            color: $accent-black;
+            font-style: italic;
+            opacity: 0.7;
+        }
+    }
+
+    .policy-content {
+        background: white;
+        border-radius: 12px;
+        padding: 40px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        margin-bottom: 40px;
+
+        .policy-section {
+            margin-bottom: 40px;
+            border-bottom: 1px solid #f0f0f0;
+            padding-bottom: 30px;
+
+            &:last-child {
+                border-bottom: none;
+                margin-bottom: 0;
+                padding-bottom: 0;
+            }
+
+            .section-title {
+                @extend .h2;
+                color: $primary-navy-blue;
+                margin-bottom: 20px;
+                position: relative;                &::after {
+                    content: '';
+                    position: absolute;
+                    bottom: -8px;
+                    left: 0;
+                    width: 60px;
+                    height: 3px;
+                    background: $secondary-ice-blue;
+                    border-radius: 2px;
+                }
+            }            .subsection-title {
+                @extend .subtitle;
+                color: $accent-black;
+                margin: 25px 0 15px 0;
+            }
+
+            .section-text {
+                @extend .body-regular;
+                color: $accent-black;
+                line-height: 1.7;
+                margin-bottom: 20px;
+            }
+
+            .policy-list {
+                list-style: none;
+                padding: 0;
+                margin: 20px 0;
+
+                li {
+                    @extend .body-regular;
+                    color: $accent-black;
+                    padding: 8px 0;
+                    padding-left: 25px;
+                    position: relative;
+                    line-height: 1.6;                    &::before {
+                        content: '•';
+                        color: $secondary-ice-blue;
+                        font-weight: bold;
+                        position: absolute;
+                        left: 0;
+                        top: 8px;
+                        font-size: 1.2em;
+                    }
+
+                    strong {
+                        color: $primary-navy-blue;
+                        font-weight: 600;
+                    }
+                }
+            }
+        }        .service-card {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 15px 0;
+            border-left: 4px solid $secondary-ice-blue;            h4 {
+                @extend .subtitle;
+                color: $primary-navy-blue;
+                margin-bottom: 10px;
+            }
+
+            p {
+                @extend .body-regular;
+                color: $accent-black;
+                margin: 0;
+                line-height: 1.6;
+            }
+        }
+
+        .disclaimer-box {
+            background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+            border: 1px solid #ffc107;
+            border-radius: 8px;
+            padding: 25px;
+            margin: 20px 0;            h4 {
+                @extend .subtitle;
+                color: #856404;
+                margin-bottom: 15px;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+
+                &::before {
+                    content: '⚠️';
+                    font-size: 1.2em;
+                }
+            }
+
+            p {
+                @extend .body-regular;
+                color: #856404;
+                margin: 0;
+                line-height: 1.6;
+                font-weight: 500;
+            }
+        }
+    }
+
+    @include mobile {
+        padding: 15px;
+
+        .policy-content {
+            padding: 25px 20px;
+        }
+
+        .title-header {
+            .title-h1 {
+                font-size: 1.8rem;
+                flex-direction: column;
+                gap: 10px;
+
+                img {
+                    width: 35px;
+                    height: 35px;
+                }
+            }
+        }
+
+        .policy-section {
+            .section-title {
+                font-size: 1.4rem;
+            }
+
+            .subsection-title {
+                font-size: 1.2rem;
+            }
+        }
+
+        .service-card {
+            padding: 15px;
+        }
+
+        .disclaimer-box {
+            padding: 20px;
+        }
+    }
+
+    @include tablet {
+        padding: 20px;
+
+        .policy-content {
+            padding: 30px 25px;
+        }
+    }
+}
+
+// Footer styles for privacy policy page
+.footer {
+    background: linear-gradient(135deg, $primary-navy-blue 0%, color.adjust($primary-navy-blue, $lightness: -10%) 100%);
+    color: white;
+    padding: 40px 20px 20px;
+    margin-top: 60px;
+
+    .footer-content {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 40px;
+        margin-bottom: 30px;
+    }    .footer-section {
+        .footer-title {
+            @extend .h3;
+            color: $tertiary-beige;
+            margin-bottom: 15px;
+        }        .footer-subtitle {
+            @extend .subtitle;
+            color: white;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .footer-text {
+            @extend .body-regular;
+            color: rgba(white, 0.8);
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .footer-links {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+
+            li {
+                margin-bottom: 8px;
+
+                a {
+                    @extend .body-regular;
+                    color: rgba(white, 0.8);
+                    text-decoration: none;
+                    transition: color 0.3s ease;                    &:hover {
+                        color: $tertiary-beige;
+                    }
+                }
+            }
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+
+            .social-link {
+                display: inline-block;
+                padding: 8px;
+                background: rgba(white, 0.1);
+                border-radius: 50%;
+                transition: all 0.3s ease;                &:hover {
+                    background: $tertiary-beige;
+                    transform: translateY(-2px);
+                }
+
+                img {
+                    width: 20px;
+                    height: 20px;
+                    filter: brightness(0) invert(1);
+                }
+            }
+        }
+    }
+
+    .footer-bottom {
+        border-top: 1px solid rgba(white, 0.2);
+        padding-top: 20px;
+        text-align: center;        p {
+            @extend .body-regular;
+            color: rgba(white, 0.7);
+            margin: 5px 0;
+            font-size: 14px;
+
+            &.disclaimer {
+                font-style: italic;
+                color: rgba(white, 0.6);
+            }
+        }
+    }
+
+    @include mobile {
+        padding: 30px 15px 15px;
+
+        .footer-content {
+            grid-template-columns: 1fr;
+            gap: 25px;
+            text-align: center;
+        }
+
+        .footer-section {
+            .social-links {
+                justify-content: center;
+            }
+        }
+    }
+}
+
+// Scroll to top button
+.scroll-to-top {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background: $primary-navy-blue;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    font-size: 20px;
+    cursor: pointer;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    z-index: 1000;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+
+    &.visible {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    &:hover {
+        background: $secondary-ice-blue;
+        transform: translateY(-3px);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    @include mobile {
+        bottom: 20px;
+        right: 20px;
+        width: 45px;
+        height: 45px;
+        font-size: 18px;
+    }
+}
+
+// Print button
+.print-btn {
+    background: $secondary-ice-blue;
+    color: $primary-navy-blue;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-family: 'Red Hat Display', sans-serif;
+    font-weight: 500;
+    cursor: pointer;
+    margin-top: 15px;
+    transition: all 0.3s ease;
+
+    &:hover {
+        background: $primary-navy-blue;
+        color: white;
+        transform: translateY(-2px);
+    }
+
+    @include mobile {
+        padding: 8px 16px;
+        font-size: 14px;
+    }
+}
+
+// Fade in animation for sections
+.policy-section {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.6s ease;
+
+    &.fade-in {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+// Active navigation link
+.nav-link.active {
+    background: rgba(255, 255, 255, 0.1);
+    border-left: 3px solid $secondary-ice-blue;
+}
+
+// Print styles
+@media print {
+    .sidebar,
+    .mobile-header,
+    .footer,
+    .scroll-to-top,
+    .print-btn {
+        display: none !important;
+    }
+
+    .main-content {
+        margin-left: 0 !important;
+        width: 100% !important;
+    }
+
+    .privacy-policy-container {
+        padding: 0 !important;
+        max-width: none !important;
+    }
+
+    .policy-content {
+        box-shadow: none !important;
+        margin-bottom: 0 !important;
+    }
+
+    .policy-section {
+        page-break-inside: avoid;
+        border-bottom: 1px solid #ccc !important;
+    }
+
+    .service-card,
+    .disclaimer-box {
+        border: 1px solid #ccc !important;
+        background: white !important;
+    }
+}

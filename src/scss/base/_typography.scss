@@ -130,6 +130,14 @@
     font-display: swap;
 }
 
+@font-face {
+    font-family: 'Staatliches';
+    src: url('../assets/fonts/Staatliches-Regular.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
 // Font Families with fallbacks
 $font-cardo: 'Cardo', 'Times New Roman', serif;
 $font-red-hat: 'Red Hat Display', 'Arial', sans-serif;
@@ -139,7 +147,7 @@ $font-northwell: 'Northwell', 'Brush Script MT', cursive;
 // Display 1
 .display-1 {
   font-family: $font-staatliches;
-  font-weight: 500;
+  font-weight: 400;
   line-height: 110%;
   letter-spacing: 2px;
 
@@ -159,7 +167,7 @@ $font-northwell: 'Northwell', 'Brush Script MT', cursive;
 // Heading 1
 .h1 {
   font-family: $font-staatliches;
-  font-weight: 500;
+  font-weight: 400;
   line-height: 120%;
   letter-spacing: 2px;
 
@@ -180,7 +188,7 @@ $font-northwell: 'Northwell', 'Brush Script MT', cursive;
 // Heading 2
 .h2 {
   font-family: $font-staatliches;
-  font-weight: 500;
+  font-weight: 400;
   line-height: 120%;
   letter-spacing: 2px;
 
@@ -200,7 +208,7 @@ $font-northwell: 'Northwell', 'Brush Script MT', cursive;
 // Heading 3
 .h3 {
   font-family: $font-staatliches;
-  font-weight: 500;
+  font-weight: 400;
   line-height: 130%;
 
   @include mobile {
