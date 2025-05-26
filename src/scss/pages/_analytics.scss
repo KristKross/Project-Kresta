@@ -229,6 +229,110 @@ $engagement-error: #C44536;
                 }
             }
         }
+
+        // Error state styling
+        .error-state-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            text-align: center;
+            padding: 20px;
+            
+            .error-state-content {
+                max-width: 400px;
+                animation: fadeIn 0.5s ease forwards;
+            }
+            
+            .error-icon-wrapper {
+                width: 100px;
+                height: 100px;
+                border-radius: 50%;
+                background-color: rgba($primary-navy-blue, 0.08);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin: 0 auto 24px;
+                
+                img {
+                    width: 60px;
+                    height: 60px;
+                    opacity: 0.7;
+                    animation: pulse 2s infinite ease-in-out;
+                }
+            }
+            
+            .error-title {
+                @extend .h3;
+                color: $primary-navy-blue;
+                margin-bottom: 16px;
+            }
+            
+            .error-message {
+                @extend .body-regular;
+                color: rgba($accent-black, 0.7);
+                margin-bottom: 32px;
+            }
+            
+            .retry-button {
+                background-color: $primary-navy-blue;
+                color: white;
+                border: none;
+                border-radius: 8px;
+                padding: 12px 24px;
+                font-family: $font-red-hat;
+                font-weight: 600;
+                font-size: 16px;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin: 0 auto;
+                transition: all 0.2s ease;
+                
+                img {
+                    width: 18px;
+                    height: 18px;
+                    margin-right: 8px;
+                    filter: brightness(0) invert(1);
+                }
+                
+                &:hover {
+                    background-color: darken($primary-navy-blue, 10%);
+                    transform: translateY(-2px);
+                }
+                
+                &:active {
+                    transform: translateY(0);
+                }
+            }
+        }
+
+        // Loading state
+        .loading-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            text-align: center;
+            
+            .loading-spinner {
+                width: 50px;
+                height: 50px;
+                border: 4px solid rgba($primary-navy-blue, 0.1);
+                border-radius: 50%;
+                border-top: 4px solid $primary-navy-blue;
+                animation: spin 1s linear infinite;
+                margin-bottom: 16px;
+            }
+            
+            p {
+                @extend .body-regular;
+                color: $primary-navy-blue;
+            }
+        }
     }
 
     @include mobile {
@@ -266,6 +370,39 @@ $engagement-error: #C44536;
                     padding: 16px;
                 }
             }
+        }
+    }
+
+    // Animations
+    @keyframes pulse {
+        0% {
+            transform: scale(1);
+        }
+        50% {
+            transform: scale(1.05);
+        }
+        100% {
+            transform: scale(1);
+        }
+    }
+
+    @keyframes spin {
+        0% {
+            transform: rotate(0deg);
+        }
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+
+    @keyframes fadeIn {
+        0% {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        100% {
+            opacity: 1;
+            transform: translateY(0);
         }
     }
 }

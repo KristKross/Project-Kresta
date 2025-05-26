@@ -250,11 +250,37 @@ function showErrorState() {
     const container = document.querySelector('.analytics-container');
     if (container) {
         container.innerHTML = `
-            <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; text-align: center;">
-                <img src="./assets/icons/analytics/analytics-logo.png" alt="Analytics" style="width: 80px; height: 80px; opacity: 0.5; margin-bottom: 20px;">
-                <h3 style="color: #143D60; margin-bottom: 10px;">Unable to load analytics data</h3>
-                <p style="color: #666; margin: 0;">Please check your connection and try again.</p>
+            <div class="error-state-container">
+                <div class="error-state-content">
+                    <div class="error-icon-wrapper">
+                        <img src="./assets/icons/analytics/analytics-logo.png" alt="Analytics">
+                    </div>
+                    <h3 class="error-title">Unable to load analytics data</h3>
+                    <p class="error-message">Please check your connection and try again.</p>
+                    <button class="retry-button">
+                        <img src="./assets/icons/analytics/refresh.png" alt="Retry">
+                        Retry
+                    </button>
+                </div>
             </div>
         `;
+        
+        // Add retry functionality
+        const retryButton = container.querySelector('.retry-button');
+        if (retryButton) {
+            retryButton.addEventListener('click', () => {
+                container.innerHTML = `
+                    <div class="loading-state">
+                        <div class="loading-spinner"></div>
+                        <p>Loading analytics data...</p>
+                    </div>
+                `;
+                
+                // Reload the page after a short delay
+                setTimeout(() => {
+                    window.location.reload();
+                }, 500);
+            });
+        }
     }
 }

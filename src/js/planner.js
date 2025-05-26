@@ -535,41 +535,107 @@ document.addEventListener('DOMContentLoaded', () => {
         grid.appendChild(calendarGrid);
     }
 
-    // Add view toggle event listeners
-    document.querySelectorAll('.view-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-            if (!btn.classList.contains('active')) {
-                document.querySelector('.view-btn.active').classList.remove('active');
-                btn.classList.add('active');
-                currentView = btn.dataset.view;
-                updatePlannerGrid();
-            }
+    // Function to create task card for planner view
+    function createTaskCardForPlanner(task) {
+        const taskCard = document.createElement('div');
+        taskCard.className = `task-card ${task.priority.toLowerCase()}`;
+        taskCard.dataset.taskId = task._id;
+        
+        taskCard.innerHTML = `
+            <div class="task-info">
+                <div class="task-header">
+                    <div class="task-title">${task.title}</div>
+                    <span class="priority ${task.priority.toLowerCase()}">${task.priority}</span>
+                </div>
+                <div class="task-meta">
+                    <span class="assignee">${task.assignedTo?.username || 'Unassigned'}</span>
+                    <span class="status ${task.status.toLowerCase()}">${task.status}</span>
+                </div>
+            </div>
+        `;
+        
+        // Add click handler to navigate to tasks page
+        taskCard.addEventListener('click', () => {
+            window.location.href = '/tasks.html';
         });
-    });
-
-    // Update navigation buttons to handle both views
-    document.querySelector('.prev-month').addEventListener('click', () => {
-        if (currentView === 'week') {
-            currentDate.setDate(currentDate.getDate() - 7);
-        } else {
-            currentDate.setMonth(currentDate.getMonth() - 1);
+        
+        return taskCard;
+    }
+    
+    // Function to fetch tasks and add them to planner
+    async function loadTasksIntoPlanner() {
+        try {
+            const response = await fetch("/api/task/get");
+            if (!response.ok) throw new Error("Failed to load tasks");
+            
+            const tasks = await response.json();
+            
+            tasks.forEach(task => {
+                if (!task.dueDate) return; // Skip tasks without due dates
+                
+                const dueDate = new Date(task.dueDate);
+                
+                // Find the correct column for this task's due date
+                const grid = document.getElementById('planner-grid');
+                const calendarGrid = grid.querySelector('.calendar-grid');
+                
+                if (!calendarGrid) return;
+                
+                // Match the column by date
+                const targetColumn = Array.from(calendarGrid.children).find(col => {
+                    const headerDate = col.querySelector('.date-header')?.textContent;
+                    if (!headerDate) return false;
+                    
+                    const headerDay = parseInt(headerDate.split(' ')[0], 10);
+                    const headerMonth = headerDate.split(' ')[1];
+                    
+                    return headerDay === dueDate.getDate() && 
+                           headerMonth === monthNames[dueDate.getMonth()];
+                });
+                
+                if (targetColumn) {
+                    // Check if there's already a tasks container
+                    let tasksContainer = targetColumn.querySelector('.tasks-container');
+                    if (!tasksContainer) {
+                        // Create tasks container if it doesn't exist
+                        tasksContainer = document.createElement('div');
+                        tasksContainer.className = 'tasks-container';
+                        
+                        // Add a label for the tasks section
+                        const tasksLabel = document.createElement('div');
+                        tasksLabel.className = 'tasks-label';
+                        tasksLabel.textContent = 'Tasks';
+                        tasksContainer.appendChild(tasksLabel);
+                        
+                        // Find the posts-container and insert tasks after it
+                        const postsContainer = targetColumn.querySelector('.posts-container');
+                        if (postsContainer) {
+                            postsContainer.after(tasksContainer);
+                        } else {
+                            targetColumn.querySelector('.column-content').appendChild(tasksContainer);
+                        }
+                    }
+                    
+                    // Add the task card to the container
+                    const taskCard = createTaskCardForPlanner(task);
+                    tasksContainer.appendChild(taskCard);
+                }
+            });
+            
+        } catch (error) {
+            console.error("Error loading tasks into planner:", error);
         }
-        updateCurrentMonth();
-        updatePlannerGrid();
-    });
-
-    document.querySelector('.next-month').addEventListener('click', () => {
-        if (currentView === 'week') {
-            currentDate.setDate(currentDate.getDate() + 7);
-        } else {
-            currentDate.setMonth(currentDate.getMonth() + 1);
-        }
-        updateCurrentMonth();
-        updatePlannerGrid();
-    });
-
-    // Initialize the planner
+    }
+    
+    // Modify the updatePlannerGrid function to call loadTasksIntoPlanner after grid is created
+    const originalUpdatePlannerGrid = updatePlannerGrid;
+    updatePlannerGrid = function() {
+        originalUpdatePlannerGrid();
+        // After grid is created, load tasks into it
+        loadTasksIntoPlanner();
+    };
+    
+    // Initialize the planner (existing code)
     updateCurrentMonth();
     updatePlannerGrid();
-
 });
