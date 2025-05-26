@@ -615,3 +615,111 @@
         }
     }
 }
+
+// Error/Success Notification System
+.notification-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+    pointer-events: none;
+}
+
+.profile-notification {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 20px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+    background: $ui-background;
+    border-left: 4px solid;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    transform: translateX(100%);
+    opacity: 0;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    pointer-events: auto;
+    min-width: 300px;
+    max-width: 400px;
+
+    &.show {
+        transform: translateX(0);
+        opacity: 1;
+    }
+
+    &.success {
+        border-left-color: $status-success;
+        
+        .notification-icon {
+            color: $status-success;
+        }
+    }
+
+    &.error {
+        border-left-color: $status-error;
+        
+        .notification-icon {
+            color: $status-error;
+        }
+    }
+
+    &.warning {
+        border-left-color: $status-warning;
+        
+        .notification-icon {
+            color: $status-warning;
+        }
+    }
+
+    &.info {
+        border-left-color: $primary-navy-blue;
+        
+        .notification-icon {
+            color: $primary-navy-blue;
+        }
+    }
+
+    .notification-icon {
+        font-size: 24px;
+        flex-shrink: 0;
+    }
+
+    .notification-content {
+        flex: 1;
+
+        .notification-title {
+            @extend .body-large;
+            font-weight: 600;
+            margin-bottom: 4px;
+            color: $accent-black;
+        }
+
+        .notification-message {
+            @extend .body-regular;
+            color: $accent-black;
+            opacity: 0.8;
+            line-height: 1.4;
+        }
+    }
+
+    .notification-close {
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 4px;
+        border-radius: 4px;
+        transition: background-color 0.2s ease;
+        color: $accent-black;
+        opacity: 0.6;
+        flex-shrink: 0;
+
+        &:hover {
+            background: rgba($accent-black, 0.1);
+            opacity: 1;
+        }
+
+        .material-icons {
+            font-size: 18px;
+        }
+    }
+}
