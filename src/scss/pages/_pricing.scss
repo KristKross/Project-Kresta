@@ -277,6 +277,119 @@
                     color: $accent-black;
                 }
             }
+        }    }
+
+    // Plan Switch Notification Popup
+    .plan-switch-notification {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 9999;
+        min-width: 380px;
+        max-width: 450px;        background: $accent-white;
+        border-radius: 12px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        border: 2px solid $primary-navy-blue;
+        transform: translateX(120%);
+        opacity: 0;
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+
+        &.active {
+            transform: translateX(0);
+            opacity: 1;
+        }
+
+        &.error {
+            border-color: $status-error;
+            
+            .notification-icon {
+                background: rgba($status-error, 0.1);
+                color: $status-error;
+            }
+        }
+
+        .notification-content {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            padding: 20px;
+            position: relative;
+
+            .notification-icon {
+                width: 48px;
+                height: 48px;
+                border-radius: 50%;
+                background: rgba($primary-navy-blue, 0.1);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                flex-shrink: 0;
+                margin-top: 5px;                .material-icons {
+                    font-size: 28px;
+                    color: $primary-navy-blue;
+                    
+                    // Fallback for when Material Icons don't load
+                    &:before {
+                        content: attr(data-fallback);
+                    }
+                }
+            }
+
+            .notification-text {
+                flex: 1;
+                
+                h3 {
+                    @extend .h3;
+                    color: $primary-navy-blue;
+                    margin: 0 0 8px 0;
+                    font-size: 18px;
+                }
+
+                p {
+                    @extend .body-regular;
+                    color: $accent-black;
+                    margin: 0;
+                    opacity: 0.8;
+                    line-height: 1.4;
+                }
+            }
+
+            .close-notification {
+                position: absolute;
+                top: 15px;
+                right: 15px;
+                background: none;
+                border: none;
+                cursor: pointer;
+                padding: 5px;
+                border-radius: 50%;
+                transition: background-color 0.2s ease;
+                
+                &:hover {
+                    background: rgba($accent-black, 0.1);
+                }
+
+                .material-icons {
+                    font-size: 20px;
+                    color: rgba($accent-black, 0.6);
+                }
+            }
+        }
+
+        // Mobile responsive
+        @include mobile {
+            top: 10px;
+            right: 10px;
+            left: 10px;
+            min-width: auto;
+            max-width: none;
+            transform: translateY(-120%);
+
+            &.active {
+                transform: translateY(0);
+            }
         }
     }
 
