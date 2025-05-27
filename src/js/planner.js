@@ -2,13 +2,10 @@ document.addEventListener('DOMContentLoaded', () => {
     // Get reference to panel elements - fix duplicate declaration
     const postCreatorPanel = document.querySelector('.post-creator-panel');
     const createPostBtn = document.querySelector('.action-btn');
-    const schedulePostBtn = document.querySelectorAll('.action-btn')[1];
     const closePanel = document.querySelector('.close-panel');
     const platformOptions = document.querySelectorAll('.platform-option');
     const mediaUpload = document.querySelector('.media-upload');
     const mediaInput = document.querySelector('#media-input');
-    const scheduleToggle = document.querySelector('#schedule-toggle');
-    const scheduleInputs = document.querySelector('.schedule-inputs');
     const postForm = document.querySelector('.panel-content');
 
     // Explicitly ensure post creator panel is fully hidden on page load
@@ -144,34 +141,6 @@ document.addEventListener('DOMContentLoaded', () => {
         postCreatorPanel.style.transform = 'translateX(0) !important';
         postCreatorPanel.style.opacity = '1';
         postCreatorPanel.style.visibility = 'visible';
-        // Ensure scheduling is unchecked
-        if (scheduleToggle) {
-            scheduleToggle.checked = false;
-            if (scheduleInputs) scheduleInputs.style.display = 'none';
-        }
-    });
-
-    schedulePostBtn?.addEventListener('click', () => {
-        console.log('Schedule post button clicked');
-        postCreatorPanel.classList.add('active');
-        // Force the panel to be visible with inline styles
-        postCreatorPanel.style.transform = 'translateX(0) !important';
-        postCreatorPanel.style.opacity = '1';
-        postCreatorPanel.style.visibility = 'visible';
-        // Pre-check scheduling
-        if (scheduleToggle) {
-            scheduleToggle.checked = true;
-            if (scheduleInputs) scheduleInputs.style.display = 'flex';
-        }
-        
-        // Set default date and time
-        const tomorrow = new Date();
-        tomorrow.setDate(tomorrow.getDate() + 1);
-        const dateInput = document.querySelector('.schedule-date');
-        const timeInput = document.querySelector('.schedule-time');
-        
-        if (dateInput) dateInput.value = tomorrow.toISOString().split('T')[0];
-        if (timeInput) timeInput.value = '09:00';
     });
 
     closePanel?.addEventListener('click', () => {
@@ -214,11 +183,6 @@ document.addEventListener('DOMContentLoaded', () => {
             };
             reader.readAsDataURL(file);
         }
-    });
-
-    scheduleToggle.addEventListener('change', () => {
-        scheduleInputs.style.display = scheduleToggle.checked ? 'flex' : 'none';
-        schedulePostBtn.disabled = !scheduleToggle.checked;
     });
 
     postForm.addEventListener('submit', async (e) => {
@@ -430,20 +394,6 @@ document.addEventListener('DOMContentLoaded', () => {
             img.classList.add('preview');
             mediaUpload.querySelector('p').textContent = 'Media uploaded';
         }
-        
-        // Set scheduling
-        const scheduleToggle = document.querySelector('#schedule-toggle');
-        const scheduleInputs = document.querySelector('.schedule-inputs');
-        if (postData.scheduled) {
-            scheduleToggle.checked = true;
-            scheduleInputs.style.display = 'flex';
-            const date = new Date(postData.scheduledDate);
-            postForm.querySelector('.schedule-date').value = date.toISOString().split('T')[0];
-            postForm.querySelector('.schedule-time').value = postData.time;
-        }
-        
-        // Show panel
-        document.querySelector('.post-creator-panel').classList.add('active');
         
         // Store reference to edited post
         postForm.dataset.editingPostId = postData.id;
