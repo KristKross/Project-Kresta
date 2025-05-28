@@ -11,6 +11,9 @@
 @use 'components/post-creator';
 @use 'components/post-preview';
 @use 'components/loading-spinner';
+@use 'components/workspace-errors';
+@use 'components/error-popups';
+@use 'components/invite-message';
 
 //PAGES
 @use 'pages/index';

@@ -66,7 +66,7 @@ exports.getMyWorkspace = async (req, res) => {
 // @route POST /api/workspace/invite
 exports.inviteMember = async (req, res) => {
   try {
-    const { email } = req.body;
+    const { email, message } = req.body;
 
     const workspace = await Workspace.findOne({ owner: req.session?.userData?.user?._id });
 
@@ -79,29 +79,44 @@ exports.inviteMember = async (req, res) => {
     const userToInvite = await User.findOne({ email });
 
     if (!userToInvite) {
-      return res.status(404).json({ success: false, message: "User not found" });
+      return res.status(404).json({ success: false, code: 'user_not_found', message: "User not found" });
     }
 
     const isUserInWorkspace = workspace.members.includes(userToInvite._id) ||
       await Workspace.findOne({ members: userToInvite._id });
 
     if (isUserInWorkspace) {
-      return res.status(400).json({ success: false, message: "User is already in a workspace" });
+      return res.status(400).json({ success: false, code: 'already_member', message: "User is already in a workspace" });
     }
 
     if (workspace.pendingInvites.includes(userToInvite._id)) {
-      return res.status(400).json({ success: false, message: "User has already been invited" });
+      return res.status(400).json({ success: false, code: 'already_invited', message: "User has already been invited" });
     }
 
+    // Get owner information to show in the notification
+    const owner = await User.findById(ownerId, 'username');
+    
     workspace.pendingInvites.push(userToInvite._id);
     await workspace.save();
+
+    // Build notification message based on whether a personal message was included
+    let notificationMessage = `${owner.username} invited you to join ${workspace.name} workspace.`;
+    
+    // If a personal message was included, append it to the notification
+    if (message && message.trim()) {
+      notificationMessage += `\n\nMessage: "${message.trim()}"`;
+    }
 
     await Notification.create({
       user: userToInvite._id,
       type: "invite",
-      message: `You have been invited to join ${workspace.name}.`,
-      workspaceId: workspace._id
+      message: notificationMessage,
+      workspaceId: workspace._id,
+      metadata: {
+        personalMessage: message ? message.trim() : null
+      }
     });
+    
     res.json({ success: true, message: "Invitation sent. Awaiting acceptance.", user: userToInvite });
   } catch (error) {
     console.error("Error inviting user:", error);

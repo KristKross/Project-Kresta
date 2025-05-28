@@ -3,9 +3,7 @@ import taskIconPath from '../assets/icons/notifications/task-complete.png';
 
 document.addEventListener('DOMContentLoaded', async () => {
     const notificationsList = document.querySelector('.notifications-list');
-    const markAllReadBtn = document.querySelector('.mark-all-read');
-
-    // Fetch notifications from API
+    const markAllReadBtn = document.querySelector('.mark-all-read');    // Fetch notifications from API
     async function fetchNotifications() {
         try {
             const response = await fetch("/api/notifications/get");
@@ -20,7 +18,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                     time: new Date(notification.createdAt).toLocaleString(),
                     unread: !notification.read,
                     icon: getNotificationIcon(notification.type),
-                    workspaceId: notification.workspaceId?._id || null // Ensure workspaceId is extracted correctly
+                    workspaceId: notification.workspaceId?._id || null, // Ensure workspaceId is extracted correctly
+                    metadata: notification.metadata || {} // Include any metadata like personal messages
                 }));
             } else {
                 console.error("Error fetching notifications:", data.message);
@@ -39,12 +38,29 @@ document.addEventListener('DOMContentLoaded', async () => {
             task: taskIconPath,
         };
         return icons[type] || "./assets/icons/notifications/default.png";
-    }
-
-    // Create notification HTML template
+    }    // Create notification HTML template
     function createNotification(notification) {
         const isInviteNotification = notification.type === 'invite';
         const isTaskNotification = notification.type === 'task';
+        
+        // Check if there's a personal message in the notification
+        const hasPersonalMessage = notification.metadata && notification.metadata.personalMessage;
+        
+        // Format the notification text
+        let notificationText = notification.text;
+        
+        // If it's an invite with a personal message, format it nicely
+        if (isInviteNotification && hasPersonalMessage) {
+            // Extract the main notification message without the personal message
+            const mainMessage = notification.text.split('\n\nMessage:')[0];
+            notificationText = `
+                <p>${mainMessage}</p>
+                <div class="personal-message">
+                    <p class="message-label">Personal message:</p>
+                    <p class="message-content">${notification.metadata.personalMessage}</p>
+                </div>
+            `;
+        }
 
         return `
             <div class="notification-item ${notification.unread ? 'unread' : ''}" 
@@ -55,7 +71,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 </div>
                 <div class="notification-content">
                     <div class="notification-title">${notification.title}</div>
-                    <div class="notification-text">${notification.text}</div>
+                    <div class="notification-text">${notificationText}</div>
                     <div class="notification-time">${notification.time}</div>
                 </div>
                 ${isInviteNotification ? `

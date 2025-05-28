@@ -1,0 +1,369 @@
+@use '../base/colors' as *;
+@use '../base/typography' as *;
+@use '../base/animations' as *;
+@use 'sass:color';
+
+// Error states for workspace management
+.workspace-loading {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+    text-align: center;
+    font-family: 'Red Hat Display', sans-serif;
+    color: $accent-black;
+    
+    &.active {
+        display: flex;
+        animation: fadeIn 0.3s ease-in-out;
+    }
+    
+    .loading-spinner-container {
+        margin-bottom: 20px;
+    }
+    
+    .loading-spinner {
+        width: 50px;
+        height: 50px;
+        border: 4px solid rgba($primary-navy-blue, 0.2);
+        border-top-color: $primary-navy-blue;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+    }
+    
+    p {
+        font-size: 16px;
+        font-weight: 500;
+        color: $accent-black;
+    }
+}
+
+// Error Templates
+.workspace-template {
+    &.error-state, &.auth-error, &.fallback {
+        animation: fadeIn 0.3s ease-in-out;
+    }
+    
+    .workspace-error {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 40px 20px;
+        text-align: center;
+        background-color: $ui-background;
+        border-radius: 10px;
+        border: 1px solid $ui-border;
+        box-shadow: 0 4px 12px rgba($accent-black, 0.05);
+        
+        .error-icon-container {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background-color: rgba($status-error, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            
+            i {
+                font-size: 40px;
+                color: $status-error;
+            }
+        }
+        
+        h3 {
+            font-family: 'Red Hat Display', sans-serif;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: $accent-black;
+        }
+        
+        p {
+            font-family: 'Red Hat Display', sans-serif;
+            font-size: 16px;
+            line-height: 1.5;
+            color: rgba($accent-black, 0.7);
+            max-width: 400px;
+            margin: 0 auto 24px;
+        }
+        
+        button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 10px 20px;
+            background-color: $primary-navy-blue;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-family: 'Red Hat Display', sans-serif;
+            font-weight: 500;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            
+            &:hover {
+                background-color: color.adjust($primary-navy-blue, $lightness: -10%);
+                transform: translateY(-2px);
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            }
+            
+            &:active {
+                transform: translateY(0);
+            }
+            
+            i {
+                font-size: 18px;
+            }
+        }
+        
+        .login-again-btn {
+            background-color: $accent-black;
+            
+            &:hover {
+                background-color: color.adjust($accent-black, $lightness: -10%);
+            }
+        }
+    }
+    
+    &.auth-error {
+        .error-icon-container {
+            background-color: rgba($accent-black, 0.1);
+            
+            i {
+                color: $accent-black;
+            }
+        }
+    }
+}
+
+// Validations and Error Indications for Inputs
+.form-input {
+    &.error {
+        border-color: $status-error;
+        box-shadow: 0 0 0 1px $status-error;
+        
+        &:focus {
+            box-shadow: 0 0 0 2px rgba($status-error, 0.3);
+        }
+        
+        &::placeholder {
+            color: rgba($status-error, 0.6);
+        }
+    }
+    
+    &.warning {
+        border-color: $status-warning;
+        box-shadow: 0 0 0 1px $status-warning;
+        
+        &:focus {
+            box-shadow: 0 0 0 2px rgba($status-warning, 0.3);
+        }
+    }
+}
+
+// Member removing animations
+.member {
+    transition: all 0.3s ease;
+    
+    &.removing {
+        opacity: 0.5;
+        background-color: rgba($ui-hover, 0.5);
+        
+        .removing-icon {
+            animation: spin 1.5s linear infinite;
+        }
+    }
+    
+    &.removed {
+        transform: translateX(30px);
+        opacity: 0;
+        height: 0;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+    }
+}
+
+// Button States
+button {
+    &.success {
+        background-color: $status-success !important;
+        
+        &:hover {
+            background-color: color.adjust($status-success, $lightness: -10%) !important;
+        }
+    }
+    
+    &.error {
+        background-color: $status-error !important;
+        
+        &:hover {
+            background-color: color.adjust($status-error, $lightness: -10%) !important;
+        }
+    }
+    
+    &:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+        
+        &:hover {
+            transform: none;
+            box-shadow: none;
+        }
+    }
+    
+    .spinner {
+        width: 16px;
+        height: 16px;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        border-top-color: white;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        display: inline-block;
+        margin-right: 6px;
+    }
+}
+
+// Enhanced Notification System Styling
+.profile-notification {
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    padding: 16px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    background-color: $ui-background;
+    box-shadow: 0 4px 12px rgba($accent-black, 0.1);
+    transform: translateX(120%);
+    transition: transform 0.3s ease, opacity 0.3s ease;
+    border-left: 4px solid;
+    max-width: 380px;
+    width: 100%;
+    font-family: 'Red Hat Display', sans-serif;
+    
+    &.show {
+        transform: translateX(0);
+    }
+    
+    &.success {
+        border-left-color: $status-success;
+        
+        .notification-icon {
+            color: $status-success;
+        }
+        
+        .notification-title {
+            color: color.adjust($status-success, $lightness: -10%);
+        }
+    }
+    
+    &.error {
+        border-left-color: $status-error;
+        
+        .notification-icon {
+            color: $status-error;
+        }
+        
+        .notification-title {
+            color: color.adjust($status-error, $lightness: -10%);
+        }
+    }
+    
+    &.warning {
+        border-left-color: $status-warning;
+        
+        .notification-icon {
+            color: $status-warning;
+        }
+        
+        .notification-title {
+            color: color.adjust($status-warning, $lightness: -10%);
+        }
+    }
+    
+    &.info {
+        border-left-color: $primary-navy-blue;
+        
+        .notification-icon {
+            color: $primary-navy-blue;
+        }
+        
+        .notification-title {
+            color: color.adjust($primary-navy-blue, $lightness: -10%);
+        }
+    }
+    
+    .notification-icon {
+        margin-right: 12px;
+        font-size: 20px;
+    }
+    
+    .notification-content {
+        flex: 1;
+    }
+    
+    .notification-title {
+        font-weight: 600;
+        font-size: 16px;
+        margin-bottom: 4px;
+    }
+    
+    .notification-message {
+        font-size: 14px;
+        color: rgba($accent-black, 0.8);
+        line-height: 1.4;
+    }
+    
+    .notification-close {
+        background: transparent;
+        border: none;
+        color: rgba($accent-black, 0.5);
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: color 0.2s ease;
+        
+        &:hover {
+            color: $accent-black;
+        }
+    }
+}
+
+// Notification container positioning
+#notification-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 10px;
+    pointer-events: none;
+    
+    .profile-notification {
+        pointer-events: all;
+    }
+}
+
+// Animation keyframes
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}

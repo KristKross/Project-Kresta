@@ -680,3 +680,42 @@ body.dragging-post {
         }
     }
 }
+
+// Custom Toast Notification Styles
+.custom-toast {
+    position: fixed;
+    bottom: 40px;
+    right: 40px;
+    min-width: 220px;
+    max-width: 350px;
+    background: $primary-navy-blue;
+    color: $accent-white;
+    font-family: $font-redhat;
+    font-size: 1rem;
+    padding: 18px 28px;
+    border-radius: 10px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.18);
+    opacity: 0;
+    pointer-events: none;
+    z-index: 2000;
+    transition: opacity 0.3s, transform 0.3s;
+    transform: translateY(30px);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+.custom-toast.active {
+    opacity: 1;
+    pointer-events: all;
+    transform: translateY(0);
+}
+.custom-toast.success {
+    background: #2e7d32;
+}
+.custom-toast.error {
+    background: #c44536;
+}
+.custom-toast img {
+    width: 22px;
+    height: 22px;
+}

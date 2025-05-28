@@ -185,12 +185,24 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // Toast notification function
+function showToast(message, type = "") {
+    const toast = document.getElementById("custom-toast");
+    if (!toast) return;
+    toast.textContent = message;
+    toast.className = "custom-toast" + (type ? ` ${type}` : "");
+    toast.classList.add("active");
+    setTimeout(() => {
+        toast.classList.remove("active");
+    }, 3000);
+}
+
     postForm.addEventListener('submit', async (e) => {
         e.preventDefault();
 
         const mediaInputFile = mediaInput.files[0];
         if (!mediaInputFile) {
-            alert('Please upload a media file');
+            showToast('Please upload a media file', 'error');
             return;
         }
 
@@ -231,13 +243,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 throw new Error(postResult.error || 'Failed to publish post');
             }
 
-            alert('Post published successfully!');
+            showToast('Post published successfully!', 'success');
             postCreatorPanel.classList.remove('active');
             postForm.reset();
             
         } catch (error) {
             console.error('Error:', error);
-            alert('Something went wrong. Please try again.');
+            showToast('Something went wrong. Please try again.', 'error');
         }
     });
 

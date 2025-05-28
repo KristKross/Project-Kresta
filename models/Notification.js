@@ -6,6 +6,10 @@ const NotificationSchema = new mongoose.Schema({
     message: { type: String, required: true },
     read: { type: Boolean, default: false },
     workspaceId: { type: mongoose.Schema.Types.ObjectId, ref: "Workspace" },
+    metadata: { 
+        type: mongoose.Schema.Types.Mixed,
+        default: {} 
+    },
     createdAt: { type: Date, default: Date.now }
 });
 

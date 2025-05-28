@@ -1,0 +1,201 @@
+@use '../base/colors' as *;
+@use '../base/typography' as *;
+@use '../base/animations' as *;
+@use 'sass:color';
+
+// Styles for the invitation form with message
+.invite-section {
+  .invite-form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    
+    .input-group {
+      width: 100%;
+    }
+      textarea.invite-message {
+      resize: vertical;
+      min-height: 60px;
+      font-family: 'Red Hat Display', sans-serif;
+      
+      &::placeholder {
+        color: rgba($accent-black, 0.5);
+      }
+    }
+    
+    .message-counter {
+      font-size: 12px;
+      color: rgba($accent-black, 0.6);
+      text-align: right;
+      margin-top: 4px;
+      font-family: 'Red Hat Display', sans-serif;
+      
+      &.limit-approaching {
+        color: $status-warning;
+      }
+      
+      &.limit-reached {
+        color: $status-error;
+      }
+    }
+    
+    .invite-btn {
+      align-self: flex-end;
+      margin-top: 8px;
+    }
+  }
+}
+
+// Invite preview popup styles
+.invite-preview-popup {
+  .popup-content {
+    max-width: 480px;
+  }
+  
+  .info-icon {
+    color: $primary-navy-blue;
+    margin-bottom: 16px;
+  }
+  
+  .invite-preview {
+    background-color: $ui-surface;
+    border-radius: 8px;
+    padding: 16px;
+    margin: 16px 0;
+    text-align: left;
+    border: 1px solid $ui-border;
+    font-family: 'Red Hat Display', sans-serif;
+    
+    .invite-preview-header {
+      margin-bottom: 12px;
+      
+      .preview-to, .preview-workspace {
+        margin-bottom: 8px;
+        display: flex;
+        gap: 8px;
+        align-items: baseline;
+        
+        .label {
+          font-weight: 600;
+          color: $accent-black;
+          min-width: 80px;
+        }
+        
+        .value {
+          color: rgba($accent-black, 0.8);
+        }
+      }
+    }
+    
+    .invite-preview-message {
+      padding-top: 12px;
+      border-top: 1px solid $ui-border;
+      
+      #preview-default-message {
+        margin-bottom: 16px;
+      }
+      
+      #preview-personal-message {
+        background-color: rgba($primary-navy-blue, 0.05);
+        padding: 12px;
+        border-radius: 6px;
+        border-left: 3px solid $primary-navy-blue;
+        
+        .personal-message-label {
+          font-weight: 500;
+          margin-bottom: 8px;
+          color: $primary-navy-blue;
+          font-size: 14px;
+        }
+        
+        .personal-message-text {
+          color: rgba($accent-black, 0.8);
+          font-style: italic;
+        }
+      }
+    }
+  }
+}
+
+// Message indicator in pending invites list
+.member.pending-invite {
+  .invite-message-indicator {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    margin-top: 4px;
+    font-size: 12px;
+    color: $primary-navy-blue;
+    position: relative;
+    
+    i {
+      font-size: 16px;
+      opacity: 0.8;
+    }
+    
+    .tooltip-text {
+      visibility: hidden;
+      width: 160px;
+      background-color: rgba($accent-black, 0.9);
+      color: white;
+      text-align: center;
+      border-radius: 4px;
+      padding: 6px 10px;
+      position: absolute;
+      z-index: 1;
+      bottom: 125%;
+      left: 50%;
+      margin-left: -80px;
+      opacity: 0;
+      transition: opacity 0.3s;
+      font-weight: normal;
+      pointer-events: none;
+      
+      &::after {
+        content: "";
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        margin-left: -5px;
+        border-width: 5px;
+        border-style: solid;
+        border-color: rgba($accent-black, 0.9) transparent transparent transparent;
+      }
+    }
+    
+    &:hover .tooltip-text {
+      visibility: visible;
+      opacity: 1;
+    }
+  }
+}
+
+// Notification personal message styling
+.notification-item {
+  .personal-message {
+    margin-top: 8px;
+    background-color: rgba($primary-navy-blue, 0.05);
+    padding: 8px 12px;
+    border-radius: 6px;
+    border-left: 3px solid $primary-navy-blue;
+    
+    .message-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: $primary-navy-blue;
+      margin-bottom: 4px;
+    }
+    
+    .message-content {
+      font-style: italic;
+      font-size: 13px;
+      color: rgba($accent-black, 0.8);
+      line-height: 1.4;
+      word-wrap: break-word;
+    }
+  }
+    &.unread .personal-message {
+    background-color: rgba($primary-navy-blue, 0.1);
+    border-left-color: color.adjust($primary-navy-blue, $lightness: -10%);
+  }
+}

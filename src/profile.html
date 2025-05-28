@@ -212,11 +212,17 @@
                         <button type="button" class="delete-account-btn">Delete Account</button>
                     </div>
                 </div>
-            </div>
-
-            <!-- Workspace Tab -->
+            </div>            <!-- Workspace Tab -->
             <div class="tab-content" id="workspace">
                 <h2 class="h2">Workspace Management</h2>
+                
+                <!-- Loading Spinner -->
+                <div class="workspace-loading">
+                    <div class="loading-spinner-container">
+                        <div class="loading-spinner"></div>
+                    </div>
+                    <p>Loading workspace...</p>
+                </div>
                 
                 <!-- No Premium Template -->
                 <div class="workspace-template no-premium">
@@ -238,9 +244,7 @@
                             <button class="create-workspace-btn" type="submit">Create Workspace</button>
                         </div>
                     </form>
-                </div>
-
-                <!-- Existing Workspace Template -->
+                </div>                <!-- Existing Workspace Template -->
                 <div class="workspace-template has-workspace">
                     <div class="workspace-section">
                         <div class="workspace-header">
@@ -264,20 +268,51 @@
                             <div class="members-list">
                                 <!-- Add more team members here -->
                             </div>
-                        </div>
-
-                        <div class="invite-section">
+                        </div>                        <div class="invite-section">
                             <h4 class="h4">Invite Team Members</h4>
-                            <form class="invite-form">
-                                <div class="input-group">
-                                    <input type="email" placeholder="Enter email address" class="form-input">
-                                    <button type="submit" class="invite-btn">
-                                        <i class="material-icons">person_add</i>
-                                        Invite
-                                    </button>
+                            <form class="invite-form">                                <div class="input-group">
+                                    <input type="email" placeholder="Enter email address" class="form-input" id="invite-email">
                                 </div>
+                                <div class="input-group">
+                                    <textarea placeholder="Add a personal message (optional)" class="form-input invite-message" id="invite-message" rows="2" maxlength="200"></textarea>
+                                    <div class="message-counter"><span id="char-count">0</span>/200 characters</div>
+                                </div>
+                                <button type="submit" class="invite-btn">
+                                    <i class="material-icons">person_add</i>
+                                    Send Invitation
+                                </button>
                             </form>
                         </div>
+                    </div>
+                </div>
+                
+                <!-- Error State Templates -->
+                <div class="workspace-template error-state">
+                    <div class="workspace-error">
+                        <div class="error-icon-container">
+                            <i class="material-icons">error_outline</i>
+                        </div>
+                        <h3 class="h3">Something Went Wrong</h3>
+                        <p>We couldn't load your workspace data. This could be due to network issues or server problems.</p>
+                        <button class="retry-workspace-btn">
+                            <i class="material-icons">refresh</i>
+                            Try Again
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Authentication Error Template -->
+                <div class="workspace-template auth-error">
+                    <div class="workspace-error">
+                        <div class="error-icon-container">
+                            <i class="material-icons">lock</i>
+                        </div>
+                        <h3 class="h3">Authentication Required</h3>
+                        <p>Your session may have expired. Please log in again to access your workspace.</p>
+                        <button class="login-again-btn">
+                            <i class="material-icons">login</i>
+                            Login Again
+                        </button>
                     </div>
                 </div>
             </div>
@@ -294,6 +329,32 @@
                 <button class="confirm-btn">Remove</button>
             </div>
         </div>
+    </div>    <!-- Popup for invite preview -->
+    <div class="workspace-popup invite-preview-popup">
+        <div class="popup-content">
+            <i class="material-icons info-icon">mail</i>
+            <h3 class="h3">Send Workspace Invitation</h3>
+            <div class="invite-preview">
+                <div class="invite-preview-header">
+                    <div class="preview-to">
+                        <span class="label">To:</span> 
+                        <span class="value" id="preview-email"></span>
+                    </div>
+                    <div class="preview-workspace">
+                        <span class="label">Workspace:</span> 
+                        <span class="value workspace-name"></span>
+                    </div>
+                </div>
+                <div class="invite-preview-message">
+                    <p id="preview-default-message">You have been invited to join this workspace.</p>
+                    <div id="preview-personal-message"></div>
+                </div>
+            </div>
+            <div class="popup-actions">
+                <button class="cancel-btn">Cancel</button>
+                <button class="confirm-btn">Send Invitation</button>
+            </div>
+        </div>
     </div>
 
     <!-- Popup for invite success -->
@@ -303,6 +364,52 @@
             <h3 class="h3">Invitation Sent</h3>
             <p>Team member has been invited successfully!</p>
             <button class="close-btn">Close</button>
+        </div>
+    </div>
+
+    <!-- Popup for network error -->
+    <div class="workspace-popup error-popup network-error">
+        <div class="popup-content">
+            <i class="material-icons error-icon">wifi_off</i>
+            <h3 class="h3">Network Error</h3>
+            <p>Cannot connect to the server. Please check your internet connection and try again.</p>
+            <div class="popup-actions">
+                <button class="retry-btn">Try Again</button>
+                <button class="close-btn">Dismiss</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Popup for permission error -->
+    <div class="workspace-popup error-popup permission-error">
+        <div class="popup-content">
+            <i class="material-icons error-icon">no_accounts</i>
+            <h3 class="h3">Permission Denied</h3>
+            <p>You don't have permission to perform this action. Only workspace owners can manage team members.</p>
+            <button class="close-btn">Understood</button>
+        </div>
+    </div>
+    
+    <!-- Popup for server error -->
+    <div class="workspace-popup error-popup server-error">
+        <div class="popup-content">
+            <i class="material-icons error-icon">error_outline</i>
+            <h3 class="h3">Server Error</h3>
+            <p>Something went wrong on our end. Our team has been notified. Please try again later.</p>
+            <button class="close-btn">Close</button>
+        </div>
+    </div>
+    
+    <!-- Popup for invite limit reached -->
+    <div class="workspace-popup error-popup invite-limit">
+        <div class="popup-content">
+            <i class="material-icons error-icon">person_off</i>
+            <h3 class="h3">Invite Limit Reached</h3>
+            <p>You've reached the maximum number of pending invites for your current plan.</p>
+            <div class="popup-actions">
+                <a href="/pricing" class="upgrade-btn">Upgrade Plan</a>
+                <button class="close-btn">Dismiss</button>
+            </div>
         </div>
     </div>    <!-- Popup for logout confirmation -->
     <div class="workspace-popup logout-popup">
