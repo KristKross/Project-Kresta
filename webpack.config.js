@@ -7,6 +7,12 @@ const NodemonPlugin = require('nodemon-webpack-plugin');
 dotenv.config();
 const MODE = process.env.NODE_ENV || 'development'; 
 
+const defaultHtmlConfig = {
+    inject: "body",
+    favicon: "./src/assets/favicon-logo.ico",
+    minify: true,
+};
+
 module.exports = {
     mode: MODE,
     entry: {
@@ -35,107 +41,107 @@ module.exports = {
         path: path.resolve(__dirname, 'dist'), 
         publicPath: '/', 
     },
-    plugins: [        new HtmlWebpackPlugin({
+    plugins: [        
+        new HtmlWebpackPlugin({
+            ...defaultHtmlConfig,
             filename: 'index.html', 
             template: './src/index.html',
-            inject: 'body',
             chunks: ['main', 'index'],
-            favicon: './src/assets/favicon-logo.ico',
-        }),new HtmlWebpackPlugin({
+        }),
+        new HtmlWebpackPlugin({
+            ...defaultHtmlConfig,
             filename: 'login.html',
             template: './src/login.html',
-            inject: 'body',
             chunks: ['main', 'login'],
-            favicon: './src/assets/favicon-logo.ico',
-        }),        new HtmlWebpackPlugin({
-            filename: 'register.html',
-            template: './src/register.html',
-            inject: 'body',
-            chunks: ['main', 'register'],
-            favicon: './src/assets/favicon-logo.ico',
         }),        
         new HtmlWebpackPlugin({
+            ...defaultHtmlConfig,
+            filename: 'register.html',
+            template: './src/register.html',
+            chunks: ['main', 'register'],
+        }),        
+        new HtmlWebpackPlugin({
+            ...defaultHtmlConfig,
             filename: 'dashboard.html',
             template: './src/dashboard.html',
-            inject: 'body',
             chunks: ['main', 'dashboard'],
         }),    
         new HtmlWebpackPlugin({
+            ...defaultHtmlConfig,
             filename: 'analytics.html',
             template: './src/analytics.html',
-            inject: 'body',
             chunks: ['main', 'analytics'],
         }),
         new HtmlWebpackPlugin({
+            ...defaultHtmlConfig,
             filename: 'planner.html',
             template: './src/planner.html',
-            inject: 'body',
             chunks: ['main', 'planner'],
         }),
         new HtmlWebpackPlugin({
+            ...defaultHtmlConfig,
             filename: 'tasks.html',
             template: './src/tasks.html',
-            inject: 'body',
             chunks: ['main', 'tasks'],
         }),
         new HtmlWebpackPlugin({
+            ...defaultHtmlConfig,
             filename: 'notification.html',
             template: './src/notification.html',
-            inject: 'body',
             chunks: ['main', 'notification'],
         }),
         new HtmlWebpackPlugin({
+            ...defaultHtmlConfig,
             filename: 'profile.html',
             template: './src/profile.html',
-            inject: 'body',
             chunks: ['main', 'profile'],
         }),
         new HtmlWebpackPlugin({
+            ...defaultHtmlConfig,
             filename: 'creators.html',
             template: './src/creators.html',
-            inject: 'body',
             chunks: ['main', 'creators'],
         }),
         new HtmlWebpackPlugin({
+            ...defaultHtmlConfig,
             filename: 'about.html',
             template: './src/about.html',
-            inject: 'body',
             chunks: ['main', 'about'],
         }),
         new HtmlWebpackPlugin({
+            ...defaultHtmlConfig,
             filename: 'contact.html',
             template: './src/contact.html',
-            inject: 'body',
             chunks: ['main', 'contact'],
         }),
         new HtmlWebpackPlugin({
+            ...defaultHtmlConfig,
             filename: 'pricing.html',
             template: './src/pricing.html',
-            inject: 'body',
             chunks: ['main', 'pricing'],
         }),
         new HtmlWebpackPlugin({
+            ...defaultHtmlConfig,
             filename: 'privacyPolicy.html',
             template: './src/privacyPolicy.html',
-            inject: 'body',
             chunks: ['main', 'privacyPolicy'],
         }),
         new HtmlWebpackPlugin({
+            ...defaultHtmlConfig,
             filename: '404.html',
             template: './src/404.html',
-            inject: 'body',
             chunks: ['main'],
         }),
         new HtmlWebpackPlugin({
+            ...defaultHtmlConfig,
             filename: '403.html',
             template: './src/403.html',
-            inject: 'body',
             chunks: ['main'],
         }),
         new HtmlWebpackPlugin({
+            ...defaultHtmlConfig,
             filename: '401.html',
             template: './src/401.html',
-            inject: 'body',
             chunks: ['main'],
         }),
         ...(MODE === 'production' ? [
