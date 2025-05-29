@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         };        const commonOptions = {
             responsive: true,
             maintainAspectRatio: true,
-            aspectRatio: 1.5,
+            aspectRatio: 3,
             onResize: function(chart, size) {
                 // This ensures the chart maintains proper aspect ratio when resized
                 setTimeout(() => {
@@ -101,7 +101,7 @@ function initializeEngagementChart(analytics, colors, options) {
                     colors.warning
                 ],
                 borderWidth: 0,
-                cutout: '60%'
+                cutout: '70%'
             }]
         },
         options: {
@@ -115,7 +115,7 @@ function initializeEngagementChart(analytics, colors, options) {
             },
             maintainAspectRatio: true,
             responsive: true,
-            aspectRatio: 1.5
+            aspectRatio: 3
         }
     });
 }
@@ -144,7 +144,7 @@ function initializeContentChart(analytics, colors, options) {
             ...options,
             maintainAspectRatio: true,
             responsive: true,
-            aspectRatio: 1.5,
+            aspectRatio: 3,
             scales: {
                 y: {
                     beginAtZero: true,
@@ -212,7 +212,7 @@ function initializeRadarChart(analytics, colors, options) {
             ...options,
             maintainAspectRatio: true,
             responsive: true,
-            aspectRatio: 2,
+            aspectRatio: 5,
             scales: {
                 r: {
                     beginAtZero: true,
