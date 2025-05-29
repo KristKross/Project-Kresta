@@ -1,3 +1,4 @@
+@use "sass:color";
 @use '../base/animations' as *;
 @use '../base/typography' as *;
 @use '../base/colors' as *;
@@ -718,4 +719,95 @@ body.dragging-post {
 .custom-toast img {
     width: 22px;
     height: 22px;
+}
+
+// Loading Spinner
+.spinner {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 3px solid rgba(255,255,255,0.3);
+    border-radius: 50%;
+    border-top-color: #fff;
+    animation: spin 1s ease-in-out infinite;
+    margin-right: 10px;
+    vertical-align: middle;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+// Button with loading state
+.btn-loading {
+    position: relative;
+    cursor: not-allowed;
+    opacity: 0.8;
+    pointer-events: none;
+    
+    .spinner {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        margin-left: -10px;
+        margin-top: -10px;
+    }
+    
+    span {
+        visibility: hidden;
+        opacity: 0;
+    }
+}
+
+// Enhanced toast with icon
+.custom-toast.with-icon {
+    padding: 18px 20px 18px 28px;
+    
+    &:before {
+        content: "✓";
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        background: rgba(255,255,255,0.2);
+        font-size: 16px;
+        font-weight: bold;
+    }
+    
+    &.error:before {
+        content: "!";
+    }
+}
+
+// Post submission button specific styles
+.post-now {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    
+    &.btn-loading {
+        background-color: color.adjust($primary-navy-blue, $lightness: -10%);
+        
+        &:after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255,255,255,0.1);
+            animation: pulse 1.5s infinite;
+            border-radius: inherit;
+        }
+    }
+}
+
+@keyframes pulse {
+    0% { opacity: 0; }
+    50% { opacity: 0.2; }
+    100% { opacity: 0; }
 }
