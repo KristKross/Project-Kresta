@@ -8,12 +8,13 @@
     background-color: $accent-white;
     min-height: 100vh;
     margin-left: 110px; // Offset for sidebar
-    width: calc(100vw - 110px); // Full remaining width
+    width: calc(100% - 110px); // Use % instead of vw to avoid overflow
     overflow-x: hidden; // Prevent horizontal scroll
+    box-sizing: border-box; // Ensure padding doesn't add to width
 
     @include mobile {
         margin-left: 0;
-        width: 100vw;
+        width: 100%;
         margin-bottom: 100px;
     }
 
@@ -49,19 +50,21 @@
             }
         }
     }
-    
-    // Categories Section
+      // Categories Section
     .categories-section {
         background-color: $accent-white;
-        padding: 3rem 2rem;
+        padding: 3rem 1rem; // Reduce horizontal padding
         display: flex;
         justify-content: center;
+        width: 100%; // Ensure it doesn't exceed the parent width
+        box-sizing: border-box; // Include padding in width calculation
         
         .categories-container {
             display: flex;
-            gap: 1rem;
+            gap: 0.8rem; // Reduce gap slightly
             flex-wrap: wrap;
             justify-content: center;
+            max-width: 100%; // Ensure container doesn't overflow
             
             .category-btn {
                 @extend .button-cta;
@@ -87,17 +90,18 @@
             }
         }
     }
-    
-    // Creators Grid Section
+      // Creators Grid Section
     .creators-grid-section {
         background-color: $ui-surface;
-        padding: 4rem 2rem;
+        padding: 4rem 1rem; // Reduce horizontal padding
+        width: 100%; // Ensure it fills parent but doesn't overflow
+        box-sizing: border-box; // Include padding in width calculation
         
         .creators-container {
             max-width: 1200px;
             margin: 0 auto;
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); // Reduce minimum item width
             gap: 2rem;
             width: 100%;
             box-sizing: border-box;
@@ -222,15 +226,14 @@
                 }
             }
         }
-    }
-
-    // Call to Action Section
+    }    // Call to Action Section
     .creators-cta {
         background-color: $tertiary-beige;
-        padding: 5rem 2rem;
+        padding: 4rem 1rem; // Adjust padding for mobile
         text-align: center;
         width: 100%;
         box-sizing: border-box;
+        overflow-x: hidden; // Add to prevent any internal content from overflowing
         
         .cta-content {
             max-width: 600px;
@@ -299,35 +302,47 @@
                 margin: 0;
             }
         }
-    }
-
-    // Mobile Responsiveness
+    }    // Mobile Responsiveness
     @include mobile {
         .creators-hero {
             padding: 6rem 1rem 3rem;
+            width: 100%;
+            box-sizing: border-box;
             
             .hero-content {
+                width: 100%;
+                
                 .display-1 {
-                    font-size: 2.5rem;
+                    font-size: 2.2rem;
+                    word-wrap: break-word; // Prevent text overflow
+                }
+                
+                .subtitle {
+                    font-size: 0.95rem;
                 }
             }
         }
         
         .categories-section {
-            padding: 2rem 1rem;
+            padding: 2rem 0.5rem;
+            width: 100%;
+            box-sizing: border-box;
             
             .categories-container {
-                gap: 0.5rem;
+                gap: 0.35rem;
+                flex-wrap: wrap;
+                width: 100%;
                 
                 .category-btn {
-                    padding: 8px 16px;
-                    font-size: 0.9rem;
+                    padding: 6px 14px;
+                    font-size: 0.85rem;
+                    white-space: nowrap;
                 }
             }
         }
         
         .creators-grid-section {
-            padding: 3rem 1rem;
+            padding: 3rem 0.75rem;
             
             .creators-container {
                 grid-template-columns: 1fr;
@@ -336,19 +351,42 @@
         }
         
         .creators-cta {
-            padding: 4rem 1rem;
+            padding: 3rem 1rem;
             
             .cta-content {
+                width: 100%;
+                
                 .display-1 {
-                    font-size: 2rem;
+                    font-size: 1.8rem;
+                }
+                
+                .subtitle {
+                    font-size: 0.95rem;
+                }
+                
+                .back-button {
+                    padding: 12px 20px;
+                    font-size: 0.9rem;
                 }
             }
         }
     }
-    
-    @include tablet {
+      @include tablet {
+        // Fix for any tablet-specific issues
+        width: calc(100% - 110px);
+        box-sizing: border-box;
+        padding: 0;
+        margin-left: 110px;
+        
         .creators-container {
             grid-template-columns: repeat(2, 1fr);
+            width: 100%;
+        }
+        
+        .categories-container {
+            width: 100%;
+            padding: 0 1rem;
+            box-sizing: border-box;
         }
     }
 }

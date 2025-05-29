@@ -7,7 +7,7 @@
             margin-left: 0; // Remove sidebar offset on mobile
         }
         
-        .task-creator-panel {            
+    .task-creator-panel {            
             position: fixed !important;
             bottom: 0 !important;
             right: 0 !important;
@@ -17,11 +17,14 @@
             transition: none; // Initially disable transitions
             transform: translateY(100%);
             border-radius: 20px 20px 0 0;
-            padding: 20px;
+            padding: 15px; // Reduce padding to prevent overflow
             overflow-y: auto;
+            overflow-x: hidden; // Add to prevent horizontal scrolling
             -webkit-overflow-scrolling: touch;
             margin-left: 0;
             backface-visibility: hidden; // Prevent flashing
+            box-sizing: border-box; // Ensure padding doesn't add to width
+            max-width: 100vw; // Ensure it never exceeds viewport width
             
             &.transitions-enabled {
                 transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
