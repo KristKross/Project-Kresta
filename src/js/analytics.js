@@ -37,85 +37,63 @@ document.addEventListener('DOMContentLoaded', async function () {
             error: '#C44536'
         };
 
-        // Store chart instances for resizing
-        const charts = {};
-        
-        // Handle window resize for better chart rendering
-        let resizeTimeout;
-        window.addEventListener('resize', () => {
-            clearTimeout(resizeTimeout);
-            resizeTimeout = setTimeout(() => {
-                // Resize all charts if they exist
-                Object.values(charts).forEach(chart => {
-                    if (chart) chart.resize();
-                });
-            }, 250);
-        });
-        
-        // Handle container resize through ResizeObserver if available
-        if (typeof ResizeObserver !== 'undefined') {
-            const chartContainers = document.querySelectorAll('.chart-container');
-            const resizeObserver = new ResizeObserver(entries => {
-                entries.forEach(entry => {
-                    const chartId = entry.target.querySelector('canvas')?.id;
-                    if (chartId && charts[chartId]) {
-                        charts[chartId].resize();
-                    }
-                });
-            });
-            
-            chartContainers.forEach(container => resizeObserver.observe(container));
-        }
-
-        // Define responsive options based on screen width
+        // Responsive options
         const getResponsiveOptions = () => {
             const isDesktop = window.innerWidth >= 1200;
             const isTablet = window.innerWidth >= 768 && window.innerWidth < 1200;
             const isMobile = window.innerWidth < 768;
-            
             return {
                 responsive: true,
                 maintainAspectRatio: true,
                 aspectRatio: isMobile ? 1.3 : isTablet ? 1.7 : 2,
-                responsiveAnimationDuration: 100,
                 plugins: {
                     legend: {
-                        position: isMobile ? 'bottom' : 'bottom',
+                        position: isMobile ? 'bottom' : 'right',
                         align: 'center',
                         labels: {
                             padding: isMobile ? 10 : 20,
                             usePointStyle: true,
                             boxWidth: isMobile ? 8 : 12,
-                            font: {
-                                size: isMobile ? 10 : 12
-                            }
+                            font: { size: isMobile ? 10 : 12 }
                         }
                     },
                     tooltip: {
-                        bodyFont: {
-                            size: isMobile ? 12 : 14
-                        }
+                        bodyFont: { size: isMobile ? 12 : 14 }
                     }
                 }
             };
         };
-        
-        // Get responsive options
-        const commonOptions = getResponsiveOptions();
 
         // Initialize charts
+        const commonOptions = getResponsiveOptions();
         initializeEngagementChart(analytics, chartColors, commonOptions);
         initializeContentChart(analytics, chartColors, commonOptions);
         initializeRadarChart(analytics, chartColors, commonOptions);
 
-        // Ensure charts fit their containers properly
-        ensureChartsFit();
-
-        // Add event listener for tab changes or visibility changes
-        document.addEventListener('visibilitychange', () => {
-            if (!document.hidden) {
-                ensureChartsFit();
+        // Resize logic
+        function resizeAllCharts() {
+            for (const key in charts) {
+                if (charts[key] && typeof charts[key].resize === 'function') {
+                    charts[key].options = { ...charts[key].options, ...getResponsiveOptions() };
+                    charts[key].resize();
+                    charts[key].update();
+                }
             }
+        }
+
+        window.addEventListener('resize', () => {
+            clearTimeout(window._chartResizeTimeout);
+            window._chartResizeTimeout = setTimeout(resizeAllCharts, 200);
+        });
+
+        if (typeof ResizeObserver !== 'undefined') {
+            const chartContainers = document.querySelectorAll('.chart-container');
+            const resizeObserver = new ResizeObserver(resizeAllCharts);
+            chartContainers.forEach(container => resizeObserver.observe(container));
+        }
+
+        document.addEventListener('visibilitychange', () => {
+            if (!document.hidden) resizeAllCharts();
         });
 
     } catch (error) {
@@ -140,7 +118,9 @@ function updateMetricCards(analytics) {
 
 function initializeEngagementChart(analytics, colors, options) {
     const ctx = document.getElementById('engagementChart')?.getContext('2d');
-    if (!ctx) return;    charts['engagementChart'] = new Chart(ctx, {
+    if (!ctx) return;
+    if (charts['engagementChart']) charts['engagementChart'].destroy();
+    charts['engagementChart'] = new Chart(ctx, {
         type: 'doughnut',
         data: {
             labels: ['Likes', 'Comments', 'Shares', 'Replies'],
@@ -155,19 +135,20 @@ function initializeEngagementChart(analytics, colors, options) {
                 borderWidth: 0,
                 cutout: '60%'
             }]
-        },options: {
+        },
+        options: {
             ...options,
             plugins: {
                 ...options.plugins,
                 legend: {
                     ...options.plugins.legend,
-                    position: 'right',
+                    position: options.plugins.legend.position || 'right',
                     align: 'center'
                 }
             },
             maintainAspectRatio: true,
             responsive: true,
-            aspectRatio: 1.5,
+            aspectRatio: options.aspectRatio || 1.5,
             layout: {
                 padding: {
                     left: 10,
