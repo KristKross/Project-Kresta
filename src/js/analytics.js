@@ -1,3 +1,5 @@
+let charts = {};
+
 document.addEventListener('DOMContentLoaded', async function () {
     try {
         const response = await fetch('/api/instagram/analytics');
@@ -163,7 +165,9 @@ function initializeEngagementChart(analytics, colors, options) {
 
 function initializeContentChart(analytics, colors, options) {
     const ctx = document.getElementById('contentChart')?.getContext('2d');
-    if (!ctx) return;    charts['contentChart'] = new Chart(ctx, {
+    if (!ctx) return;
+    if (charts['contentChart']) charts['contentChart'].destroy();
+    charts['contentChart'] = new Chart(ctx, {
         type: 'bar',
         data: {
             labels: ['Views', 'Engagement', 'Reach'],
@@ -178,7 +182,8 @@ function initializeContentChart(analytics, colors, options) {
                 borderRadius: 8,
                 borderSkipped: false
             }]
-        },options: {
+        },
+        options: {
             ...options,
             maintainAspectRatio: true,
             responsive: true,
@@ -222,14 +227,14 @@ function initializeContentChart(analytics, colors, options) {
 function initializeRadarChart(analytics, colors, options) {
     const ctx = document.getElementById('radarChart')?.getContext('2d');
     if (!ctx) return;
-
+    if (charts['radarChart']) charts['radarChart'].destroy();
     // Normalize data for radar chart (scale to 0-100)
     const maxValue = Math.max(
         analytics.likes, analytics.comments, analytics.shares, 
         analytics.replies, analytics.views, analytics.reach
     );
-
-    const normalizeValue = (value) => maxValue > 0 ? (value / maxValue) * 100 : 0;    charts['radarChart'] = new Chart(ctx, {
+    const normalizeValue = (value) => maxValue > 0 ? (value / maxValue) * 100 : 0;
+    charts['radarChart'] = new Chart(ctx, {
         type: 'radar',
         data: {
             labels: ['Likes', 'Comments', 'Shares', 'Replies', 'Views', 'Reach'],
@@ -256,12 +261,12 @@ function initializeRadarChart(analytics, colors, options) {
         options: {
             ...options,
             maintainAspectRatio: true,
-            responsive: true,            aspectRatio: window.innerWidth > 1200 ? 2.5 : 
-                      window.innerWidth > 768 ? 2 : 1.5, // Responsive aspect ratio
+            responsive: true,
+            aspectRatio: window.innerWidth > 1200 ? 2.5 : 
+                      window.innerWidth > 768 ? 2 : 1.5,
             layout: {
                 padding: window.innerWidth < 768 ? 10 : 20
             },
-            aspectRatio: 2,
             scales: {
                 r: {
                     beginAtZero: true,
