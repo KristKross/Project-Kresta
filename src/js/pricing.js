@@ -83,6 +83,8 @@ async function updatePricing(event) {
         if (res.ok) {
             // Show success notification instead of reloading
             showPlanSwitchNotification(planName);
+        } else if (res.status === 401) {
+            window.location.href = "/register";
         } else {
             // Show error notification using the same system but with error styling
             showErrorNotification(data.message || 'Failed to update plan');
