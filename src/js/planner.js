@@ -218,8 +218,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 resourceType: fileType,
             };
 
-            console.log('Post Form Data:', postFormData);
-
             const postResponse = await fetch('/api/instagram/publish', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
