@@ -35,34 +35,88 @@ document.addEventListener('DOMContentLoaded', async function () {
             success: '#6B8E6B',
             warning: '#D4A418',
             error: '#C44536'
-        };        const commonOptions = {
-            responsive: true,
-            maintainAspectRatio: true,
-            aspectRatio: 1.5,
-            onResize: function(chart, size) {
-                // This ensures the chart maintains proper aspect ratio when resized
-                setTimeout(() => {
-                    chart.resize();
-                }, 0);
-            },
-            plugins: {
-                legend: {
-                    position: 'bottom',
-                    labels: {
-                        padding: 20,
-                        usePointStyle: true,
-                        font: {
-                            size: 12
+        };
+
+        // Store chart instances for resizing
+        const charts = {};
+        
+        // Handle window resize for better chart rendering
+        let resizeTimeout;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(() => {
+                // Resize all charts if they exist
+                Object.values(charts).forEach(chart => {
+                    if (chart) chart.resize();
+                });
+            }, 250);
+        });
+        
+        // Handle container resize through ResizeObserver if available
+        if (typeof ResizeObserver !== 'undefined') {
+            const chartContainers = document.querySelectorAll('.chart-container');
+            const resizeObserver = new ResizeObserver(entries => {
+                entries.forEach(entry => {
+                    const chartId = entry.target.querySelector('canvas')?.id;
+                    if (chartId && charts[chartId]) {
+                        charts[chartId].resize();
+                    }
+                });
+            });
+            
+            chartContainers.forEach(container => resizeObserver.observe(container));
+        }
+
+        // Define responsive options based on screen width
+        const getResponsiveOptions = () => {
+            const isDesktop = window.innerWidth >= 1200;
+            const isTablet = window.innerWidth >= 768 && window.innerWidth < 1200;
+            const isMobile = window.innerWidth < 768;
+            
+            return {
+                responsive: true,
+                maintainAspectRatio: true,
+                aspectRatio: isMobile ? 1.3 : isTablet ? 1.7 : 2,
+                responsiveAnimationDuration: 100,
+                plugins: {
+                    legend: {
+                        position: isMobile ? 'bottom' : 'bottom',
+                        align: 'center',
+                        labels: {
+                            padding: isMobile ? 10 : 20,
+                            usePointStyle: true,
+                            boxWidth: isMobile ? 8 : 12,
+                            font: {
+                                size: isMobile ? 10 : 12
+                            }
+                        }
+                    },
+                    tooltip: {
+                        bodyFont: {
+                            size: isMobile ? 12 : 14
                         }
                     }
                 }
-            }
+            };
         };
+        
+        // Get responsive options
+        const commonOptions = getResponsiveOptions();
 
         // Initialize charts
         initializeEngagementChart(analytics, chartColors, commonOptions);
         initializeContentChart(analytics, chartColors, commonOptions);
         initializeRadarChart(analytics, chartColors, commonOptions);
+
+        // Ensure charts fit their containers properly
+        ensureChartsFit();
+
+        // Add event listener for tab changes or visibility changes
+        document.addEventListener('visibilitychange', () => {
+            if (!document.hidden) {
+                ensureChartsFit();
+            }
+        });
 
     } catch (error) {
         console.error('Error fetching Instagram analytics:', error);
@@ -86,9 +140,7 @@ function updateMetricCards(analytics) {
 
 function initializeEngagementChart(analytics, colors, options) {
     const ctx = document.getElementById('engagementChart')?.getContext('2d');
-    if (!ctx) return;
-
-    new Chart(ctx, {
+    if (!ctx) return;    charts['engagementChart'] = new Chart(ctx, {
         type: 'doughnut',
         data: {
             labels: ['Likes', 'Comments', 'Shares', 'Replies'],
@@ -103,28 +155,34 @@ function initializeEngagementChart(analytics, colors, options) {
                 borderWidth: 0,
                 cutout: '60%'
             }]
-        },
-        options: {
+        },options: {
             ...options,
             plugins: {
                 ...options.plugins,
                 legend: {
                     ...options.plugins.legend,
-                    position: 'right'
+                    position: 'right',
+                    align: 'center'
                 }
             },
             maintainAspectRatio: true,
             responsive: true,
-            aspectRatio: 1.5
+            aspectRatio: 1.5,
+            layout: {
+                padding: {
+                    left: 10,
+                    right: 10,
+                    top: 0,
+                    bottom: 0
+                }
+            }
         }
     });
 }
 
 function initializeContentChart(analytics, colors, options) {
     const ctx = document.getElementById('contentChart')?.getContext('2d');
-    if (!ctx) return;
-
-    new Chart(ctx, {
+    if (!ctx) return;    charts['contentChart'] = new Chart(ctx, {
         type: 'bar',
         data: {
             labels: ['Views', 'Engagement', 'Reach'],
@@ -139,12 +197,19 @@ function initializeContentChart(analytics, colors, options) {
                 borderRadius: 8,
                 borderSkipped: false
             }]
-        },
-        options: {
+        },options: {
             ...options,
             maintainAspectRatio: true,
             responsive: true,
             aspectRatio: 1.5,
+            layout: {
+                padding: {
+                    left: 10,
+                    right: 10,
+                    top: 10,
+                    bottom: 0
+                }
+            },
             scales: {
                 y: {
                     beginAtZero: true,
@@ -154,7 +219,8 @@ function initializeContentChart(analytics, colors, options) {
                     ticks: {
                         font: {
                             size: 11
-                        }
+                        },
+                        maxTicksLimit: 8 // Limit the number of ticks for better fit
                     }
                 },
                 x: {
@@ -182,9 +248,7 @@ function initializeRadarChart(analytics, colors, options) {
         analytics.replies, analytics.views, analytics.reach
     );
 
-    const normalizeValue = (value) => maxValue > 0 ? (value / maxValue) * 100 : 0;
-
-    new Chart(ctx, {
+    const normalizeValue = (value) => maxValue > 0 ? (value / maxValue) * 100 : 0;    charts['radarChart'] = new Chart(ctx, {
         type: 'radar',
         data: {
             labels: ['Likes', 'Comments', 'Shares', 'Replies', 'Views', 'Reach'],
@@ -211,7 +275,11 @@ function initializeRadarChart(analytics, colors, options) {
         options: {
             ...options,
             maintainAspectRatio: true,
-            responsive: true,
+            responsive: true,            aspectRatio: window.innerWidth > 1200 ? 2.5 : 
+                      window.innerWidth > 768 ? 2 : 1.5, // Responsive aspect ratio
+            layout: {
+                padding: window.innerWidth < 768 ? 10 : 20
+            },
             aspectRatio: 2,
             scales: {
                 r: {
@@ -235,6 +303,18 @@ function initializeRadarChart(analytics, colors, options) {
             }
         }
     });
+}
+
+// Ensure charts fit their containers properly
+function ensureChartsFit() {
+    // Force chart reflow for better fitting
+    setTimeout(() => {
+        for (const chartId in charts) {
+            if (charts[chartId]) {
+                charts[chartId].resize();
+            }
+        }
+    }, 200);
 }
 
 function formatNumber(num) {

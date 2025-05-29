@@ -132,8 +132,7 @@ $engagement-error: #C44536;
             grid-template-columns: 1fr 1fr;
             gap: 20px;
             // Remove fixed height rows for better flexibility
-            
-            .chart-wrapper {
+              .chart-wrapper {
                 background: white;
                 border-radius: 16px;
                 padding: 24px;
@@ -141,7 +140,7 @@ $engagement-error: #C44536;
                 border: 1px solid rgba($primary-navy-blue, 0.08);
                 display: flex;
                 flex-direction: column;
-                height: 400px; // Set fixed height for chart wrappers
+                height: 380px; // Slightly reduced height for better proportions
                 
                 .chart-header {
                     margin-bottom: 16px;
@@ -163,20 +162,27 @@ $engagement-error: #C44536;
                 
                 &.wide {
                     grid-column: 1 / -1;
+                    
+                    .chart-container {
+                        max-width: 700px; // Limit width on very large screens
+                        margin: 0 auto; // Center the chart
+                    }
                 }
-                
-                .chart-container {
+                  .chart-container {
                     flex: 1; // Take remaining space
                     position: relative;
                     display: flex; // Use flex to center the canvas
+                    justify-content: center;
+                    align-items: center;
+                    overflow: hidden; // Prevent overflow
                 }
                 
                 canvas {
-                    max-width: 100%;
-                    max-height: 100%;
-                    margin: auto; // Center the canvas in the container
-                    width: auto !important; // Let Chart.js handle sizing
-                    height: auto !important;
+                    max-width: 100% !important; 
+                    max-height: 100% !important;
+                    width: 100% !important; 
+                    height: auto !important; // Maintain aspect ratio
+                    object-fit: contain; // Ensure it fits within the container
                 }
             }
         }
