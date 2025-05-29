@@ -132,10 +132,6 @@ app.use('/api', uploadRoutes);
 const notificationRoutes = require("./routes/notificationRoute");
 app.use('/api/notifications', isAuthenticated, notificationRoutes);
 
-const contactRoutes = require("./routes/contactRoute");
-app.use('/api/contact', contactRoutes);
-
-
 app.use((req, res) => {
     res.status(404).sendFile(path.join(__dirname, 'dist', '404.html'));
 });
