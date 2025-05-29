@@ -1,3 +1,5 @@
+let charts = {};
+
 document.addEventListener('DOMContentLoaded', async function () {
     try {
         const response = await fetch('/api/instagram/analytics');
@@ -38,7 +40,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         };        const commonOptions = {
             responsive: true,
             maintainAspectRatio: true,
-            aspectRatio: 3,
+            aspectRatio: 1.5,
             onResize: function(chart, size) {
                 // This ensures the chart maintains proper aspect ratio when resized
                 setTimeout(() => {
@@ -54,15 +56,45 @@ document.addEventListener('DOMContentLoaded', async function () {
                         font: {
                             size: 12
                         }
+                    },
+                    tooltip: {
+                        bodyFont: { size: isMobile ? 12 : 14 }
                     }
                 }
-            }
+            };
         };
 
         // Initialize charts
+        const commonOptions = getResponsiveOptions();
         initializeEngagementChart(analytics, chartColors, commonOptions);
         initializeContentChart(analytics, chartColors, commonOptions);
         initializeRadarChart(analytics, chartColors, commonOptions);
+
+        // Resize logic
+        function resizeAllCharts() {
+            for (const key in charts) {
+                if (charts[key] && typeof charts[key].resize === 'function') {
+                    charts[key].options = { ...charts[key].options, ...getResponsiveOptions() };
+                    charts[key].resize();
+                    charts[key].update();
+                }
+            }
+        }
+
+        window.addEventListener('resize', () => {
+            clearTimeout(window._chartResizeTimeout);
+            window._chartResizeTimeout = setTimeout(resizeAllCharts, 200);
+        });
+
+        if (typeof ResizeObserver !== 'undefined') {
+            const chartContainers = document.querySelectorAll('.chart-container');
+            const resizeObserver = new ResizeObserver(resizeAllCharts);
+            chartContainers.forEach(container => resizeObserver.observe(container));
+        }
+
+        document.addEventListener('visibilitychange', () => {
+            if (!document.hidden) resizeAllCharts();
+        });
 
     } catch (error) {
         console.error('Error fetching Instagram analytics:', error);
@@ -87,8 +119,8 @@ function updateMetricCards(analytics) {
 function initializeEngagementChart(analytics, colors, options) {
     const ctx = document.getElementById('engagementChart')?.getContext('2d');
     if (!ctx) return;
-
-    new Chart(ctx, {
+    if (charts['engagementChart']) charts['engagementChart'].destroy();
+    charts['engagementChart'] = new Chart(ctx, {
         type: 'doughnut',
         data: {
             labels: ['Likes', 'Comments', 'Shares', 'Replies'],
@@ -110,12 +142,13 @@ function initializeEngagementChart(analytics, colors, options) {
                 ...options.plugins,
                 legend: {
                     ...options.plugins.legend,
-                    position: 'right'
+                    position: options.plugins.legend.position || 'right',
+                    align: 'center'
                 }
             },
             maintainAspectRatio: true,
             responsive: true,
-            aspectRatio: 3
+            aspectRatio: 1.5
         }
     });
 }
@@ -123,8 +156,8 @@ function initializeEngagementChart(analytics, colors, options) {
 function initializeContentChart(analytics, colors, options) {
     const ctx = document.getElementById('contentChart')?.getContext('2d');
     if (!ctx) return;
-
-    new Chart(ctx, {
+    if (charts['contentChart']) charts['contentChart'].destroy();
+    charts['contentChart'] = new Chart(ctx, {
         type: 'bar',
         data: {
             labels: ['Views', 'Engagement', 'Reach'],
@@ -144,7 +177,7 @@ function initializeContentChart(analytics, colors, options) {
             ...options,
             maintainAspectRatio: true,
             responsive: true,
-            aspectRatio: 3,
+            aspectRatio: 1.5,
             scales: {
                 y: {
                     beginAtZero: true,
@@ -154,7 +187,8 @@ function initializeContentChart(analytics, colors, options) {
                     ticks: {
                         font: {
                             size: 11
-                        }
+                        },
+                        maxTicksLimit: 8 // Limit the number of ticks for better fit
                     }
                 },
                 x: {
@@ -175,16 +209,14 @@ function initializeContentChart(analytics, colors, options) {
 function initializeRadarChart(analytics, colors, options) {
     const ctx = document.getElementById('radarChart')?.getContext('2d');
     if (!ctx) return;
-
+    if (charts['radarChart']) charts['radarChart'].destroy();
     // Normalize data for radar chart (scale to 0-100)
     const maxValue = Math.max(
         analytics.likes, analytics.comments, analytics.shares, 
         analytics.replies, analytics.views, analytics.reach
     );
-
     const normalizeValue = (value) => maxValue > 0 ? (value / maxValue) * 100 : 0;
-
-    new Chart(ctx, {
+    charts['radarChart'] = new Chart(ctx, {
         type: 'radar',
         data: {
             labels: ['Likes', 'Comments', 'Shares', 'Replies', 'Views', 'Reach'],
@@ -212,7 +244,7 @@ function initializeRadarChart(analytics, colors, options) {
             ...options,
             maintainAspectRatio: true,
             responsive: true,
-            aspectRatio: 5,
+            aspectRatio: 2,
             scales: {
                 r: {
                     beginAtZero: true,
@@ -235,6 +267,18 @@ function initializeRadarChart(analytics, colors, options) {
             }
         }
     });
+}
+
+// Ensure charts fit their containers properly
+function ensureChartsFit() {
+    // Force chart reflow for better fitting
+    setTimeout(() => {
+        for (const chartId in charts) {
+            if (charts[chartId]) {
+                charts[chartId].resize();
+            }
+        }
+    }, 200);
 }
 
 function formatNumber(num) {

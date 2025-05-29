@@ -141,26 +141,36 @@ document.addEventListener('DOMContentLoaded', () => {
         postCreatorPanel.style.transform = 'translateX(0) !important';
         postCreatorPanel.style.opacity = '1';
         postCreatorPanel.style.visibility = 'visible';
-    });
-
-    closePanel?.addEventListener('click', () => {
+    });    closePanel?.addEventListener('click', () => {
+        // Hide panel with smooth animation
         postCreatorPanel.classList.remove('active');
         // Reset inline styles
         postCreatorPanel.style.transform = '';
         postCreatorPanel.style.opacity = '';
         postCreatorPanel.style.visibility = '';
-        // Reset form
-        if (postForm) postForm.reset();
-        if (mediaUpload) {
-            mediaUpload.classList.remove('has-media');
-            const img = mediaUpload.querySelector('img');
-            if (img) {
-                img.src = './assets/icons/dashboard/create-post.png';
-                img.classList.remove('preview');
+        
+        // Reset form after animation completes
+        setTimeout(() => {
+            if (postForm) postForm.reset();
+            if (mediaUpload) {
+                mediaUpload.classList.remove('has-media');
+                const img = mediaUpload.querySelector('img');
+                if (img) {
+                    img.src = './assets/icons/dashboard/create-post.png';
+                    img.classList.remove('preview');
+                }
+                const p = mediaUpload.querySelector('p');
+                if (p) p.textContent = 'Click to upload media';
             }
-            const p = mediaUpload.querySelector('p');
-            if (p) p.textContent = 'Click to upload media (optional)';
-        }
+            
+            // Reset any button loading states
+            const submitBtn = postForm.querySelector('.post-now');
+            if (submitBtn && submitBtn.classList.contains('btn-loading')) {
+                submitBtn.classList.remove('btn-loading');
+                submitBtn.innerHTML = 'Create Post';
+                submitBtn.disabled = false;
+            }
+        }, 300);
     });
 
     // Platform options click handler
@@ -185,33 +195,63 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Toast notification function
+    // Enhanced toast notification function with animation and icon
 function showToast(message, type = "") {
     const toast = document.getElementById("custom-toast");
     if (!toast) return;
-    toast.textContent = message;
-    toast.className = "custom-toast" + (type ? ` ${type}` : "");
-    toast.classList.add("active");
+    
+    // Remove any existing toast first (in case there's one already showing)
+    toast.classList.remove("active");
+    
+    // Wait a tiny bit before showing the new toast (for animation purposes)
     setTimeout(() => {
-        toast.classList.remove("active");
-    }, 3000);
-}
-
-    postForm.addEventListener('submit', async (e) => {
+        // Create content with icon
+        toast.innerHTML = `${message}`;
+        toast.className = "custom-toast with-icon" + (type ? ` ${type}` : "");
+        toast.classList.add("active");
+        
+        // Hide toast after delay
+        setTimeout(() => {
+            toast.classList.remove("active");
+        }, 3000);
+    }, 10);
+}    postForm.addEventListener('submit', async (e) => {
         e.preventDefault();
 
+        // Get submit button
+        const submitBtn = postForm.querySelector('.post-now');
+        const originalBtnText = submitBtn.textContent;
+
+        // Validate media file
         const mediaInputFile = mediaInput.files[0];
         if (!mediaInputFile) {
             showToast('Please upload a media file', 'error');
             return;
         }
 
+        // Validate caption
+        const caption = postForm.querySelector('.post-description').value.trim();
+        if (!caption) {
+            showToast('Please enter a caption for your post', 'error');
+            return;
+        }
+
+        // Show loading state
+        submitBtn.classList.add('btn-loading');
+        submitBtn.innerHTML = `<div class="spinner"></div><span>${originalBtnText}</span>`;
+        submitBtn.disabled = true;
+        
+        // Process file type
         const fileType = mediaInputFile.type.startsWith('video') ? 'video' : 'image';
         const mediaFormData = new FormData();
         mediaFormData.append('imageFile', mediaInputFile);
         mediaFormData.append('resourceType', fileType);
 
         try {
+            // Display "Uploading..." toast
+            showToast('Uploading media...', '');
+            
+            // Upload media
             const uploadResponse = await fetch('/api/upload-media', {
                 method: 'POST',
                 body: mediaFormData
@@ -222,16 +262,19 @@ function showToast(message, type = "") {
                 throw new Error(uploadResult.error || 'Media upload failed');
             }
 
+            // Show "Publishing..." toast
+            showToast('Publishing post...', '');
+            
             const cloudinaryPublicId = uploadResult.publicId;
 
+            // Prepare post data
             const postFormData = {
-                caption: postForm.querySelector('.post-description').value,
+                caption: caption,
                 mediaPublicId: cloudinaryPublicId,
                 resourceType: fileType,
             };
 
-            console.log('Post Form Data:', postFormData);
-
+            // Submit post
             const postResponse = await fetch('/api/instagram/publish', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -243,13 +286,47 @@ function showToast(message, type = "") {
                 throw new Error(postResult.error || 'Failed to publish post');
             }
 
-            showToast('Post published successfully!', 'success');
-            postCreatorPanel.classList.remove('active');
-            postForm.reset();
+            // Success: Show toast and reset form
+            showToast('Your post has been published successfully!', 'success');
+            
+            // Clear form content and hide panel with a slight delay
+            setTimeout(() => {
+                // Hide the panel
+                postCreatorPanel.classList.remove('active');
+                postCreatorPanel.style.transform = '';
+                postCreatorPanel.style.opacity = '';
+                postCreatorPanel.style.visibility = '';
+                
+                // Reset form fields after panel is hidden
+                setTimeout(() => {
+                    // Reset form
+                    postForm.reset();
+                    
+                    // Reset media upload area
+                    if (mediaUpload) {
+                        mediaUpload.classList.remove('has-media');
+                        const img = mediaUpload.querySelector('img');
+                        if (img) {
+                            img.src = './assets/icons/dashboard/create-post.png';
+                            img.classList.remove('preview');
+                        }
+                        const p = mediaUpload.querySelector('p');
+                        if (p) p.textContent = 'Click to upload media';
+                    }
+                    
+                    // Refresh the planner grid to show the new post
+                    updatePlannerGridWithTasks();
+                }, 300);
+            }, 1000);
             
         } catch (error) {
             console.error('Error:', error);
             showToast('Something went wrong. Please try again.', 'error');
+        } finally {
+            // Reset button state
+            submitBtn.classList.remove('btn-loading');
+            submitBtn.innerHTML = originalBtnText;
+            submitBtn.disabled = false;
         }
     });
 

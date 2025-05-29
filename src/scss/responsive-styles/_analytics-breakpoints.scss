@@ -38,12 +38,15 @@
                 }
             }            .charts-container {
                 grid-template-columns: 1fr !important;
-                grid-template-rows: repeat(3, 320px);
+                grid-template-rows: auto;
                 gap: 15px;
                 min-height: auto;
 
                 .chart-wrapper {
                     padding: 16px !important;
+                    height: auto !important; 
+                    min-height: 300px;
+                    aspect-ratio: 1.3;
 
                     .chart-header h3 {
                         font-size: 1em;
@@ -51,7 +54,9 @@
 
                     .chart-container {
                         min-height: 240px;
-                    }                    canvas {
+                    }
+
+                    canvas {
                         width: 100% !important;
                     }
 
@@ -103,8 +108,54 @@
                 grid-template-columns: 1fr;
                 grid-template-rows: repeat(3, 350px);
 
-                .chart-wrapper.wide {
-                    grid-column: 1;
+                .chart-wrapper {
+                    min-height: 320px;
+                    max-height: 350px;
+
+                    &.wide {
+                        grid-column: 1;
+                    }
+                }
+            }
+        }
+    }
+    
+    // Desktop specific styles
+    @media (min-width: 1200px) {
+        .analytics-container {
+            .charts-container {
+                .chart-wrapper {
+                    canvas {
+                        max-width: 95% !important; // Give some breathing room
+                    }
+                    
+                    &.wide canvas {
+                        max-width: 85% !important; // Wider chart needs more space around it
+                    }
+                }
+            }
+        }
+    }
+
+    // Large desktop screens
+    @media (min-width: 1600px) {
+        .analytics-container {
+            .charts-container {
+                .chart-wrapper {
+                    // Slightly larger fixed height for XL screens
+                    height: 420px;
+                    
+                    .chart-container {
+                        // Ensure charts have ample space
+                        padding: 10px 0;
+                    }
+                    
+                    // Special handling for the radar chart
+                    &.wide {
+                        .chart-container {
+                            max-width: 900px; // Allow more horizontal space on XL screens
+                        }
+                    }
                 }
             }
         }
