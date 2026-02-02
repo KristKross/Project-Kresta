@@ -12,6 +12,10 @@ span, a{
 
 .dashboard-page{
     padding-left: 110px;
+
+    @include mobile {
+        padding: 0px;
+    }
 }
 
 .dashboard-container {
