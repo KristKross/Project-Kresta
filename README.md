@@ -1,118 +1,84 @@
-# Project Kresta
+# Project Kresta — Social Media Workspace Platform
 
-A modern collaborative platform for creative teams.
-
----
-
-## 🚀 Getting Started
-
-### 1. Prerequisites
-
-- **Node.js**: Download from the [Node.js website](https://nodejs.org/) or install via your OS package manager.
-- **npm**: Comes with Node.js.
-- **Git**: Download from [git-scm.com](https://git-scm.com/) or install via your OS package manager.
-
-Verify installations:
-```bash
-node -v
-npm -v
-git --version
-```
+Project Kresta is a modern collaborative platform designed for creative teams and social media managers. It provides a unified workspace for organizing content, managing media, and integrating social media tools — powered by a Node.js backend, MongoDB, Cloudinary, and the Instagram Graph API.
 
 ---
 
-### 2. Clone the Repository
+## Important Note
 
-```bash
-git clone <repository-url>
-cd project-kresta
-```
+This build does not function in production because Facebook and Instagram OAuth require strict verification, approved redirect domains, and full compliance with Meta’s platform policies.  
+Project Kresta is presented as a **concept prototype** demonstrating backend architecture, API integration structure, and workspace features, but it is **not a deployable production application**.
 
 ---
 
-### 3. Environment Variables
+## Walkthrough Video
 
-Create a `.env` file in the root directory for environment variables.  
-**Example:**
-```env
-NODE_ENV="development"
-PORT=5000
+Watch the full walkthrough of Project Kresta here:
 
-MONGO_URI=your-mongo-uri
-SESSION_SECRET=your-session-secret
-SECRET_KEY=your-secret-key
-
-CLOUD_NAME=your-cloud-name
-CLOUD_API_KEY=your-cloud-api-key
-CLOUD_API_SECRET=your-cloud-api-secret
-
-FACEBOOK_APP_ID=your-facebook-app-id
-FACEBOOK_APP_SECRET=your-facebook-app-secret
-REDIRECT_URI=your-redirect-uri
-```
-
+[Project Kresta Walkthrough](https://youtu.be/fkB6EdH3HMw)
 
 ---
 
-### 4. Install Dependencies
+## About the Platform
 
-#### Main Dependencies
-```bash
-npm install
-```
-Or, to install specific versions:
-```bash
-npm install axios@^1.8.4 bcrypt@^6.0.0 cloudinary@^2.6.1 connect-mongo@^5.1.0 cors@^2.8.5 crypto-js@^4.2.0 dotenv@^16.5.0 express@^5.1.0 express-session@^1.18.1 jsonwebtoken@^9.0.2 mongoose@^8.14.3 multer@^2.0.0 path@^0.12.7
-```
+Project Kresta centralizes social media workflow into one organized environment. Users can upload media, manage content, connect their Instagram accounts, and collaborate within a structured workspace. The backend handles authentication, media storage, API communication, and secure session management.
 
-#### Development Dependencies
-```bash
-npm install --save-dev browser-sync@^3.0.4 copy-webpack-plugin@^13.0.0 css-loader@^7.1.2 html-loader@^5.1.0 html-webpack-plugin@^5.6.3 mini-css-extract-plugin@^2.9.2 nodemon-webpack-plugin@^4.8.2 sass@^1.86.3 sass-loader@^16.0.5 style-loader@^4.0.0 webpack@^5.99.6 webpack-cli@^6.0.1 webpack-dev-server@^5.2.1
-```
+### Features
 
----
-
-## 🛠 Development Workflow
-
-### Frontend (Webpack)
-
-- **Start Dev Server:**  
-  ```bash
-  npm start
-  ```
-  This launches the Webpack Dev Server. Edit files in `src/` and see live reloads.
-
-- **Production Build:**  
-  ```bash
-  npm run build
-  ```
-  Bundles your app for deployment.
-
-### Backend (Nodemon)
-
-- **Start Backend Dev Server:**  
-  ```bash
-  npm run dev
-  ```
-  Runs your backend with hot-reloading via Nodemon.
+- Instagram Graph API integration  
+- Cloudinary media storage  
+- User authentication and session management  
+- Workspace organization for teams  
+- Tools for drafting and preparing social media posts  
+- MongoDB database for users, sessions, and media metadata  
+- Modular backend architecture using Express and Mongoose  
+- Frontend bundling and optimization with Webpack  
 
 ---
 
-## 📁 Project Structure
+## How It Works
+
+1. Create an account and log in.  
+2. Connect your Instagram profile through Facebook OAuth.  
+3. Upload media to Cloudinary or import existing Instagram posts.  
+4. Organize content inside your workspace.  
+5. Draft posts and attach media.  
+6. Collaborate with your team.  
+7. Manage all social media assets in one place.
+
+---
+
+## Tech Stack
+
+- Backend: Node.js, Express  
+- Database: MongoDB, Mongoose  
+- Authentication: JWT, Express-Session, Facebook OAuth  
+- Media: Cloudinary  
+- API: Instagram Graph API  
+- Frontend: Webpack, HTML/CSS/JS  
+- Development Tools: Nodemon, Webpack Dev Server  
+
+---
+
+## Project Structure
 
 ```
 project-kresta/
-├── src/                   # Source code (frontend)
-├── controllers/           # Express route 
-├── config/                # Configuration files 
-├── middleware/            # Express middleware
-├── models/                # Mongoose models
-├── routes/                # Express route 
-├── utils/                 # Utility/helper 
+├── src/                   # Frontend source code
+├── controllers/           # Route controllers
+├── config/                # Environment and service configs
+├── middleware/            # Authentication and validation middleware
+├── models/                # Mongoose schemas
+├── routes/                # Express routes
+├── utils/                 # Helper utilities
 ├── .env                   # Environment variables
 ├── package.json
 ├── app.js
 └── README.md
-
 ```
+
 ---
+
+## License
+
+This project is licensed under the ISC License.
